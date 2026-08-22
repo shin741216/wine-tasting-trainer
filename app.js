@@ -20,7 +20,7 @@ btnHome.addEventListener("click", () => {
   } else if (view === "quiz") {
     if (!confirm("クイズを中断してメニューに戻りますか？")) return;
     showQuizStart();
-  } else if (view === "wineList" || view === "flashcards" || view === "quizStart" || view === "stats") {
+  } else if (view === "wineList" || view === "flashcards" || view === "quizStart" || view === "stats" || view === "compare") {
     showLauncher();
   }
 });
@@ -33,6 +33,7 @@ const FEATURES = [
   { id: "flashcard", icon: "🃏", title: "主要品種フラッシュカード", desc: "品種ごとの特徴を暗記", active: true },
   { id: "quiz", icon: "❓", title: "品種当てクイズ", desc: "コメントから品種を推測", active: true },
   { id: "stats", icon: "📊", title: "過去の出題品種 傾向データ", desc: "出題実績をチェック", active: true },
+  { id: "compare", icon: "📖", title: "模範解答 比較閲覧", desc: "品種×生産地でコメント正解を見比べ", active: true },
 ];
 
 function showLauncher() {
@@ -63,6 +64,7 @@ function showLauncher() {
       if (tile.dataset.feature === "flashcard") showFlashcards();
       if (tile.dataset.feature === "quiz") showQuizStart();
       if (tile.dataset.feature === "stats") showStats();
+      if (tile.dataset.feature === "compare") showCompare();
     });
   });
   window.scrollTo(0, 0);
@@ -421,6 +423,82 @@ function showStats() {
     <p class="reveal-note">出典: <a href="https://www.wine-jyuken.com/second_exam/kakonosyutudai" target="_blank" rel="noopener">ワイン受験.com「過去の出題ワインの品種と生産国」</a>（2026年8月取得）。シラーズはシラーとして集計しています。最新情報や訂正は data.js の PAST_EXAMS を編集してください。</p>
   `;
   window.scrollTo(0, 0);
+}
+
+// ---------------- compare (模範解答 比較閲覧) ----------------
+let cmpGrape = null;
+
+function showCompare() {
+  view = "compare";
+  headerTitle.textContent = "模範解答 比較閲覧";
+  btnHome.classList.remove("hidden");
+  footerBar.classList.add("hidden");
+
+  // WINESに存在する品種を白→赤の順で列挙（重複除去）
+  const grapes = [];
+  for (const color of ["white", "red"]) {
+    for (const g of VOCAB[color].find(s => s.id === "grape").terms) {
+      if (WINES.some(w => w.color === color && w.answers.grape[0] === g)) grapes.push({ name: g, color });
+    }
+  }
+  if (!cmpGrape || !grapes.some(g => g.name === cmpGrape)) cmpGrape = grapes[0].name;
+
+  screen.innerHTML = `
+    <p class="home-lead">品種を選ぶと、生産地ごとの模範解答コメントを並べて比較できます。<span class="cmp-diff">色付き</span>の用語は生産地間で答えが異なる箇所です。</p>
+    <div class="fc-filters">
+      ${grapes.map(g => `<button class="chip cmp-grape" data-g="${g.name}">${g.color === "white" ? "🥂" : "🍷"} ${g.name}</button>`).join("")}
+    </div>
+    <div id="cmp-body"></div>
+    <p class="reveal-note">※ 模範解答はAIが試験対策の定石に基づき作成した参考解答です。お手元の教材と併せてご活用ください。</p>
+  `;
+
+  screen.querySelectorAll(".cmp-grape").forEach(b => {
+    b.addEventListener("click", () => {
+      cmpGrape = b.dataset.g;
+      renderCompareTable();
+    });
+  });
+  renderCompareTable();
+  window.scrollTo(0, 0);
+}
+
+function renderCompareTable() {
+  screen.querySelectorAll(".cmp-grape").forEach(b =>
+    b.classList.toggle("on", b.dataset.g === cmpGrape));
+  const wines = WINES.filter(w => w.answers.grape[0] === cmpGrape);
+  const color = wines[0].color;
+  const sections = VOCAB[color].filter(s => !["grape", "country", "vintage"].includes(s.id));
+
+  let rows = "";
+  let lastGroup = null;
+  for (const sec of sections) {
+    if (sec.group !== lastGroup) {
+      rows += `<tr class="cmp-group"><th colspan="${wines.length + 1}">${sec.group}</th></tr>`;
+      lastGroup = sec.group;
+    }
+    // 全ワイン共通で選ばれている用語か判定し、違う箇所をハイライト
+    const cells = wines.map(w => {
+      const terms = w.answers[sec.id] || [];
+      return terms.map(t => {
+        const shared = wines.every(x => (x.answers[sec.id] || []).includes(t));
+        return shared || wines.length < 2 ? t : `<span class="cmp-diff">${t}</span>`;
+      }).join("、");
+    });
+    rows += `<tr><th class="cmp-item">${sec.title}</th>${cells.map(c => `<td>${c}</td>`).join("")}</tr>`;
+  }
+
+  document.getElementById("cmp-body").innerHTML = `
+    <div class="cmp-wrap">
+      <table class="cmp-table">
+        <thead><tr>
+          <th class="cmp-item">項目</th>
+          ${wines.map(w => `<th class="cmp-head">${w.answers.country[0]}<span class="cmp-vintage">${w.answers.vintage[0]}</span></th>`).join("")}
+        </tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+    ${wines.length < 2 ? '<p class="reveal-note">この品種は現在1つの生産地のみ収録しています。ワインを追加すると自動的に比較列が増えます。</p>' : ""}
+  `;
 }
 
 // ---------------- wine list (コメント練習) ----------------

@@ -253,6 +253,28 @@ main { padding: 16px 14px 120px; max-width: 640px; margin: 0 auto; }
 .stat-exam-country { margin-left: auto; color: var(--muted); font-size: .78rem; }
 .reveal-note a { color: var(--wine); }
 
+/* ---------- compare ---------- */
+.cmp-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 14px; background: var(--card); }
+.cmp-table { border-collapse: collapse; width: 100%; min-width: 480px; font-size: .82rem; }
+.cmp-table th, .cmp-table td {
+  padding: 8px 10px; border-bottom: 1px solid var(--border);
+  text-align: left; vertical-align: top; line-height: 1.5;
+}
+.cmp-table td { min-width: 150px; }
+.cmp-item {
+  position: sticky; left: 0; background: var(--card);
+  font-weight: 700; font-size: .78rem; color: var(--muted);
+  min-width: 96px; max-width: 120px;
+}
+.cmp-head { font-weight: 800; color: var(--wine); white-space: nowrap; }
+.cmp-vintage { display: block; font-size: .7rem; color: var(--muted); font-weight: 600; }
+.cmp-group th {
+  background: var(--wine); color: #fff; font-size: .78rem; font-weight: 700;
+  position: static; padding: 5px 10px;
+}
+.cmp-group th:first-child { position: sticky; left: 0; }
+.cmp-diff { color: var(--wrong); font-weight: 700; }
+
 /* ---------- result ---------- */
 .score-card {
   background: linear-gradient(135deg, #5c1a2e, #8a3050); color: #fff;
