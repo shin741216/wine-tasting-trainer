@@ -195,6 +195,18 @@ main { padding: 16px 14px 120px; max-width: 640px; margin: 0 auto; }
 .fc-facts dt { font-size: .78rem; font-weight: 700; color: var(--muted); margin-top: 10px; }
 .fc-facts dd { font-size: .88rem; line-height: 1.55; margin-top: 2px; }
 .fc-hint { text-align: center; font-size: .75rem; color: var(--muted); margin: 10px 0 14px; }
+.fc-bycountry {
+  font-size: .84rem; line-height: 1.55;
+  padding: 6px 8px; border-radius: 8px; margin-top: 4px;
+  background: var(--chip-bg);
+}
+.fc-bycountry.highlight { background: var(--wine); color: #fff; }
+.fc-bycountry.highlight .fc-bc-country { background: #fff; color: var(--wine); }
+.fc-bc-country {
+  display: inline-block; background: var(--wine); color: #fff;
+  font-size: .7rem; font-weight: 700; border-radius: 999px;
+  padding: 1px 8px; margin-right: 6px; vertical-align: 1px;
+}
 .fc-nav { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 .fc-counter { font-size: .85rem; color: var(--muted); font-weight: 700; white-space: nowrap; }
 

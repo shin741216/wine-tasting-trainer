@@ -187,6 +187,16 @@ function renderFlashcard() {
     <span class="fc-name">${g.name}</span>
     <span class="fc-colorlabel">${g.color === "white" ? "白ワイン用品種" : "赤ワイン用品種"}${fcState.country !== "all" ? " ・ " + fcState.country : ""}</span>
   `;
+  const byCountryHtml = g.byCountry ? `
+    <dt>🌐 生産地による違い</dt>
+    <dd>
+      ${Object.entries(g.byCountry).map(([c, desc]) => `
+        <div class="fc-bycountry ${fcState.country === c ? "highlight" : ""}">
+          <span class="fc-bc-country">${c}</span>${desc}
+        </div>
+      `).join("")}
+    </dd>
+  ` : "";
   document.getElementById("fc-back").innerHTML = `
     <div class="fc-back-name">${g.name}</div>
     <dl class="fc-facts">
@@ -195,6 +205,7 @@ function renderFlashcard() {
       <dt>👅 味わい</dt><dd>${g.taste}</dd>
       <dt>🔑 決め手</dt><dd>${g.key}</dd>
       <dt>🌍 主産地</dt><dd>${g.region}</dd>
+      ${byCountryHtml}
     </dl>
   `;
 }
