@@ -172,8 +172,8 @@ function renderFlashcard() {
     document.getElementById("fc-counter").textContent = "0 / 0";
     document.getElementById("fc-front").innerHTML = `
       <span class="fc-glass">🤷</span>
-      <span class="fc-name">該当する品種がありません</span>
-      <span class="fc-colorlabel">色と生産地の組み合わせを変えてみてください</span>
+      <span class="fc-name">この組み合わせは収録外です</span>
+      <span class="fc-colorlabel">本アプリは2次試験対策として主要品種のみ収録しています</span>
     `;
     document.getElementById("fc-back").innerHTML = "";
     return;
