@@ -473,7 +473,7 @@ function renderCompareTable() {
   let lastGroup = null;
   for (const sec of sections) {
     if (sec.group !== lastGroup) {
-      rows += `<tr class="cmp-group"><th colspan="${wines.length + 1}">${sec.group}</th></tr>`;
+      rows += `<tr class="cmp-group"><th class="cmp-item">${sec.group}</th><td colspan="${wines.length}"></td></tr>`;
       lastGroup = sec.group;
     }
     // 全ワイン共通で選ばれている用語か判定し、違う箇所をハイライト
