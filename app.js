@@ -40,7 +40,7 @@ function showLauncher() {
   view = "launcher";
   currentWine = null;
   selections = {};
-  headerTitle.textContent = "ワイン2次試験対策";
+  headerTitle.textContent = "ワインエキスパート 2次試験対策";
   btnHome.classList.add("hidden");
   footerBar.classList.add("hidden");
 
