@@ -69,10 +69,15 @@ function showLauncher() {
 }
 
 // ---------------- flashcards (品種フラッシュカード) ----------------
-const fcState = { filter: "all", order: [], index: 0, flipped: false };
+const fcState = { filter: "all", country: "all", order: [], index: 0, flipped: false };
+
+const FC_COUNTRIES = ["フランス", "イタリア", "スペイン", "ドイツ", "アメリカ", "オーストラリア",
+                      "ニュージーランド", "チリ", "アルゼンチン", "南アフリカ", "日本"];
 
 function fcDeck() {
-  return fcState.order.filter(g => fcState.filter === "all" || g.color === fcState.filter);
+  return fcState.order.filter(g =>
+    (fcState.filter === "all" || g.color === fcState.filter) &&
+    (fcState.country === "all" || (g.countries || []).includes(fcState.country)));
 }
 
 function showFlashcards() {
@@ -90,6 +95,10 @@ function showFlashcards() {
       <button class="chip fc-filter" data-f="white">白</button>
       <button class="chip fc-filter" data-f="red">赤</button>
       <button class="chip fc-shuffle" id="fc-shuffle">🔀 シャッフル</button>
+    </div>
+    <div class="fc-filters fc-countries">
+      <button class="chip fc-country" data-c="all">🌍 全生産地</button>
+      ${FC_COUNTRIES.map(c => `<button class="chip fc-country" data-c="${c}">${c}</button>`).join("")}
     </div>
     <div class="fc-stage">
       <div class="fc-card" id="fc-card">
@@ -110,6 +119,14 @@ function showFlashcards() {
   screen.querySelectorAll(".fc-filter").forEach(b => {
     b.addEventListener("click", () => {
       fcState.filter = b.dataset.f;
+      fcState.index = 0;
+      fcState.flipped = false;
+      renderFlashcard();
+    });
+  });
+  screen.querySelectorAll(".fc-country").forEach(b => {
+    b.addEventListener("click", () => {
+      fcState.country = b.dataset.c;
       fcState.index = 0;
       fcState.flipped = false;
       renderFlashcard();
@@ -137,6 +154,7 @@ function showFlashcards() {
 
 function moveFlashcard(dir) {
   const deck = fcDeck();
+  if (deck.length === 0) return;
   fcState.index = (fcState.index + dir + deck.length) % deck.length;
   fcState.flipped = false;
   renderFlashcard();
@@ -144,15 +162,30 @@ function moveFlashcard(dir) {
 
 function renderFlashcard() {
   const deck = fcDeck();
-  const g = deck[fcState.index];
   screen.querySelectorAll(".fc-filter").forEach(b =>
     b.classList.toggle("on", b.dataset.f === fcState.filter));
+  screen.querySelectorAll(".fc-country").forEach(b =>
+    b.classList.toggle("on", b.dataset.c === fcState.country));
+
+  if (deck.length === 0) {
+    document.getElementById("fc-inner").classList.remove("flipped");
+    document.getElementById("fc-counter").textContent = "0 / 0";
+    document.getElementById("fc-front").innerHTML = `
+      <span class="fc-glass">🤷</span>
+      <span class="fc-name">該当する品種がありません</span>
+      <span class="fc-colorlabel">色と生産地の組み合わせを変えてみてください</span>
+    `;
+    document.getElementById("fc-back").innerHTML = "";
+    return;
+  }
+  if (fcState.index >= deck.length) fcState.index = 0;
+  const g = deck[fcState.index];
   document.getElementById("fc-inner").classList.toggle("flipped", fcState.flipped);
   document.getElementById("fc-counter").textContent = `${fcState.index + 1} / ${deck.length}`;
   document.getElementById("fc-front").innerHTML = `
     <span class="fc-glass">${g.color === "white" ? "🥂" : "🍷"}</span>
     <span class="fc-name">${g.name}</span>
-    <span class="fc-colorlabel">${g.color === "white" ? "白ワイン用品種" : "赤ワイン用品種"}</span>
+    <span class="fc-colorlabel">${g.color === "white" ? "白ワイン用品種" : "赤ワイン用品種"}${fcState.country !== "all" ? " ・ " + fcState.country : ""}</span>
   `;
   document.getElementById("fc-back").innerHTML = `
     <div class="fc-back-name">${g.name}</div>
@@ -222,7 +255,7 @@ function buildQuizComment(wine) {
   const join = (ids) => ids.flatMap(id => a[id] || []).join("、");
   const groups = [
     { icon: "👁", label: "外観", text: join(["clarity", "brightness", "color", "intensity", "viscosity", "appearanceImpression"]) },
-    { icon: "👃", label: "香り", text: join(["aromaFirst", "aromaFruit", "aromaSpice", "aromaImpression"]) },
+    { icon: "👃", label: "香り", text: join(["aromaFirst", "aromaFruit", "aromaFlora", "aromaSpice", "aromaImpression"]) },
     { icon: "👅", label: "味わい", text: join(["attack", "sweetness", "acidity", "bitterness", "tannin", "balance", "alcohol", "finish"]) },
   ];
   return groups.map(g => `

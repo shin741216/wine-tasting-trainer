@@ -161,6 +161,8 @@ main { padding: 16px 14px 120px; max-width: 640px; margin: 0 auto; }
 
 /* ---------- flashcards ---------- */
 .fc-filters { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+.fc-countries { gap: 6px; margin-top: -6px; }
+.fc-countries .chip { font-size: .78rem; padding: 6px 11px; }
 .fc-shuffle { margin-left: auto; }
 .fc-stage { perspective: 1200px; }
 .fc-card { cursor: pointer; height: 420px; }
