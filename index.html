@@ -16,10 +16,21 @@
   <header class="app-header">
     <button id="btn-home" class="header-btn" aria-label="ホームへ">◀</button>
     <h1 id="header-title">テイスティング練習</h1>
-    <span class="header-spacer"></span>
+    <button id="btn-info" class="header-btn" aria-label="この画面の使い方">ⓘ</button>
   </header>
 
   <main id="screen"></main>
+
+  <div id="help-modal" class="help-modal hidden">
+    <div class="help-backdrop" id="help-backdrop"></div>
+    <div class="help-panel">
+      <div class="help-head">
+        <h2 id="help-title"></h2>
+        <button id="help-close" class="header-btn" aria-label="閉じる">✕</button>
+      </div>
+      <div id="help-body" class="help-body"></div>
+    </div>
+  </div>
 
   <footer id="footer-bar" class="footer-bar hidden">
     <div id="footer-progress" class="footer-progress"></div>

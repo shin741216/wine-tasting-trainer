@@ -1,6 +1,6 @@
 // オフライン対応 Service Worker
 // CACHE_VERSION を上げると全端末で次回起動時に新しいファイルへ更新されます
-const CACHE_VERSION = "v12";
+const CACHE_VERSION = "v13";
 const CACHE_NAME = `wine-trainer-${CACHE_VERSION}`;
 const ASSETS = [
   "./",

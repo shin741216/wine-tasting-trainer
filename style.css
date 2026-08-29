@@ -275,6 +275,56 @@ main { padding: 16px 14px 120px; max-width: 640px; margin: 0 auto; }
 .cmp-group td { background: var(--wine); padding: 5px 10px; }
 .cmp-diff { color: var(--wrong); font-weight: 700; }
 
+/* ---------- help modal ---------- */
+.help-modal { position: fixed; inset: 0; z-index: 50; }
+.help-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,.45); }
+.help-panel {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  width: min(92vw, 480px); max-height: 78vh; overflow-y: auto;
+  background: var(--card); border-radius: 16px; padding: 16px;
+  box-shadow: 0 10px 40px rgba(0,0,0,.25);
+}
+.help-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
+.help-head h2 { font-size: 1rem; color: var(--wine); }
+.help-head .header-btn { color: var(--muted); }
+.help-body { font-size: .87rem; line-height: 1.7; }
+.help-body p { margin: 8px 0; }
+.help-body ul { margin: 8px 0 8px 4px; padding-left: 16px; }
+.help-body li { margin: 6px 0; }
+.help-body b { color: var(--wine); }
+
+/* ---------- practice results (一時保存) ---------- */
+.pr-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 0; border-bottom: 1px dashed var(--border);
+  font-size: .85rem;
+}
+.pr-name { flex: 1; font-weight: 700; line-height: 1.4; }
+.pr-blind {
+  display: inline-block; margin-left: 6px;
+  background: var(--chip-bg); color: var(--muted);
+  font-size: .65rem; font-weight: 700; border-radius: 999px; padding: 1px 7px;
+}
+.pr-score { font-weight: 800; color: var(--wine); white-space: nowrap; }
+.pr-time { font-size: .72rem; color: var(--muted); white-space: nowrap; }
+.pr-clear { width: 100%; margin-top: 12px; }
+
+/* ---------- compare accordion ---------- */
+.cmp-acc {
+  background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+  margin-bottom: 10px; overflow: hidden;
+}
+.cmp-acc summary {
+  cursor: pointer; list-style: none;
+  padding: 12px 14px; font-weight: 700; font-size: .92rem;
+  display: flex; align-items: center; gap: 6px;
+}
+.cmp-acc summary::-webkit-details-marker { display: none; }
+.cmp-acc summary::after { content: "▾"; margin-left: auto; color: var(--muted); transition: transform .2s; }
+.cmp-acc:not([open]) summary::after { transform: rotate(-90deg); }
+.cmp-acc-body { padding: 0 14px 14px; margin: 0; }
+#cmp-body { margin-top: 4px; }
+
 /* ---------- result ---------- */
 .score-card {
   background: linear-gradient(135deg, #5c1a2e, #8a3050); color: #fff;

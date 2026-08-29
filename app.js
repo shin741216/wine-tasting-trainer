@@ -3,9 +3,105 @@
 const screen = document.getElementById("screen");
 const headerTitle = document.getElementById("header-title");
 const btnHome = document.getElementById("btn-home");
+const btnInfo = document.getElementById("btn-info");
 const footerBar = document.getElementById("footer-bar");
 const footerProgress = document.getElementById("footer-progress");
 const btnGrade = document.getElementById("btn-grade");
+
+// ---------------- help (使い方) ----------------
+const HELP = {
+  launcher: { title: "このアプリについて", body: `
+    <p>ワインエキスパート2次試験（テイスティング）対策の練習アプリです。タイルをタップして機能を選びます。</p>
+    <ul>
+      <li>📝 <b>コメント選択練習</b> — 本番形式の用語シートで解答し採点</li>
+      <li>🃏 <b>品種フラッシュカード</b> — 品種の特徴を暗記</li>
+      <li>❓ <b>品種当てクイズ</b> — コメントから品種を推測</li>
+      <li>📊 <b>出題傾向データ</b> — 過去15年の出題実績</li>
+      <li>📖 <b>模範解答 比較閲覧</b> — 品種×生産地で正解を見比べ</li>
+    </ul>
+    <p>各画面の右上 ⓘ でその画面の使い方が見られます。</p>` },
+  comment: { title: "コメント選択練習の使い方", body: `
+    <p>本番の解答用紙を模した用語シートでコメントを作り、模範解答と照合して採点する練習です。</p>
+    <ul>
+      <li><b>ワインを選ぶ</b> — 銘柄を見て選ぶか、「ランダム出題」でブラインド練習ができます。ランダムは白・赤を選んでから出題されます</li>
+      <li><b>ブラインドテイスティングでの使い方</b> — 実際にワインを飲みながらランダム出題でシートを記入→採点すると本番に近い練習になります</li>
+      <li><b>結果の一時保存</b> — 採点結果は自動で一時保存され、この画面に一覧表示されます。複数本の練習が終わったら「練習完了」で記録を削除できます</li>
+    </ul>` },
+  sheet: { title: "用語シートの使い方", body: `
+    <p>各項目で指定された数（例：2/2）の用語を選びます。</p>
+    <ul>
+      <li>選択数の上限に達した状態で別の用語をタップすると、最も古い選択と入れ替わります</li>
+      <li>全項目を記入したら画面下の「採点する」をタップ。未記入があっても採点できます</li>
+      <li>中断するときは左上の ◀（記入内容は破棄されます）</li>
+      <li>採点結果は「正解（緑）／選び漏れ（黄）／誤って選択（赤）」で色分け表示されます</li>
+    </ul>
+    <p>※「いくつ選べ」の数は本番で年により変わるため目安です。</p>` },
+  flashcards: { title: "品種フラッシュカードの使い方", body: `
+    <ul>
+      <li><b>カードをタップ</b>すると裏返り、外観・香り・味わい・決め手・主産地が表示されます</li>
+      <li><b>すべて／白／赤</b> と <b>生産地</b> の2軸で絞り込めます</li>
+      <li>複数の生産国を持つ品種は、裏面に<b>生産地による違い</b>が表示されます。生産地フィルタ選択中はその国がハイライトされます</li>
+      <li>🔀 シャッフルで並びをランダムにできます</li>
+    </ul>` },
+  quiz: { title: "品種当てクイズの使い方", body: `
+    <ul>
+      <li>出題範囲（すべて／白のみ／赤のみ）を選ぶとスタート。出題順はランダムです</li>
+      <li>テイスティングコメントを読み、4択から品種を選びます</li>
+      <li>回答すると正誤と正解ワインの解説が表示されます</li>
+      <li>全問終了後にスコアが表示されます。中断は左上の ◀</li>
+    </ul>` },
+  stats: { title: "出題傾向データの見方", body: `
+    <ul>
+      <li><b>品種別ランキング</b> — 2011〜2025年の出題回数。バーの下の数字は出題年です</li>
+      <li><b>年度別の出題</b> — 各年の出題ワイン（🥂白・🍷赤・🥃その他の酒類）</li>
+    </ul>
+    <p>出典はワイン受験.com「過去の出題ワインの品種と生産国」。頻出品種から優先して対策するのがおすすめです。</p>` },
+  compare: { title: "模範解答 比較閲覧の使い方", body: `
+    <ul>
+      <li>「白ワイン品種」「赤ワイン品種」のタブを開いて品種を選びます</li>
+      <li>その品種の模範解答が<b>生産地ごとに横並びの表</b>で表示されます（横スクロール可）</li>
+      <li><b>赤色の用語</b>は生産地間で答えが異なる箇所＝生産地当ての決め手です</li>
+    </ul>
+    <p>※ 模範解答はAIが試験対策の定石に基づき作成した参考解答です。</p>` },
+};
+
+function viewHelpKey() {
+  if (view === "wineList" || view === "result") return "comment";
+  if (view === "sheet") return "sheet";
+  if (view === "flashcards") return "flashcards";
+  if (view === "quizStart" || view === "quiz") return "quiz";
+  if (view === "stats") return "stats";
+  if (view === "compare") return "compare";
+  return "launcher";
+}
+
+function openHelp(key) {
+  const h = HELP[key];
+  if (!h) return;
+  document.getElementById("help-title").textContent = h.title;
+  document.getElementById("help-body").innerHTML = h.body;
+  document.getElementById("help-modal").classList.remove("hidden");
+}
+btnInfo.addEventListener("click", () => openHelp(viewHelpKey()));
+document.getElementById("help-close").addEventListener("click", () =>
+  document.getElementById("help-modal").classList.add("hidden"));
+document.getElementById("help-backdrop").addEventListener("click", () =>
+  document.getElementById("help-modal").classList.add("hidden"));
+
+// ---------------- 練習結果の一時保存 ----------------
+const RESULTS_KEY = "wtt-practice-results";
+
+function loadResults() {
+  try { return JSON.parse(localStorage.getItem(RESULTS_KEY)) || []; } catch { return []; }
+}
+function savePracticeResult(entry) {
+  const list = loadResults();
+  list.push(entry);
+  try { localStorage.setItem(RESULTS_KEY, JSON.stringify(list)); } catch {}
+}
+function clearResults() {
+  localStorage.removeItem(RESULTS_KEY);
+}
 
 let currentWine = null;
 let selections = {}; // sectionId -> Set of terms
@@ -20,7 +116,7 @@ btnHome.addEventListener("click", () => {
   } else if (view === "quiz") {
     if (!confirm("クイズを中断してメニューに戻りますか？")) return;
     showQuizStart();
-  } else if (view === "wineList" || view === "flashcards" || view === "quizStart" || view === "stats" || view === "compare") {
+  } else if (view === "wineList" || view === "flashcards" || view === "quizStart" || view === "stats" || view === "compare" || view === "guide") {
     showLauncher();
   }
 });
@@ -34,6 +130,7 @@ const FEATURES = [
   { id: "quiz", icon: "❓", title: "品種当てクイズ", desc: "コメントから品種を推測", active: true },
   { id: "stats", icon: "📊", title: "過去の出題品種 傾向データ", desc: "出題実績をチェック", active: true },
   { id: "compare", icon: "📖", title: "模範解答 比較閲覧", desc: "品種×生産地でコメント正解を見比べ", active: true },
+  { id: "guide", icon: "📘", title: "使い方", desc: "各機能の説明・操作方法", active: true },
 ];
 
 function showLauncher() {
@@ -65,6 +162,7 @@ function showLauncher() {
       if (tile.dataset.feature === "quiz") showQuizStart();
       if (tile.dataset.feature === "stats") showStats();
       if (tile.dataset.feature === "compare") showCompare();
+      if (tile.dataset.feature === "guide") showGuide();
     });
   });
   window.scrollTo(0, 0);
@@ -425,6 +523,22 @@ function showStats() {
   window.scrollTo(0, 0);
 }
 
+// ---------------- guide (使い方ページ) ----------------
+function showGuide() {
+  view = "guide";
+  headerTitle.textContent = "使い方";
+  btnHome.classList.remove("hidden");
+  footerBar.classList.add("hidden");
+  const order = ["launcher", "comment", "sheet", "flashcards", "quiz", "stats", "compare"];
+  screen.innerHTML = order.map(k => `
+    <div class="section-card">
+      <div class="section-head"><span class="section-title">${HELP[k].title}</span></div>
+      <div class="help-body">${HELP[k].body}</div>
+    </div>
+  `).join("");
+  window.scrollTo(0, 0);
+}
+
 // ---------------- compare (模範解答 比較閲覧) ----------------
 let cmpGrape = null;
 
@@ -442,12 +556,23 @@ function showCompare() {
     }
   }
   if (!cmpGrape || !grapes.some(g => g.name === cmpGrape)) cmpGrape = grapes[0].name;
+  const currentColor = grapes.find(g => g.name === cmpGrape).color;
+
+  const grapeChipsHtml = (color) => grapes.filter(g => g.color === color)
+    .map(g => `<button class="chip cmp-grape" data-g="${g.name}">${g.name}</button>`).join("");
+  const whiteGrapes = grapes.filter(g => g.color === "white");
+  const redGrapes = grapes.filter(g => g.color === "red");
 
   screen.innerHTML = `
     <p class="home-lead">品種を選ぶと、生産地ごとの模範解答コメントを並べて比較できます。<span class="cmp-diff">色付き</span>の用語は生産地間で答えが異なる箇所です。</p>
-    <div class="fc-filters">
-      ${grapes.map(g => `<button class="chip cmp-grape" data-g="${g.name}">${g.color === "white" ? "🥂" : "🍷"} ${g.name}</button>`).join("")}
-    </div>
+    <details class="cmp-acc" ${currentColor === "white" ? "open" : ""}>
+      <summary>🥂 白ワイン品種（${whiteGrapes.length}）</summary>
+      <div class="fc-filters cmp-acc-body">${grapeChipsHtml("white")}</div>
+    </details>
+    <details class="cmp-acc" ${currentColor === "red" ? "open" : ""}>
+      <summary>🍷 赤ワイン品種（${redGrapes.length}）</summary>
+      <div class="fc-filters cmp-acc-body">${grapeChipsHtml("red")}</div>
+    </details>
     <div id="cmp-body"></div>
     <p class="reveal-note">※ 模範解答はAIが試験対策の定石に基づき作成した参考解答です。お手元の教材と併せてご活用ください。</p>
   `;
@@ -513,16 +638,41 @@ function showHome() {
   const whites = WINES.filter(w => w.color === "white");
   const reds = WINES.filter(w => w.color === "red");
 
+  const results = loadResults();
+  const resultsHtml = results.length === 0 ? "" : `
+    <h2 class="wine-section-title">練習結果（一時保存中 ${results.length}件）</h2>
+    <div class="section-card">
+      ${results.map(r => `
+        <div class="pr-row">
+          <span>${r.color === "white" ? "🥂" : "🍷"}</span>
+          <span class="pr-name">${r.name}${r.blind ? '<span class="pr-blind">ブラインド</span>' : ""}</span>
+          <span class="pr-score">${r.pct}点</span>
+          <span class="pr-time">${new Date(r.t).toLocaleString("ja-JP", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" })}</span>
+        </div>
+      `).join("")}
+      <button class="btn-secondary pr-clear" id="btn-finish-practice">✅ 練習完了（記録を削除）</button>
+    </div>
+  `;
+
   screen.innerHTML = `
     <p class="home-lead">ワインを選んで、本番形式の用語選択シートでコメントを作成しましょう。採点すると模範解答と照合できます。</p>
-    <button class="wine-card random" data-random="1">
-      <span class="glass">🎲</span>
+    <button class="wine-card random" data-random="white">
+      <span class="glass">🥂</span>
       <span>
-        <span class="wine-label">ランダム出題（銘柄非公開）</span>
-        <span class="wine-sub" style="display:block">どのワインか伏せた状態で出題します</span>
+        <span class="wine-label">白ワインからランダム出題（銘柄非公開）</span>
+        <span class="wine-sub" style="display:block">ブラインドテイスティング用。白のどれかを伏せて出題</span>
       </span>
       <span class="chev">▶</span>
     </button>
+    <button class="wine-card random" data-random="red">
+      <span class="glass">🍷</span>
+      <span>
+        <span class="wine-label">赤ワインからランダム出題（銘柄非公開）</span>
+        <span class="wine-sub" style="display:block">ブラインドテイスティング用。赤のどれかを伏せて出題</span>
+      </span>
+      <span class="chev">▶</span>
+    </button>
+    ${resultsHtml}
     <h2 class="wine-section-title">白ワイン</h2>
     ${whites.map(wineCardHtml).join("")}
     <h2 class="wine-section-title">赤ワイン</h2>
@@ -533,13 +683,22 @@ function showHome() {
   screen.querySelectorAll(".wine-card").forEach(card => {
     card.addEventListener("click", () => {
       if (card.dataset.random) {
-        const w = WINES[Math.floor(Math.random() * WINES.length)];
+        const pool = WINES.filter(w => w.color === card.dataset.random);
+        const w = pool[Math.floor(Math.random() * pool.length)];
         startPractice(w, true);
       } else {
         startPractice(WINES.find(w => w.id === card.dataset.id), false);
       }
     });
   });
+  const finishBtn = document.getElementById("btn-finish-practice");
+  if (finishBtn) {
+    finishBtn.addEventListener("click", () => {
+      if (!confirm(`一時保存中の練習結果 ${results.length}件 を削除して練習を完了しますか？`)) return;
+      clearResults();
+      showHome();
+    });
+  }
   window.scrollTo(0, 0);
 }
 
@@ -685,6 +844,10 @@ function showResult() {
   }
 
   const pct = totalModel ? Math.round((totalHit / totalModel) * 100) : 0;
+  savePracticeResult({
+    t: Date.now(), name: wine.name, color: wine.color,
+    blind: !!wine._blind, pct, hit: totalHit, total: totalModel,
+  });
   screen.innerHTML = `
     <div class="score-card">
       <div class="s-wine">${wine.name}</div>
