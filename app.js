@@ -57,7 +57,7 @@ const HELP = {
     </ul>
     <p>出典はワイン受験.com「過去の出題ワインの品種と生産国」。頻出品種から優先して対策するのがおすすめです。</p>` },
   data: { title: "収録データについて（重要）", body: `
-    <p>このアプリの出力が「何の情報をもとにしているか」の説明です。</p>
+    <p>このアプリの出力が「何の情報をもとにしているか」の説明です。画面の各所に表示される出所バッジで見分けられます：<span class="src-badge ai">🤖 AI参考解答</span>＝AI作成の参考データ、<span class="src-badge real">📜 実物過去問</span>＝本試験で実際に発表された正解・実績データ。</p>
     <ul>
       <li><b>用語選択シート</b> — ワイン受験.com公開の「テイスティング解答用紙 2026年版」（白・赤）に項目・用語・並び順を準拠しています。ただし各項目の「いくつ選べ」の数は本番で年により変わるため、本アプリ独自の目安です</li>
       <li><b>模範解答（44ワイン）</b> — コメント選択練習の採点・品種当てクイズ・模範解答比較閲覧で使われる正解データです。<b>実際の試験の正解ではなく、AI（Claude）がソムリエ・ワインエキスパート試験対策の定石に基づいて作成した参考解答</b>です。過去15年（2011〜2025年）に出題された品種×生産地の組み合わせは全てカバーしています</li>
@@ -106,6 +106,14 @@ document.getElementById("help-close").addEventListener("click", () =>
 document.getElementById("help-backdrop").addEventListener("click", () =>
   document.getElementById("help-modal").classList.add("hidden"));
 
+// ---------------- 解答の出所バッジ ----------------
+// AI参考解答（WINES/GRAPES）と実物の過去問正解（PAST_ANSWERS）を見分けるための表示
+function srcBadge(kind) {
+  return kind === "real"
+    ? '<span class="src-badge real">📜 実物過去問</span>'
+    : '<span class="src-badge ai">🤖 AI参考解答</span>';
+}
+
 // ---------------- 練習結果の一時保存 ----------------
 const RESULTS_KEY = "wtt-practice-results";
 
@@ -143,12 +151,12 @@ btnGrade.addEventListener("click", () => showResult());
 
 // ---------------- launcher ----------------
 const FEATURES = [
-  { id: "comment", icon: "📝", title: "テイスティングコメント選択練習", desc: "本番の解答用紙を模した用語シートで練習", active: true },
-  { id: "flashcard", icon: "🃏", title: "主要品種フラッシュカード", desc: "品種ごとの特徴を暗記", active: true },
-  { id: "quiz", icon: "❓", title: "品種当てクイズ", desc: "コメントから品種を推測", active: true },
-  { id: "stats", icon: "📊", title: "過去の出題品種 傾向データ", desc: "出題実績をチェック", active: true },
-  { id: "compare", icon: "📖", title: "模範解答 比較閲覧", desc: "品種×生産地でコメント正解を見比べ", active: true },
-  { id: "archive", icon: "🗄️", title: "過去問アーカイブ", desc: "本試験の実物の正解（2015・2017・2018年）", active: true },
+  { id: "comment", icon: "📝", title: "テイスティングコメント選択練習", desc: "本番の解答用紙を模した用語シートで練習", active: true, src: "ai" },
+  { id: "flashcard", icon: "🃏", title: "主要品種フラッシュカード", desc: "品種ごとの特徴を暗記", active: true, src: "ai" },
+  { id: "quiz", icon: "❓", title: "品種当てクイズ", desc: "コメントから品種を推測", active: true, src: "ai" },
+  { id: "stats", icon: "📊", title: "過去の出題品種 傾向データ", desc: "出題実績をチェック", active: true, src: "real" },
+  { id: "compare", icon: "📖", title: "模範解答 比較閲覧", desc: "品種×生産地でコメント正解を見比べ", active: true, src: "ai" },
+  { id: "archive", icon: "🗄️", title: "過去問アーカイブ", desc: "本試験の実物の正解（2015・2017・2018年）", active: true, src: "real" },
   { id: "guide", icon: "📘", title: "使い方", desc: "各機能の説明・操作方法", active: true },
 ];
 
@@ -169,6 +177,7 @@ function showLauncher() {
           <span class="tile-icon">${f.icon}</span>
           <span class="tile-title">${f.title}</span>
           <span class="tile-desc">${f.desc}</span>
+          ${f.src ? srcBadge(f.src) : ""}
         </button>
       `).join("")}
     </div>
@@ -318,7 +327,7 @@ function renderFlashcard() {
     </dd>
   ` : "";
   document.getElementById("fc-back").innerHTML = `
-    <div class="fc-back-name">${g.name}</div>
+    <div class="fc-back-name">${g.name} ${srcBadge("ai")}</div>
     <dl class="fc-facts">
       <dt>👁 外観</dt><dd>${g.appearance}</dd>
       <dt>👃 香り</dt><dd>${g.aroma}</dd>
@@ -439,7 +448,7 @@ function renderQuizQuestion() {
       const fb = document.getElementById("quiz-feedback");
       document.getElementById("quiz-verdict").textContent = isCorrect ? "⭕ 正解！" : "❌ 不正解…";
       document.getElementById("quiz-verdict").className = "quiz-verdict " + (isCorrect ? "good" : "bad");
-      document.getElementById("quiz-explain").textContent = `正解：${wine.name} — ${wine.note}`;
+      document.getElementById("quiz-explain").innerHTML = `${srcBadge("ai")} 正解：${wine.name} — ${wine.note}`;
       const nextBtn = document.getElementById("quiz-next");
       nextBtn.textContent = quizState.index + 1 < quizState.queue.length ? "次の問題へ" : "結果を見る";
       nextBtn.addEventListener("click", () => {
@@ -559,7 +568,7 @@ function showArchive() {
         <div class="cmp-acc-body ar-year">
           ${PAST_ANSWERS.filter(a => a.examYear === y).map((a, i) => `
             <details class="ar-wine">
-              <summary>${a.color === "white" ? "🥂" : "🍷"} ${a.grape}（${a.country}）<span class="ar-vintage">${a.vintage}</span></summary>
+              <summary>${a.color === "white" ? "🥂" : "🍷"} ${a.grape}（${a.country}）<span class="ar-vintage">${a.vintage}</span> ${srcBadge("real")}</summary>
               <div class="ar-body">
                 ${(() => {
                   let html = "", lastG = null;
@@ -621,7 +630,7 @@ function showCompare() {
   const redGrapes = grapes.filter(g => g.color === "red");
 
   screen.innerHTML = `
-    <p class="home-lead">品種を選ぶと、生産地ごとの模範解答コメントを並べて比較できます。<span class="cmp-diff">色付き</span>の用語は生産地間で答えが異なる箇所です。</p>
+    <p class="home-lead">品種を選ぶと、生産地ごとの模範解答コメントを並べて比較できます。<span class="cmp-diff">色付き</span>の用語は生産地間で答えが異なる箇所です。 ${srcBadge("ai")}</p>
     <details class="cmp-acc" ${currentColor === "white" ? "open" : ""}>
       <summary>🥂 白ワイン品種（${whiteGrapes.length}）</summary>
       <div class="fc-filters cmp-acc-body">${grapeChipsHtml("white")}</div>
@@ -787,7 +796,7 @@ function startPractice(wine, blind) {
   const vocab = VOCAB[wine.color];
   let html = `
     <div class="sheet-wine-banner">
-      <div class="b-label">出題ワイン</div>
+      <div class="b-label">出題ワイン ${srcBadge("ai")}</div>
       <div class="b-name">${blind ? (wine.color === "white" ? "白ワイン（銘柄非公開）" : "赤ワイン（銘柄非公開）") : wine.name}</div>
     </div>
   `;
@@ -909,7 +918,7 @@ function showResult() {
     <div class="score-card">
       <div class="s-wine">${wine.name}</div>
       <div class="s-score">${pct}点</div>
-      <div class="s-detail">模範解答 ${totalModel} 語中 ${totalHit} 語一致</div>
+      <div class="s-detail">模範解答 ${totalModel} 語中 ${totalHit} 語一致 ${srcBadge("ai")}</div>
     </div>
     <div class="legend">
       <span class="l-ok">正解（選択して一致）</span>
