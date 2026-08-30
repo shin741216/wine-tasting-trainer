@@ -64,8 +64,15 @@ const HELP = {
       <li><b>品種フラッシュカード（26品種）</b> — 特徴文・生産地による違いも同じくAI執筆の参考情報です</li>
       <li><b>過去の出題実績（2011〜2025年）</b> — 出題傾向データの元データで、ワイン受験.com「過去の出題ワインの品種と生産国」から取得した実績情報です（アプリ内に出典リンクあり）</li>
     </ul>
-    <p><b>実際の本試験の正解を収録していない理由</b>：2019年以降の模範解答は日本ソムリエ協会の会員専用ページで前年分のみ期間限定公開となっており、一般公開されていないためです。</p>
+    <p><b>過去問アーカイブ（21本）</b> — こちらは唯一の実物データで、本試験で実際に発表された正解（2015・2017・2018年出題分）です。2016年は正解未公表、2019年以降は日本ソムリエ協会の会員専用ページで前年分のみ期間限定公開のため、収録できるのはこの3年分です。</p>
     <p>AI作成の参考解答には誤りが含まれる可能性があります。お手元の教材と記述が異なる場合は教材を優先してください。</p>` },
+  archive: { title: "過去問アーカイブの使い方", body: `
+    <ul>
+      <li>本試験で実際に発表された正解（模範解答）を年度別に閲覧できます。<b>AI作成ではない実物のデータ</b>です</li>
+      <li>年度をタップして開き、ワインをタップすると全項目の正解が表示されます</li>
+      <li>収録は一般公開されている2015・2017・2018年出題分（21本、ソムリエ・エキスパート両方の出題を含む）。2016年は正解未公表、2019年以降はJ.S.A.会員限定公開のため収録していません</li>
+      <li>項目・用語は出題当時の解答用紙の様式のままなので、現在のシート（コメント練習）と一部異なります</li>
+    </ul>` },
   compare: { title: "模範解答 比較閲覧の使い方", body: `
     <ul>
       <li>「白ワイン品種」「赤ワイン品種」のタブを開いて品種を選びます</li>
@@ -82,6 +89,7 @@ function viewHelpKey() {
   if (view === "quizStart" || view === "quiz") return "quiz";
   if (view === "stats") return "stats";
   if (view === "compare") return "compare";
+  if (view === "archive") return "archive";
   return "launcher";
 }
 
@@ -126,7 +134,7 @@ btnHome.addEventListener("click", () => {
   } else if (view === "quiz") {
     if (!confirm("クイズを中断してメニューに戻りますか？")) return;
     showQuizStart();
-  } else if (view === "wineList" || view === "flashcards" || view === "quizStart" || view === "stats" || view === "compare" || view === "guide") {
+  } else if (view === "wineList" || view === "flashcards" || view === "quizStart" || view === "stats" || view === "compare" || view === "guide" || view === "archive") {
     showLauncher();
   }
 });
@@ -140,6 +148,7 @@ const FEATURES = [
   { id: "quiz", icon: "❓", title: "品種当てクイズ", desc: "コメントから品種を推測", active: true },
   { id: "stats", icon: "📊", title: "過去の出題品種 傾向データ", desc: "出題実績をチェック", active: true },
   { id: "compare", icon: "📖", title: "模範解答 比較閲覧", desc: "品種×生産地でコメント正解を見比べ", active: true },
+  { id: "archive", icon: "🗄️", title: "過去問アーカイブ", desc: "本試験の実物の正解（2015・2017・2018年）", active: true },
   { id: "guide", icon: "📘", title: "使い方", desc: "各機能の説明・操作方法", active: true },
 ];
 
@@ -173,6 +182,7 @@ function showLauncher() {
       if (tile.dataset.feature === "stats") showStats();
       if (tile.dataset.feature === "compare") showCompare();
       if (tile.dataset.feature === "guide") showGuide();
+      if (tile.dataset.feature === "archive") showArchive();
     });
   });
   window.scrollTo(0, 0);
@@ -533,13 +543,50 @@ function showStats() {
   window.scrollTo(0, 0);
 }
 
+// ---------------- archive (過去問アーカイブ) ----------------
+function showArchive() {
+  view = "archive";
+  headerTitle.textContent = "過去問アーカイブ";
+  btnHome.classList.remove("hidden");
+  footerBar.classList.add("hidden");
+
+  const years = [...new Set(PAST_ANSWERS.map(a => a.examYear))].sort((a, b) => b - a);
+  screen.innerHTML = `
+    <p class="home-lead">本試験で実際に発表された正解（模範解答）です。一般公開されている2015・2017・2018年出題分（全${PAST_ANSWERS.length}本、ソムリエ・ワインエキスパート両方の出題を含む）を収録しています。</p>
+    ${years.map((y, yi) => `
+      <details class="cmp-acc" ${yi === 0 ? "open" : ""}>
+        <summary>📅 ${y}年出題（${PAST_ANSWERS.filter(a => a.examYear === y).length}本）</summary>
+        <div class="cmp-acc-body ar-year">
+          ${PAST_ANSWERS.filter(a => a.examYear === y).map((a, i) => `
+            <details class="ar-wine">
+              <summary>${a.color === "white" ? "🥂" : "🍷"} ${a.grape}（${a.country}）<span class="ar-vintage">${a.vintage}</span></summary>
+              <div class="ar-body">
+                ${(() => {
+                  let html = "", lastG = null;
+                  for (const [g, title, terms] of a.sections) {
+                    if (g !== lastG) { html += `<div class="ar-group">${g}</div>`; lastG = g; }
+                    html += `<div class="ar-row"><span class="ar-title">${title}</span><span class="ar-terms">${terms.join("、")}</span></div>`;
+                  }
+                  return html;
+                })()}
+              </div>
+            </details>
+          `).join("")}
+        </div>
+      </details>
+    `).join("")}
+    <p class="reveal-note">出典: <a href="https://www.wine-jyuken.com/second_exam/kakonoseikai" target="_blank" rel="noopener">ワイン受験.com「過去の出題のテイスティングコメントの正解（模範解答）」</a>。項目・用語は出題当時の解答用紙の様式のままです（現在のシートと一部異なります）。2016年は正解未公表、2019年以降はJ.S.A.会員専用ページのみでの公開のため収録していません。</p>
+  `;
+  window.scrollTo(0, 0);
+}
+
 // ---------------- guide (使い方ページ) ----------------
 function showGuide() {
   view = "guide";
   headerTitle.textContent = "使い方";
   btnHome.classList.remove("hidden");
   footerBar.classList.add("hidden");
-  const order = ["launcher", "data", "comment", "sheet", "flashcards", "quiz", "stats", "compare"];
+  const order = ["launcher", "data", "comment", "sheet", "flashcards", "quiz", "stats", "compare", "archive"];
   screen.innerHTML = order.map(k => `
     <div class="section-card">
       <div class="section-head"><span class="section-title">${HELP[k].title}</span></div>

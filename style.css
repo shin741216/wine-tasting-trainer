@@ -325,6 +325,28 @@ main { padding: 16px 14px 120px; max-width: 640px; margin: 0 auto; }
 .cmp-acc-body { padding: 0 14px 14px; margin: 0; }
 #cmp-body { margin-top: 4px; }
 
+/* ---------- archive ---------- */
+.ar-year { display: flex; flex-direction: column; gap: 8px; }
+.ar-wine { border: 1px solid var(--border); border-radius: 12px; background: var(--bg); overflow: hidden; }
+.ar-wine summary {
+  cursor: pointer; list-style: none;
+  padding: 10px 12px; font-weight: 700; font-size: .88rem;
+}
+.ar-wine summary::-webkit-details-marker { display: none; }
+.ar-vintage { font-size: .72rem; color: var(--muted); font-weight: 600; margin-left: 6px; }
+.ar-body { padding: 0 12px 12px; }
+.ar-group {
+  background: var(--wine); color: #fff; font-size: .75rem; font-weight: 700;
+  border-radius: 8px; padding: 4px 10px; margin: 10px 0 4px;
+}
+.ar-row {
+  display: flex; gap: 10px; padding: 6px 2px;
+  border-bottom: 1px dashed var(--border); font-size: .84rem;
+}
+.ar-row:last-child { border-bottom: none; }
+.ar-title { flex: 0 0 96px; font-weight: 700; color: var(--muted); font-size: .78rem; line-height: 1.5; }
+.ar-terms { flex: 1; line-height: 1.55; }
+
 /* ---------- result ---------- */
 .score-card {
   background: linear-gradient(135deg, #5c1a2e, #8a3050); color: #fff;
