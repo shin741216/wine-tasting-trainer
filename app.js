@@ -97,6 +97,32 @@ const HELP = {
     </ul>
     <p><b>データの出所</b> — 個人ブログ「ニライカナイCH」2026年版 二次試験対策シリーズ（<span class="src-badge teppan">🧭 ブログ分析の定石</span>）です。画面下部に出典リンクがあります。</p>
     <p>⚠ この内容は<b>協会の公式見解ではありません</b>。筆者が過去5年の模範解答から逆算した分析で、採用率の数値も筆者の集計です。実物の正解は「🗄️ 過去問アーカイブ」で確認してください。</p>` },
+  realcmp: { title: "実物正解 品種×年度 横断の使い方", body: `
+    <p>過去問アーカイブの正解（52本）を<b>品種ごとに年度横並び</b>で見比べる画面です。AI参考解答は含みません。</p>
+    <ul>
+      <li>品種のチップを選ぶと、その品種が出題された回の正解が列に並びます（列見出しは 年度・試験区分・番号・生産国・ヴィンテージ）</li>
+      <li><b>色付きの太字</b>は、並んだすべての回で採用された語です。年をまたいで共通する語＝その品種の定石が、ブログの主張ではなく実データで見えます</li>
+      <li>横に長い表は横スクロールできます</li>
+      <li>「果実」「花・植物」が分かれていた旧様式（2015〜2018年）は「果実・花・植物」にまとめて並べています</li>
+    </ul>
+    <p><b>データの出所</b> — 📜 一般公開の正解PDF（2015・2017・2018年）と 📝 個人ブログの転記（2021〜2025年・未検証）を混ぜて並べています。列見出しのバッジで区別できます。</p>` },
+  termstats: { title: "用語の採用率の見方", body: `
+    <p>過去問アーカイブの正解から、<b>項目ごとに各用語が何本の正解で採用されたか</b>を数えた画面です。</p>
+    <ul>
+      <li>白／赤と、集計範囲（全年度／2021〜2025年の現行様式／2015〜2018年の旧様式）を切り替えられます</li>
+      <li>バーの長さは「その用語を含む正解の本数 ÷ 集計対象の本数」です。協会の正解は1項目に複数の語を含むので、合計は100%を超えます</li>
+      <li>「タンニン 力強い 100%」のようなテッパンの主張を、自分の手元のデータで検証する用途を想定しています</li>
+    </ul>
+    <p><b>データの出所</b> — 📜 一般公開の正解PDF と 📝 個人ブログの転記（未検証）を合算しています。旧様式の用語（「やや強め」など）はそのまま数えているので、現行の用語シートで比べたいときは範囲を「2021〜2025年」に絞ってください。</p>` },
+  examset: { title: "本番セット練習の使い方", body: `
+    <p>実際の試験と同じ組み合わせ・順番で通し練習をする画面です。年度と試験区分（ワインエキスパートは4本、ソムリエは3本）を選ぶと、その回の出題を番号順に出します。</p>
+    <ul>
+      <li>既定はブラインド（銘柄非公開・白か赤かだけ表示）。「銘柄を表示する」をオンにすると名前を見ながら練習できます</li>
+      <li>1本ごとに採点結果が出て、「次のワインへ」で進みます。最後に全本のスコアと平均が出ます</li>
+      <li>途中でやめるときは左上の ◀。セットは破棄されます</li>
+      <li>模範解答が用語シートに載せられない回（2017年ヴィンテージなど）は、その本だけ飛ばして「3本中2本」のように出します</li>
+    </ul>
+    <p><b>データの出所</b> — 採点に使う正解はすべて <span class="src-badge transcribed">📝 転記・未検証</span>（個人ブログが転記した2021〜2025年の模範解答を用語シートの語に合わせたもの）です。読み替えた箇所は各採点結果の注記に出ます。</p>` },
   compare: { title: "模範解答 比較閲覧の使い方", body: `
     <ul>
       <li>「白ワイン品種」「赤ワイン品種」のタブを開いて品種を選びます</li>
@@ -115,6 +141,9 @@ function viewHelpKey() {
   if (view === "compare") return "compare";
   if (view === "archive") return "archive";
   if (view === "teppan") return "teppan";
+  if (view === "realcmp") return "realcmp";
+  if (view === "termstats") return "termstats";
+  if (view === "examset" || view === "setSummary") return "examset";
   return "launcher";
 }
 
@@ -176,7 +205,13 @@ let selections = {}; // sectionId -> Set of terms
 let view = "launcher"; // launcher | wineList | sheet | result | flashcards | quizStart | quiz
 
 btnHome.addEventListener("click", () => {
-  if (view === "sheet") {
+  if (setState && (view === "sheet" || view === "result")) {
+    if (view === "sheet" && !confirm("本番セット練習を中断してセット一覧に戻りますか？（このセットの記録は破棄されます）")) return;
+    setState = null;
+    showExamSets();
+  } else if (view === "setSummary") {
+    showExamSets();
+  } else if (view === "sheet") {
     if (!confirm("練習を中断してワイン選択に戻りますか？")) return;
     showHome();
   } else if (view === "result") {
@@ -203,6 +238,9 @@ const FEATURES = [
   { id: "stats", icon: "📊", title: "過去の出題品種 傾向データ", desc: "出題実績をチェック", active: true, src: "real" },
   { id: "compare", icon: "📖", title: "模範解答 比較閲覧", desc: "品種×生産地でコメント正解を見比べ", active: true, src: "ai" },
   { id: "archive", icon: "🗄️", title: "過去問アーカイブ", desc: "本試験の実物の正解（2015〜2025年の52本）", active: true, src: "real" },
+  { id: "realcmp", icon: "🔍", title: "実物正解 品種×年度 横断", desc: "同じ品種の模範解答を年度横並びで見比べ、共通する語を探す", active: true, src: "real" },
+  { id: "termstats", icon: "📈", title: "用語の採用率", desc: "52本の実物正解から、項目ごとに各用語が採用された回数を集計", active: true, src: "real" },
+  { id: "examset", icon: "🎓", title: "本番セット練習", desc: "年度と試験区分を選び、その回の出題を番号順にブラインドで通す", active: true, src: "transcribed" },
   { id: "guide", icon: "📘", title: "使い方", desc: "各機能の説明・操作方法", active: true },
 ];
 
@@ -239,6 +277,9 @@ function showLauncher() {
       if (tile.dataset.feature === "guide") showGuide();
       if (tile.dataset.feature === "archive") showArchive();
       if (tile.dataset.feature === "teppan") showTeppan();
+      if (tile.dataset.feature === "realcmp") showRealCompare();
+      if (tile.dataset.feature === "termstats") showTermStats();
+      if (tile.dataset.feature === "examset") showExamSets();
     });
   });
   window.scrollTo(0, 0);
@@ -308,6 +349,248 @@ function renderTeppan() {
       window.scrollTo(0, 0);
     });
   });
+  window.scrollTo(0, 0);
+}
+
+// ---------------- 過去問アーカイブの正規化（横断ビュー・採用率で共用） ----------------
+// 旧様式（2015〜2018年）と現行様式で項目名が違う箇所を寄せる
+const AR_ITEM_ALIAS = {
+  "果実": "果実・花・植物", "花・植物": "果実・花・植物",
+  "芳香・香辛料・化学物質": "香辛料・芳香・化学物質",
+};
+const AR_ITEMS = {
+  white: ["清澄度", "輝き", "色調", "濃淡", "粘性", "外観の印象", "第一印象", "果実・花・植物", "香辛料・芳香・化学物質", "香りの印象",
+          "アタック", "甘み", "酸味", "苦味", "バランス", "アルコール", "余韻", "評価", "適正温度", "グラス"],
+  red:   ["清澄度", "輝き", "色調", "濃淡", "粘性", "外観の印象", "第一印象", "果実・花・植物", "香辛料・芳香・化学物質", "香りの印象",
+          "アタック", "甘み", "酸味", "タンニン分", "バランス", "アルコール", "余韻", "評価", "適正温度", "グラス"],
+};
+const AR_GRAPE_ALIAS = { "メルロー": "メルロ", "シラー/シラーズ": "シラー", "シラーズ": "シラー", "サンジョベーゼ": "サンジョヴェーゼ" };
+function arGrape(a) { const g = a.grape.replace(/[（(].*$/, ""); return AR_GRAPE_ALIAS[g] || g; }
+function arItemMap(a) {
+  const m = {};
+  for (const [, title, terms] of a.sections) {
+    const k = AR_ITEM_ALIAS[title] || title;
+    (m[k] = m[k] || []).push(...terms.filter(t => !m[k].includes(t)));
+  }
+  return m;
+}
+function arColLabel(a) {
+  const circled = ["", "①", "②", "③", "④", "⑤"];
+  const e = a.exam === "sommelier" ? "ソムリエ" : a.exam === "we" ? "WE" : "";
+  return `${a.examYear}年 ${e}${circled[a.no] || ""}`;
+}
+
+// ---------------- realcmp (実物正解 品種×年度 横断) ----------------
+let rcGrape = null;
+
+function showRealCompare() {
+  view = "realcmp";
+  headerTitle.textContent = "実物正解 品種×年度";
+  btnHome.classList.remove("hidden");
+  footerBar.classList.add("hidden");
+
+  const counts = new Map();
+  for (const a of PAST_ANSWERS) { const g = arGrape(a); counts.set(g, (counts.get(g) || 0) + 1); }
+  const order = [...VOCAB.white.find(s => s.id === "grape").terms.map(g => ({ g, color: "white" })),
+                 ...VOCAB.red.find(s => s.id === "grape").terms.map(g => ({ g: g.replace(/（.*$/, ""), color: "red" }))];
+  const grapes = [];
+  for (const { g, color } of order) if (counts.has(g) && !grapes.some(x => x.g === g)) grapes.push({ g, color, n: counts.get(g) });
+  for (const [g, n] of counts) if (!grapes.some(x => x.g === g)) grapes.push({ g, color: PAST_ANSWERS.find(a => arGrape(a) === g).color, n });
+  if (!rcGrape || !grapes.some(x => x.g === rcGrape)) rcGrape = grapes.sort((a, b) => b.n - a.n)[0].g;
+  const chips = color => grapes.filter(x => x.color === color).sort((a, b) => b.n - a.n)
+    .map(x => `<button class="chip rc-grape ${x.g === rcGrape ? "on" : ""}" data-g="${x.g}">${x.g}<span class="rc-n">${x.n}</span></button>`).join("");
+
+  screen.innerHTML = `
+    <p class="home-lead">品種を選ぶと、その品種が出題された回の<b>実物の模範解答</b>が年度横並びで表示されます。<span class="rc-common">色付きの太字</span>は並んだ全回で採用された語です。</p>
+    <details class="cmp-acc" open><summary>🥂 白ワイン品種</summary><div class="fc-filters cmp-acc-body">${chips("white")}</div></details>
+    <details class="cmp-acc" open><summary>🍷 赤ワイン品種</summary><div class="fc-filters cmp-acc-body">${chips("red")}</div></details>
+    <div id="rc-body"></div>
+    <p class="reveal-note"><b>データの出所</b> — 過去問アーカイブと同じ52本です。📜 は一般公開の正解PDF、📝 は個人ブログの転記（未検証）。旧様式の「果実」「花・植物」は「果実・花・植物」にまとめて並べています。</p>
+  `;
+  screen.querySelectorAll(".rc-grape").forEach(b => b.addEventListener("click", () => {
+    rcGrape = b.dataset.g;
+    screen.querySelectorAll(".rc-grape").forEach(x => x.classList.toggle("on", x.dataset.g === rcGrape));
+    renderRealCompare();
+  }));
+  renderRealCompare();
+  window.scrollTo(0, 0);
+}
+
+function renderRealCompare() {
+  const list = PAST_ANSWERS.filter(a => arGrape(a) === rcGrape)
+    .sort((a, b) => b.examYear - a.examYear || ((a.exam === "we") - (b.exam === "we")) || ((a.no || 0) - (b.no || 0)));
+  const color = list[0].color;
+  const maps = list.map(arItemMap);
+  const items = [...AR_ITEMS[color]];
+  for (const m of maps) for (const k of Object.keys(m)) if (!items.includes(k)) items.push(k);
+  const commonCount = {};
+  let rows = "";
+  for (const item of items) {
+    const cells = maps.map(m => m[item] || []);
+    const common = list.length >= 2 ? cells[0].filter(t => cells.every(c => c.includes(t))) : [];
+    commonCount[item] = common.length;
+    rows += `<tr><th class="rc-item">${item}</th>${cells.map(c => `<td>${c.map(t => `<span class="${common.includes(t) ? "rc-common" : ""}">${t}</span>`).join("、") || "<span class='rc-none'>—</span>"}</td>`).join("")}</tr>`;
+  }
+  const totalCommon = Object.values(commonCount).reduce((s, n) => s + n, 0);
+  document.getElementById("rc-body").innerHTML = `
+    <div class="section-card">
+      <div class="section-head"><span class="section-title">${color === "white" ? "🥂" : "🍷"} ${rcGrape}（${list.length}回）</span></div>
+      ${list.length >= 2 ? `<p class="rc-summary">${list.length}回すべてで採用された語: <b>${totalCommon}語</b></p>` : `<p class="rc-summary">出題は1回のみです。比較対象がないため共通語は出しません。</p>`}
+      <div class="rc-wrap"><table class="rc-table">
+        <thead><tr><th class="rc-item"></th>${list.map(a => `<th>${arColLabel(a)}<br><span class="rc-sub">${a.country}・${a.vintage.replace(/（.*$/, "")}</span><br>${srcBadge(a.source === "blog" ? "transcribed" : "real")}</th>`).join("")}</tr></thead>
+        <tbody>${rows}</tbody>
+      </table></div>
+    </div>
+  `;
+}
+
+// ---------------- termstats (用語の採用率) ----------------
+const tsState = { color: "white", scope: "all" };
+
+function showTermStats() {
+  view = "termstats";
+  headerTitle.textContent = "用語の採用率";
+  btnHome.classList.remove("hidden");
+  footerBar.classList.add("hidden");
+  screen.innerHTML = `
+    <p class="home-lead">過去問アーカイブの正解（52本）から、項目ごとに<b>各用語が何本の正解で採用されたか</b>を数えています。協会の正解は1項目に複数の語を含むため、合計は100%を超えます。</p>
+    <div class="fc-filters">
+      <button class="chip ts-color" data-c="white">🥂 白</button>
+      <button class="chip ts-color" data-c="red">🍷 赤</button>
+    </div>
+    <div class="fc-filters">
+      <button class="chip ts-scope" data-s="all">全年度</button>
+      <button class="chip ts-scope" data-s="recent">2021〜2025年（現行様式）</button>
+      <button class="chip ts-scope" data-s="old">2015〜2018年（旧様式）</button>
+    </div>
+    <div id="ts-body"></div>
+    <p class="reveal-note"><b>データの出所</b> — 過去問アーカイブと同じ52本（📜 一般公開の正解PDF＋📝 個人ブログの転記・未検証）を合算しています。旧様式の用語はそのまま数えているので、現行の用語シートで比べるときは範囲を「2021〜2025年」に絞ってください。</p>
+  `;
+  screen.querySelectorAll(".ts-color").forEach(b => b.addEventListener("click", () => { tsState.color = b.dataset.c; renderTermStats(); }));
+  screen.querySelectorAll(".ts-scope").forEach(b => b.addEventListener("click", () => { tsState.scope = b.dataset.s; renderTermStats(); }));
+  renderTermStats();
+  window.scrollTo(0, 0);
+}
+
+function renderTermStats() {
+  screen.querySelectorAll(".ts-color").forEach(b => b.classList.toggle("on", b.dataset.c === tsState.color));
+  screen.querySelectorAll(".ts-scope").forEach(b => b.classList.toggle("on", b.dataset.s === tsState.scope));
+  const list = PAST_ANSWERS.filter(a => a.color === tsState.color &&
+    (tsState.scope === "all" || (tsState.scope === "recent" ? a.examYear >= 2021 : a.examYear <= 2018)));
+  const n = list.length;
+  const maps = list.map(arItemMap);
+  const items = [...AR_ITEMS[tsState.color]];
+  for (const m of maps) for (const k of Object.keys(m)) if (!items.includes(k)) items.push(k);
+  let html = `<p class="ts-n">集計対象 <b>${n}本</b>（${tsState.color === "white" ? "白" : "赤"}・${{ all: "全年度", recent: "2021〜2025年", old: "2015〜2018年" }[tsState.scope]}）</p>`;
+  for (const item of items) {
+    const cnt = new Map();
+    for (const m of maps) for (const t of (m[item] || [])) cnt.set(t, (cnt.get(t) || 0) + 1);
+    if (cnt.size === 0) continue;
+    const sorted = [...cnt.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], "ja"));
+    html += `
+      <div class="section-card">
+        <div class="section-head"><span class="section-title">${item}</span></div>
+        ${sorted.map(([t, c]) => `
+          <div class="stat-row">
+            <span class="stat-name ts-term">${t}</span>
+            <span class="stat-bar-wrap"><span class="stat-bar ${tsState.color}" style="width:${Math.round((c / n) * 100)}%"></span></span>
+            <span class="stat-count">${c}本<span class="ts-pct">${Math.round((c / n) * 100)}%</span></span>
+          </div>`).join("")}
+      </div>`;
+  }
+  document.getElementById("ts-body").innerHTML = html;
+}
+
+// ---------------- examset (本番セット練習) ----------------
+// setState: { title, queue: [{no, wine}], index, results: [{wine,pct,hit,total}], blind }
+let setState = null;
+let esBlind = true;
+
+function examSetList() {
+  const sets = [];
+  for (const exam of PAST_EXAMS) {
+    for (const [kind, items] of [["we", exam.items], ["sommelier", exam.sommelier || []]]) {
+      const wines = items.filter(i => i.type !== "other").map(i => ({
+        no: i.no, name: i.name, country: i.country, type: i.type,
+        wine: i.no ? WINES.find(w => w.origin === "past" && w.archiveKey === `${exam.year}|${kind}|${i.no}`) : null,
+      }));
+      if (wines.length && wines.some(w => w.wine)) sets.push({ year: exam.year, kind, wines });
+    }
+  }
+  return sets;
+}
+
+function showExamSets() {
+  view = "examset";
+  setState = null;
+  headerTitle.textContent = "本番セット練習";
+  btnHome.classList.remove("hidden");
+  footerBar.classList.add("hidden");
+  const sets = examSetList();
+  const circled = ["", "①", "②", "③", "④", "⑤"];
+  screen.innerHTML = `
+    <p class="home-lead">年度と試験区分を選ぶと、その回の出題を<b>番号順に通しで</b>練習できます。採点はその回の実物の模範解答で行います。${srcBadge("transcribed")}</p>
+    <label class="es-toggle"><input type="checkbox" id="es-blind" ${esBlind ? "checked" : ""}> ブラインド（銘柄非公開）で出題する</label>
+    ${sets.map((s, i) => {
+      const avail = s.wines.filter(w => w.wine).length;
+      return `
+      <div class="section-card es-card">
+        <div class="section-head"><span class="section-title">${s.year}年 ${s.kind === "we" ? "ワインエキスパート" : "ソムリエ"}</span><span class="es-count">${avail} / ${s.wines.length}本</span></div>
+        <div class="es-list">
+          ${s.wines.map(w => `<div class="es-row ${w.wine ? "" : "es-na"}"><span>${w.type === "white" ? "🥂" : "🍷"}</span><span class="es-no">${circled[w.no] || "–"}</span><span class="es-name">${esBlind ? (w.type === "white" ? "白ワイン" : "赤ワイン") : `${w.name}（${w.country}）`}</span><span class="es-status">${w.wine ? "" : "正解を用語シートに載せられないため対象外"}</span></div>`).join("")}
+        </div>
+        <button class="btn-primary es-start" data-i="${i}">この回を通しで練習する</button>
+      </div>`;
+    }).join("")}
+    <p class="reveal-note"><b>データの出所</b> — 出題の組み合わせは出題傾向データ（ワイン受験.com＋個人ブログ）、採点に使う正解は個人ブログが転記した模範解答を用語シートの語に合わせたもの（📝 転記・未検証）です。読み替えた箇所は各採点結果の注記に出ます。</p>
+  `;
+  document.getElementById("es-blind").addEventListener("change", e => { esBlind = e.target.checked; showExamSets(); });
+  screen.querySelectorAll(".es-start").forEach(b => b.addEventListener("click", () => {
+    const s = sets[+b.dataset.i];
+    setState = {
+      title: `${s.year}年 ${s.kind === "we" ? "WE" : "ソムリエ"}`,
+      queue: s.wines.filter(w => w.wine).map(w => ({ no: w.no, wine: w.wine })),
+      index: 0, results: [], blind: esBlind,
+    };
+    startPractice(setState.queue[0].wine, esBlind);
+  }));
+  window.scrollTo(0, 0);
+}
+
+function showSetSummary() {
+  view = "setSummary";
+  headerTitle.textContent = "セットの結果";
+  btnHome.classList.remove("hidden");
+  footerBar.classList.add("hidden");
+  const s = setState;
+  const circled = ["", "①", "②", "③", "④", "⑤"];
+  const avg = Math.round(s.results.reduce((sum, r) => sum + r.pct, 0) / s.results.length);
+  screen.innerHTML = `
+    <div class="score-card">
+      <div class="s-wine">${s.title}${s.blind ? "（ブラインド）" : ""}</div>
+      <div class="s-score">平均 ${avg}点</div>
+      <div class="s-detail">${s.results.length}本 ${srcBadge("transcribed")}</div>
+    </div>
+    <div class="section-card">
+      ${s.results.map((r, i) => `
+        <div class="pr-row">
+          <span>${r.wine.color === "white" ? "🥂" : "🍷"}</span>
+          <span class="pr-name">${circled[s.queue[i].no] || ""} ${r.wine.name}</span>
+          <span class="pr-score">${r.pct}点</span>
+          <span class="pr-time">${r.hit}/${r.total}語</span>
+        </div>`).join("")}
+    </div>
+    <div class="result-actions">
+      <button class="btn-secondary" id="es-again">同じ回をもう一度</button>
+      <button class="btn-primary" id="es-back">セット一覧へ</button>
+    </div>
+    <p class="reveal-note">各ワインの原本どおりの正解は「🗄️ 過去問アーカイブ」で確認できます（採点結果の一時保存にも1本ずつ記録されています）。</p>
+  `;
+  document.getElementById("es-again").addEventListener("click", () => {
+    setState = { ...s, index: 0, results: [] };
+    startPractice(setState.queue[0].wine, setState.blind);
+  });
+  document.getElementById("es-back").addEventListener("click", () => showExamSets());
   window.scrollTo(0, 0);
 }
 
@@ -763,7 +1046,7 @@ function showGuide() {
   headerTitle.textContent = "使い方";
   btnHome.classList.remove("hidden");
   footerBar.classList.add("hidden");
-  const order = ["launcher", "data", "comment", "sheet", "flashcards", "quiz", "teppan", "stats", "compare", "archive"];
+  const order = ["launcher", "data", "comment", "sheet", "flashcards", "quiz", "teppan", "stats", "compare", "archive", "realcmp", "termstats", "examset"];
   screen.innerHTML = order.map(k => `
     <div class="section-card">
       <div class="section-head"><span class="section-title">${HELP[k].title}</span></div>
@@ -965,10 +1248,13 @@ function startPractice(wine, blind) {
   btnGrade.disabled = false;
 
   const vocab = VOCAB[wine.color];
+  const blindName = wine.color === "white" ? "白ワイン（銘柄非公開）" : "赤ワイン（銘柄非公開）";
+  const setLabel = setState ? `${setState.title}｜ワイン${"①②③④"[(setState.queue[setState.index].no || 1) - 1]}` : "出題ワイン";
   let html = `
     <div class="sheet-wine-banner">
-      <div class="b-label">出題ワイン ${srcBadge(wine.origin === "past" ? "transcribed" : "ai")}</div>
-      <div class="b-name">${blind ? (wine.color === "white" ? "白ワイン（銘柄非公開）" : "赤ワイン（銘柄非公開）") : wine.name}</div>
+      <div class="b-label">${setLabel} ${srcBadge(wine.origin === "past" ? "transcribed" : "ai")}</div>
+      <div class="b-name">${blind ? blindName : wine.name}</div>
+      ${setState ? `<div class="b-sub">${setState.index + 1} / ${setState.queue.length} 本目</div>` : ""}
     </div>
   `;
 
@@ -1109,15 +1395,28 @@ function showResult() {
     </div>
     ${wine.origin === "past" ? `<div class="ar-note">📝 この正解は本試験で発表された模範解答ですが、会員限定公開分を個人ブログが転記した内容から収録したもので、原本と照合していません。${wine.caveat ? `<br>${wine.caveat}` : ""}${wine.archiveKey ? `<br><a href="#" id="btn-archive-link">🗄️ 過去問アーカイブで原本どおりの正解を見る</a>` : ""}</div>` : ""}
     ${sectionsHtml}
+    ${setState ? `
+    <div class="result-actions">
+      <button class="btn-primary" id="btn-set-next">${setState.index + 1 < setState.queue.length ? `次のワイン（${"①②③④"[(setState.queue[setState.index + 1].no || 2) - 1]}）へ` : "セットの結果を見る"}</button>
+    </div>` : `
     <div class="result-actions">
       <button class="btn-secondary" id="btn-retry">同じワインでもう一度</button>
       <button class="btn-primary" id="btn-next">ワイン選択へ</button>
-    </div>
+    </div>`}
     ${srcNote("wines")}
   `;
 
-  document.getElementById("btn-retry").addEventListener("click", () => startPractice(wine, wine._blind));
-  document.getElementById("btn-next").addEventListener("click", () => showHome());
+  if (setState) {
+    setState.results.push({ wine, pct, hit: totalHit, total: totalModel });
+    document.getElementById("btn-set-next").addEventListener("click", () => {
+      setState.index++;
+      if (setState.index < setState.queue.length) startPractice(setState.queue[setState.index].wine, setState.blind);
+      else showSetSummary();
+    });
+  } else {
+    document.getElementById("btn-retry").addEventListener("click", () => startPractice(wine, wine._blind));
+    document.getElementById("btn-next").addEventListener("click", () => showHome());
+  }
   const archiveLink = document.getElementById("btn-archive-link");
   if (archiveLink) archiveLink.addEventListener("click", e => { e.preventDefault(); showArchive(wine.archiveKey); });
   window.scrollTo(0, 0);

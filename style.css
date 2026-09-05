@@ -213,6 +213,37 @@ main { padding: 16px 14px 120px; max-width: 640px; margin: 0 auto; }
   font-size: .68rem; font-weight: 700; color: #8a6a72;
   background: #f6eef0; border-radius: 4px; padding: 1px 5px;
 }
+/* ---------- 実物正解 品種×年度 横断 ---------- */
+.rc-n { font-size: .68rem; margin-left: 4px; opacity: .7; }
+.rc-summary { font-size: .84rem; margin: 0 0 8px; }
+.rc-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; max-width: 100%; }
+.rc-table { border-collapse: collapse; font-size: .78rem; width: max-content; min-width: 100%; }
+.rc-table th, .rc-table td { border-bottom: 1px solid #f0e8ea; padding: 6px 8px; vertical-align: top; text-align: left; min-width: 150px; }
+.rc-table thead th { font-size: .74rem; line-height: 1.5; background: #fbf7f8; position: sticky; top: 0; }
+.rc-table .rc-item { min-width: 5.5em; font-weight: 700; color: #8a6a72; font-size: .72rem; position: sticky; left: 0; background: #fff; }
+.rc-table thead .rc-item { background: #fbf7f8; z-index: 1; }
+.rc-sub { font-weight: 400; color: #9a8a8e; }
+.rc-common { color: var(--wine); font-weight: 700; }
+.rc-none { color: #c8bcc0; }
+
+/* ---------- 用語の採用率 ---------- */
+.ts-n { font-size: .84rem; margin: 6px 0 10px; }
+.ts-term { font-size: .82rem; }
+.ts-pct { display: block; font-size: .66rem; font-weight: 400; color: #9a8a8e; }
+
+/* ---------- 本番セット練習 ---------- */
+.es-toggle { display: flex; align-items: center; gap: 8px; font-size: .86rem; margin: 0 0 12px; }
+.es-count { font-size: .78rem; font-weight: 700; color: #8a6a72; }
+.es-list { margin-bottom: 10px; }
+.es-row { display: flex; align-items: center; gap: 8px; padding: 6px 0; border-bottom: 1px dashed var(--border); font-size: .86rem; }
+.es-row:last-child { border-bottom: none; }
+.es-no { font-size: .8rem; color: #8a6a72; min-width: 1.2em; }
+.es-name { font-weight: 700; }
+.es-status { margin-left: auto; font-size: .7rem; color: #9a8a8e; text-align: right; }
+.es-na .es-name { color: #b0a4a8; font-weight: 400; }
+.es-start { width: 100%; }
+.sheet-wine-banner .b-sub { font-size: .74rem; opacity: .8; margin-top: 3px; }
+
 .stat-link { color: var(--wine); text-decoration: underline; text-decoration-color: #d9bfc7; text-underline-offset: 2px; }
 .stat-link-mark { font-size: .7rem; }
 .ar-practice { display: block; width: 100%; margin: 0 0 10px; font-size: .84rem; }
