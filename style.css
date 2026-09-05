@@ -466,3 +466,44 @@ main { padding: 16px 14px 120px; max-width: 640px; margin: 0 auto; }
 .section-score.bad { color: var(--wrong); }
 .result-actions { display: flex; gap: 10px; margin-top: 22px; }
 .result-actions button { flex: 1; }
+
+/* ============================================================
+   タブレット（iPad など 768px 以上）
+   iPhone 向けの1列レイアウトを、幅がある端末では2〜3列に広げる。
+   画面の種類は #screen の中身で判定する（:has）。:has 非対応の古い
+   ブラウザでは無視され、1列表示のままになる。
+   ============================================================ */
+@media (min-width: 768px) {
+  main { max-width: 1000px; padding: 20px 24px 120px; }
+  .footer-bar { padding-left: max(14px, calc((100% - 1000px) / 2 + 24px)); padding-right: max(14px, calc((100% - 1000px) / 2 + 24px)); }
+
+  /* ランチャー: タイル3列 */
+  .tile-grid { grid-template-columns: repeat(3, 1fr); gap: 14px; }
+
+  /* 2列グリッドにする画面。見出し・注記・ボタン行は全幅 */
+  #screen:has(.sheet-wine-banner),      /* 用語シート */
+  #screen:has(.legend),                 /* 採点結果 */
+  #screen:has(.stat-exam-item),         /* 出題傾向データ */
+  #screen:has(.es-card),                /* 本番セット練習 */
+  #screen:has(.ar-year) {               /* 過去問アーカイブ */
+    display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px; align-items: start;
+  }
+  #screen > .home-lead, #screen > .group-title, #screen > .reveal-note,
+  #screen > .sheet-wine-banner, #screen > .score-card, #screen > .legend,
+  #screen > .ar-note, #screen > .result-actions, #screen > .es-toggle,
+  #screen > .wine-card, #screen > .wine-section-title, #screen > .fc-filters, #screen > details.cmp-acc {
+    grid-column: 1 / -1;
+  }
+
+  /* 用語の採用率: 項目カードを2列 */
+  #ts-body { display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px; align-items: start; }
+  #ts-body > .ts-n { grid-column: 1 / -1; }
+
+  /* 横断ビュー: 列を少し狭めて多く収める */
+  .rc-table th, .rc-table td { min-width: 118px; }
+
+  /* タイプ別テッパン: 項目表を2列 */
+  .tp-table { column-count: 2; column-gap: 24px; }
+  .tp-table .tp-group, .tp-table .tp-row { break-inside: avoid; }
+  .tp-table .tp-group { margin-left: 0; margin-right: 0; padding-left: 8px; padding-right: 8px; border-radius: 6px; }
+}
