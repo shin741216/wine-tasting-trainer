@@ -19,6 +19,7 @@ const HELP = {
       <li>🧭 <b>タイプ別テッパン</b> — 5タイプ別の定石コメント早見表</li>
       <li>📊 <b>出題傾向データ</b> — 過去15年の出題実績</li>
       <li>📖 <b>模範解答 比較閲覧</b> — 品種×生産地で正解を見比べ</li>
+      <li>🗄️ <b>過去問アーカイブ</b> — 本試験で実際に発表された模範解答（2015〜2025年の29本）</li>
     </ul>
     <p>各画面の右上 ⓘ でその画面の使い方が見られます。採点や解説の元になっているデータの出所は、📘使い方の「収録データについて」をご覧ください。</p>` },
   comment: { title: "コメント選択練習の使い方", body: `
@@ -27,6 +28,7 @@ const HELP = {
       <li><b>ワインを選ぶ</b> — 銘柄を見て選ぶか、「ランダム出題」でブラインド練習ができます。ランダムは白・赤を選んでから出題されます</li>
       <li><b>ブラインドテイスティングでの使い方</b> — 実際にワインを飲みながらランダム出題でシートを記入→採点すると本番に近い練習になります</li>
       <li><b>結果の一時保存</b> — 採点結果は自動で一時保存され、この画面に一覧表示されます。複数本の練習が終わったら「練習完了」で記録を削除できます</li>
+      <li><b>一覧の末尾の5本</b>（名前に「2025年ソムリエ①」のように年度が入っているもの）は、AI参考解答ではなく<b>本試験の模範解答そのもの</b>で採点します。<span class="src-badge transcribed">📝 転記・未検証</span> のバッジが付き、項目ごとの選択数もその年の正解の語数になります</li>
     </ul>` },
   sheet: { title: "用語シートの使い方", body: `
     <p>各項目で指定された数（例：2/2）の用語を選びます。</p>
@@ -36,7 +38,7 @@ const HELP = {
       <li>中断するときは左上の ◀（記入内容は破棄されます）</li>
       <li>採点結果は「正解（緑）／選び漏れ（黄）／誤って選択（赤）」で色分け表示されます</li>
     </ul>
-    <p>※「いくつ選べ」の数は本番で年により変わるため目安です。</p>` },
+    <p>※「いくつ選べ」の数は本番で年により変わるため目安です。ただし <span class="src-badge transcribed">📝 転記・未検証</span> が付いた実物由来のワインだけは、目安ではなく<b>その年の正解の語数</b>を使います（色調が4語なら「0/4」）。</p>` },
   flashcards: { title: "品種フラッシュカードの使い方", body: `
     <ul>
       <li><b>カードをタップ</b>すると裏返り、外観・香り・味わい・決め手・主産地が表示されます</li>
@@ -48,15 +50,16 @@ const HELP = {
     <ul>
       <li>出題範囲（すべて／白のみ／赤のみ）を選ぶとスタート。出題順はランダムです</li>
       <li>テイスティングコメントを読み、4択から品種を選びます</li>
-      <li>回答すると正誤と正解ワインの解説が表示されます</li>
+      <li>回答すると正誤と正解ワインの解説が表示されます。解説の先頭のバッジで、そのコメントがAI参考解答か実物の模範解答かが分かります</li>
       <li>全問終了後にスコアが表示されます。中断は左上の ◀</li>
     </ul>` },
   stats: { title: "出題傾向データの見方", body: `
     <ul>
-      <li><b>品種別ランキング</b> — 2011〜2025年の出題回数。バーの下の数字は出題年です</li>
-      <li><b>年度別の出題</b> — 各年の出題ワイン（🥂白・🍷赤・🥃その他の酒類）</li>
+      <li><b>品種別ランキング</b> — 2011〜2025年の出題回数。バーの下の数字は出題年です。集計対象は<b>ワインエキスパートの出題のみ</b>で、ソムリエ試験分は含めていません</li>
+      <li><b>年度別の出題</b> — 各年の出題ワイン（🥂白・🍷赤・🥃その他の酒類）。試験区分ごとに分けて表示します</li>
+      <li>品種名の左の数字は<b>出題番号</b>、右の数字は<b>ヴィンテージ</b>です。空欄は出所が見つかっていない箇所です（2025年WE③のテンプラニーリョなど）</li>
     </ul>
-    <p>出典はワイン受験.com「過去の出題ワインの品種と生産国」。頻出品種から優先して対策するのがおすすめです。</p>` },
+    <p>品種・生産国の出典はワイン受験.com「過去の出題ワインの品種と生産国」。出題番号・ヴィンテージ・ソムリエ試験分は個人ブログ「ニライカナイCH」から補ったもので<b>未検証</b>です（品種・生産国が両者で一致することは確認済み）。頻出品種から優先して対策するのがおすすめです。</p>` },
   data: { title: "収録データについて（重要）", body: `
     <p>このアプリの出力が「何の情報をもとにしているか」の説明です。画面の各所に表示される出所バッジで見分けられます：<span class="src-badge ai">🤖 AI参考解答</span>＝AI作成の参考データ、<span class="src-badge real">📜 実物過去問</span>＝本試験で実際に発表された正解・実績データ、<span class="src-badge transcribed">📝 転記・未検証</span>＝会員限定公開の正解を個人ブログが転記したもの、<span class="src-badge teppan">🧭 ブログ分析の定石</span>＝個人ブログが過去問から逆算した分析。</p>
     <ul>
@@ -160,7 +163,10 @@ btnHome.addEventListener("click", () => {
   } else if (view === "quiz") {
     if (!confirm("クイズを中断してメニューに戻りますか？")) return;
     showQuizStart();
-  } else if (view === "wineList" || view === "flashcards" || view === "quizStart" || view === "stats" || view === "compare" || view === "guide" || view === "archive") {
+  } else {
+    // 上記以外の一覧系画面（wineList / flashcards / quizStart / teppan / stats /
+    // compare / archive / guide）はメニューへ戻る。画面を足したときの戻し忘れを防ぐため
+    // 画面名の列挙ではなく既定の動作にしている
     showLauncher();
   }
 });
@@ -535,7 +541,8 @@ function renderQuizQuestion() {
       const fb = document.getElementById("quiz-feedback");
       document.getElementById("quiz-verdict").textContent = isCorrect ? "⭕ 正解！" : "❌ 不正解…";
       document.getElementById("quiz-verdict").className = "quiz-verdict " + (isCorrect ? "good" : "bad");
-      document.getElementById("quiz-explain").innerHTML = `${srcBadge("ai")} 正解：${wine.name} — ${wine.note}`;
+      document.getElementById("quiz-explain").innerHTML =
+        `${srcBadge(wine.origin === "past" ? "transcribed" : "ai")} 正解：${wine.name} — ${wine.note}`;
       const nextBtn = document.getElementById("quiz-next");
       nextBtn.textContent = quizState.index + 1 < quizState.queue.length ? "次の問題へ" : "結果を見る";
       nextBtn.addEventListener("click", () => {
