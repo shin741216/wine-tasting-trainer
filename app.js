@@ -28,8 +28,9 @@ const HELP = {
       <li><b>ワインを選ぶ</b> — 銘柄を見て選ぶか、「ランダム出題」でブラインド練習ができます。ランダムは白・赤を選んでから出題されます</li>
       <li><b>ブラインドテイスティングでの使い方</b> — 実際にワインを飲みながらランダム出題でシートを記入→採点すると本番に近い練習になります</li>
       <li><b>結果の一時保存</b> — 採点結果は自動で一時保存され、この画面に一覧表示されます。複数本の練習が終わったら「練習完了」で記録を削除できます</li>
-      <li><b>一覧の末尾の5本</b>（名前に「2025年ソムリエ①」のように年度が入っているもの）は、AI参考解答ではなく<b>本試験の模範解答そのもの</b>で採点します。<span class="src-badge transcribed">📝 転記・未検証</span> のバッジが付き、項目ごとの選択数もその年の正解の語数になります</li>
-    </ul>` },
+      <li><b>一覧の末尾の5本</b>（名前に「2025年ソムリエ①」のように年度が入っているもの）は、AI参考解答ではなく<b>本試験の模範解答そのもの</b>で採点します。項目ごとの選択数もその年の正解の語数になります</li>
+    </ul>
+    <p><b>データの出所</b> — 一覧の各ワインにバッジが付いています。<span class="src-badge ai">🤖 AI参考解答</span> はAIが試験対策の定石に基づいて作成した参考解答、<span class="src-badge transcribed">📝 転記・未検証</span> は本試験で実際に発表された模範解答ですが、会員限定公開分を個人ブログが転記した内容から収録しており原本と照合していません。</p>` },
   sheet: { title: "用語シートの使い方", body: `
     <p>各項目で指定された数（例：2/2）の用語を選びます。</p>
     <ul>
@@ -38,28 +39,31 @@ const HELP = {
       <li>中断するときは左上の ◀（記入内容は破棄されます）</li>
       <li>採点結果は「正解（緑）／選び漏れ（黄）／誤って選択（赤）」で色分け表示されます</li>
     </ul>
-    <p>※「いくつ選べ」の数は本番で年により変わるため目安です。ただし <span class="src-badge transcribed">📝 転記・未検証</span> が付いた実物由来のワインだけは、目安ではなく<b>その年の正解の語数</b>を使います（色調が4語なら「0/4」）。</p>` },
+    <p>※「いくつ選べ」の数は本番で年により変わるため目安です。ただし <span class="src-badge transcribed">📝 転記・未検証</span> が付いた実物由来のワインだけは、目安ではなく<b>その年の正解の語数</b>を使います（色調が4語なら「0/4」）。</p>
+    <p><b>データの出所</b> — 採点に使う模範解答の出所は、画面上部の「出題ワイン」欄のバッジで確認できます。用語シートの項目・用語・並び順はワイン受験.com公開の「テイスティング解答用紙 2026年版」に準拠しています。</p>` },
   flashcards: { title: "品種フラッシュカードの使い方", body: `
     <ul>
       <li><b>カードをタップ</b>すると裏返り、外観・香り・味わい・決め手・主産地が表示されます</li>
       <li><b>すべて／白／赤</b> と <b>生産地</b> の2軸で絞り込めます</li>
       <li>複数の生産国を持つ品種は、裏面に<b>生産地による違い</b>が表示されます。生産地フィルタ選択中はその国がハイライトされます</li>
       <li>🔀 シャッフルで並びをランダムにできます</li>
-    </ul>` },
+    </ul>
+    <p><b>データの出所</b> — カードの特徴文と生産地による違いは <span class="src-badge ai">🤖 AI参考解答</span>（AI執筆の参考情報）です。本試験で実際に発表された正解は「🗄️ 過去問アーカイブ」で確認できます。</p>` },
   quiz: { title: "品種当てクイズの使い方", body: `
     <ul>
       <li>出題範囲（すべて／白のみ／赤のみ）を選ぶとスタート。出題順はランダムです</li>
       <li>テイスティングコメントを読み、4択から品種を選びます</li>
       <li>回答すると正誤と正解ワインの解説が表示されます。解説の先頭のバッジで、そのコメントがAI参考解答か実物の模範解答かが分かります</li>
       <li>全問終了後にスコアが表示されます。中断は左上の ◀</li>
-    </ul>` },
+    </ul>
+    <p><b>データの出所</b> — 出題コメントの大半は <span class="src-badge ai">🤖 AI参考解答</span> から組み立てています。名前に年度が入った5本だけは <span class="src-badge transcribed">📝 転記・未検証</span> で、本試験の模範解答から組み立てたものです。</p>` },
   stats: { title: "出題傾向データの見方", body: `
     <ul>
       <li><b>品種別ランキング</b> — 2011〜2025年の出題回数。バーの下の数字は出題年です。集計対象は<b>ワインエキスパートの出題のみ</b>で、ソムリエ試験分は含めていません</li>
       <li><b>年度別の出題</b> — 各年の出題ワイン（🥂白・🍷赤・🥃その他の酒類）。試験区分ごとに分けて表示します</li>
       <li>品種名の左の数字は<b>出題番号</b>、右の数字は<b>ヴィンテージ</b>です。空欄は出所が見つかっていない箇所です（2025年WE③のテンプラニーリョなど）</li>
     </ul>
-    <p>品種・生産国の出典はワイン受験.com「過去の出題ワインの品種と生産国」。出題番号・ヴィンテージ・ソムリエ試験分は個人ブログ「ニライカナイCH」から補ったもので<b>未検証</b>です（品種・生産国が両者で一致することは確認済み）。頻出品種から優先して対策するのがおすすめです。</p>` },
+    <p><b>データの出所</b> — 品種・生産国はワイン受験.com「過去の出題ワインの品種と生産国」。出題番号・ヴィンテージ・ソムリエ試験分は個人ブログ「ニライカナイCH」から補ったもので<b>未検証</b>です（品種・生産国が両者で一致することは確認済み）。画面下部に出典リンクがあります。頻出品種から優先して対策するのがおすすめです。</p>` },
   data: { title: "収録データについて（重要）", body: `
     <p>このアプリの出力が「何の情報をもとにしているか」の説明です。画面の各所に表示される出所バッジで見分けられます：<span class="src-badge ai">🤖 AI参考解答</span>＝AI作成の参考データ、<span class="src-badge real">📜 実物過去問</span>＝本試験で実際に発表された正解・実績データ、<span class="src-badge transcribed">📝 転記・未検証</span>＝会員限定公開の正解を個人ブログが転記したもの、<span class="src-badge teppan">🧭 ブログ分析の定石</span>＝個人ブログが過去問から逆算した分析。</p>
     <ul>
@@ -79,7 +83,8 @@ const HELP = {
       <li>📝 <b>転記・未検証</b> — 2019年以降の正解はJ.S.A.会員限定公開のため、個人ブログが記事中に転記した内容から収録（2021〜2025年の8本）。<b>原本と照合していません</b>。公式PDFを入手できたら差し替えてください</li>
       <li>ワイン名の前の「WE③」「ソムリエ②」は試験区分と出題番号です</li>
       <li>項目・用語は出題当時の解答用紙の様式のままなので、現在のシート（コメント練習）と一部異なります</li>
-    </ul>` },
+    </ul>
+    <p><b>データの出所</b> — 📜 はワイン受験.com が一般公開している正解PDF、📝 は個人ブログ「ニライカナイCH」2026年版シリーズが記事中に転記した内容です。画面下部に出典リンクがあります。</p>` },
   teppan: { title: "タイプ別テッパンの使い方", body: `
     <p>ワインを「淡い白／濃い白／淡い赤／濃い赤／特殊」の5タイプに振り分け、そのタイプで採用率の高いコメントを機械的に置くための早見表です。</p>
     <ul>
@@ -87,14 +92,15 @@ const HELP = {
       <li><b>判定サイン</b>で目の前のワインがどのタイプかを決めてから、<b>項目別テッパン</b>を上から置いていきます</li>
       <li>各項目の下の細い行は<b>条件分岐</b>です。下位タイプ（軽やか型／骨格型など）で選ぶ用語が変わる箇所を書いています</li>
     </ul>
-    <p>⚠ この内容は<b>協会の公式見解ではありません</b>。個人ブログの筆者が過去5年の模範解答から逆算した分析で、採用率の数値も筆者の集計です。実物の正解は「🗄️ 過去問アーカイブ」で確認してください。</p>` },
+    <p><b>データの出所</b> — 個人ブログ「ニライカナイCH」2026年版 二次試験対策シリーズ（<span class="src-badge teppan">🧭 ブログ分析の定石</span>）です。画面下部に出典リンクがあります。</p>
+    <p>⚠ この内容は<b>協会の公式見解ではありません</b>。筆者が過去5年の模範解答から逆算した分析で、採用率の数値も筆者の集計です。実物の正解は「🗄️ 過去問アーカイブ」で確認してください。</p>` },
   compare: { title: "模範解答 比較閲覧の使い方", body: `
     <ul>
       <li>「白ワイン品種」「赤ワイン品種」のタブを開いて品種を選びます</li>
       <li>その品種の模範解答が<b>生産地ごとに横並びの表</b>で表示されます（横スクロール可）</li>
       <li><b>赤色の用語</b>は生産地間で答えが異なる箇所＝生産地当ての決め手です</li>
     </ul>
-    <p>※ 模範解答はAIが試験対策の定石に基づき作成した参考解答です。</p>` },
+    <p><b>データの出所</b> — この画面は <span class="src-badge ai">🤖 AI参考解答</span> だけを比較対象にしています。実物の模範解答から作った5本は、生産地が重複して表が読みにくくなるため除いています。本試験の正解は「🗄️ 過去問アーカイブ」で確認できます。</p>` },
 };
 
 function viewHelpKey() {
@@ -133,6 +139,18 @@ function srcBadge(kind) {
   if (kind === "transcribed") return '<span class="src-badge transcribed">📝 転記・未検証</span>';
   if (kind === "teppan") return '<span class="src-badge teppan">🧭 ブログ分析の定石</span>';
   return '<span class="src-badge ai">🤖 AI参考解答</span>';
+}
+
+// 画面下部に必ず出すデータの出所。どの画面でも出所が分かる状態を保つ
+function srcNote(kind) {
+  const notes = {
+    wines: `<b>データの出所</b> — 模範解答の大半は ${srcBadge("ai")}（AIが試験対策の定石に基づいて作成した参考解答）です。
+      名前に年度が入った5本だけは ${srcBadge("transcribed")} で、本試験で実際に発表された模範解答ですが、
+      会員限定公開分を個人ブログが転記した内容から収録しており、原本と照合していません。`,
+    grapes: `<b>データの出所</b> — カードの特徴文と生産地による違いは ${srcBadge("ai")}（AI執筆の参考情報）です。
+      本試験で実際に発表された正解は「🗄️ 過去問アーカイブ」で確認できます。`,
+  };
+  return `<p class="reveal-note">${notes[kind]}</p>`;
 }
 
 // ---------------- 練習結果の一時保存 ----------------
@@ -336,6 +354,7 @@ function showFlashcards() {
       <span class="fc-counter" id="fc-counter"></span>
       <button class="btn-secondary" id="fc-next">次へ ▶</button>
     </div>
+    ${srcNote("grapes")}
   `;
 
   screen.querySelectorAll(".fc-filter").forEach(b => {
@@ -469,6 +488,7 @@ function showQuizStart() {
       <span class="wine-sub" style="display:block">赤ワイン用品種から出題</span></span>
       <span class="chev">▶</span>
     </button>
+    ${srcNote("wines")}
   `;
   screen.querySelectorAll(".wine-card").forEach(b =>
     b.addEventListener("click", () => startQuiz(b.dataset.mode)));
@@ -524,6 +544,7 @@ function renderQuizQuestion() {
       <div class="quiz-explain" id="quiz-explain"></div>
       <button class="btn-primary" id="quiz-next"></button>
     </div>
+    ${srcNote("wines")}
   `;
 
   screen.querySelectorAll(".quiz-choice").forEach(btn => {
@@ -673,8 +694,8 @@ function showArchive() {
   screen.innerHTML = `
     <p class="home-lead">本試験で実際に発表された正解（模範解答）です。全${PAST_ANSWERS.length}本。ソムリエ・ワインエキスパート両方の出題を含みます。</p>
     <p class="reveal-note">📜 は一般公開されている正解PDF（2015・2017・2018年）から、📝 は2019年以降の会員専用公開分を個人ブログが転記したものからの収録です。<b>📝 は原本と照合していない未検証データ</b>なので、公式PDFを入手できたら差し替えてください。</p>
-    ${years.map((y, yi) => `
-      <details class="cmp-acc" ${yi === 0 ? "open" : ""}>
+    ${years.map(y => `
+      <details class="cmp-acc">
         <summary>📅 ${y}年出題（${PAST_ANSWERS.filter(a => a.examYear === y).length}本）</summary>
         <div class="cmp-acc-body ar-year">
           ${PAST_ANSWERS.filter(a => a.examYear === y).map((a, i) => `
@@ -753,7 +774,7 @@ function showCompare() {
       <div class="fc-filters cmp-acc-body">${grapeChipsHtml("red")}</div>
     </details>
     <div id="cmp-body"></div>
-    <p class="reveal-note">※ 模範解答はAIが試験対策の定石に基づき作成した参考解答です。お手元の教材と併せてご活用ください。</p>
+    <p class="reveal-note"><b>データの出所</b> — この画面で見比べているのは ${srcBadge("ai")}（AIが試験対策の定石に基づいて作成した参考解答）だけです。本試験で実際に発表された正解は「🗄️ 過去問アーカイブ」で確認できます。お手元の教材と併せてご活用ください。</p>
   `;
 
   screen.querySelectorAll(".cmp-grape").forEach(b => {
@@ -856,6 +877,7 @@ function showHome() {
     ${whites.map(wineCardHtml).join("")}
     <h2 class="wine-section-title">赤ワイン</h2>
     ${reds.map(wineCardHtml).join("")}
+    ${srcNote("wines")}
     <p class="reveal-note">※ データは data.js で自由に追加・編集できます。実際にワインを飲みながら該当する銘柄を選んで練習するのがおすすめです。</p>
   `;
 
@@ -888,6 +910,7 @@ function wineCardHtml(w) {
       <span>
         <span class="wine-label">${w.name}</span>
         <span class="wine-sub" style="display:block">${w.note}</span>
+        <span class="wine-src">${srcBadge(w.origin === "past" ? "transcribed" : "ai")}</span>
       </span>
       <span class="chev">▶</span>
     </button>
@@ -1055,6 +1078,7 @@ function showResult() {
       <button class="btn-secondary" id="btn-retry">同じワインでもう一度</button>
       <button class="btn-primary" id="btn-next">ワイン選択へ</button>
     </div>
+    ${srcNote("wines")}
   `;
 
   document.getElementById("btn-retry").addEventListener("click", () => startPractice(wine, wine._blind));
