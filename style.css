@@ -168,7 +168,55 @@ main { padding: 16px 14px 120px; max-width: 640px; margin: 0 auto; }
 }
 .src-badge.ai { background: #e8e4ef; color: #5b4a7a; border: 1px solid #c9bede; }
 .src-badge.real { background: #fdf3d7; color: #8a6a00; border: 1px solid #dcc26a; }
+.src-badge.transcribed { background: #fbe9e3; color: #8f4a2c; border: 1px solid #e0b49f; }
+.src-badge.teppan { background: #e2f0e8; color: #2f6b4c; border: 1px solid #a9d2bd; }
 .score-card .src-badge.ai { background: rgba(255,255,255,.2); color: #fff; border-color: rgba(255,255,255,.4); }
+
+/* ---------- タイプ別テッパン ---------- */
+.tp-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+.tp-tab.active { background: #5c1a2e; color: #fff; border-color: #5c1a2e; }
+.tp-lead { font-size: .84rem; line-height: 1.65; margin: 0 0 10px; }
+.tp-sub {
+  font-size: .7rem; font-weight: 700; letter-spacing: .04em;
+  color: #8a6a72; margin: 12px 0 4px;
+}
+.tp-text { font-size: .82rem; line-height: 1.6; margin: 0; }
+.tp-list { margin: 0; padding-left: 1.1rem; font-size: .82rem; line-height: 1.7; }
+.tp-list li { margin-bottom: 2px; }
+.tp-group {
+  font-size: .72rem; font-weight: 700; letter-spacing: .06em;
+  color: #5c1a2e; background: #f6eef0;
+  margin: 10px -14px 6px; padding: 5px 14px;
+}
+.tp-table .tp-group:first-child { margin-top: -4px; }
+.tp-row { padding: 7px 0; border-bottom: 1px solid #f0e8ea; }
+.tp-row:last-child { border-bottom: none; }
+.tp-item { font-size: .74rem; font-weight: 700; color: #8a6a72; }
+.tp-base { font-size: .86rem; line-height: 1.5; margin-top: 1px; }
+.tp-branch { font-size: .74rem; line-height: 1.55; color: #7a6a6e; margin-top: 3px; }
+.tp-caution {
+  margin-top: 10px; padding: 8px 10px; border-radius: 8px;
+  background: #fdf3d7; border: 1px solid #dcc26a;
+  font-size: .8rem; line-height: 1.6; color: #6b5200;
+}
+
+/* ---------- 出題実績・アーカイブの追加表示 ---------- */
+.stat-exam-no { font-size: .7rem; color: #9a8a8e; min-width: 1.2em; }
+.stat-exam-vintage { font-size: .72rem; color: #9a8a8e; margin-left: auto; }
+.stat-exam-sub {
+  font-size: .68rem; font-weight: 700; letter-spacing: .06em;
+  color: #8a6a72; margin: 8px 0 2px;
+}
+.stat-exam-sub.sommelier { color: #9a8a8e; }
+.ar-exam {
+  font-size: .68rem; font-weight: 700; color: #8a6a72;
+  background: #f6eef0; border-radius: 4px; padding: 1px 5px;
+}
+.ar-note {
+  margin-bottom: 8px; padding: 7px 9px; border-radius: 8px;
+  background: #fbe9e3; border: 1px solid #e0b49f;
+  font-size: .76rem; line-height: 1.55; color: #8f4a2c;
+}
 
 /* ---------- flashcards ---------- */
 .fc-filters { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }

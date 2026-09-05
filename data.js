@@ -1017,6 +1017,127 @@ const WINES = [
       vintage: ["2021年"], country: ["アメリカ"], grape: ["ジンファンデル"],
     },
   },
+
+  // ============================================================
+  // 実物の模範解答から作った練習ワイン（origin: "past"）
+  // ------------------------------------------------------------
+  // answers は PAST_ANSWERS と同じ内容で、用語シートに載っている用語だけを残したもの。
+  // 各項目の選択数は VOCAB の pick ではなく、その年の正解の語数に合わせる（app.js の pickFor）。
+  // 生産地が既存ワインと重複するため、模範解答 比較閲覧の対象からは除外している。
+  // ⚠ 元データは会員限定公開の正解を個人ブログが転記したもので、原本と未照合。
+  // ============================================================
+  {
+    id: "px-2025s1-ch-fr", color: "white", origin: "past",
+    name: "シャルドネ（フランス 2022）｜2025年ソムリエ①",
+    note: "「やや濃い」と分類されながら中身は淡い〜やや濃いの境界。シャブリ型で樽が弱く、味わいはエレガント側に振れている。",
+    caveat: "アルコールは原本の「12.0〜12.9%」を用語シートの表記へ読み替えている。",
+    answers: {
+      clarity: ["澄んだ"], brightness: ["輝きのある"],
+      color: ["グリーンがかった", "イエロー"], intensity: ["やや濃い"], viscosity: ["適度な"],
+      appearanceImpression: ["若々しい", "成熟度が高い"],
+      aromaFirst: ["控えめ", "フレッシュな", "ミネラリー"],
+      aromaFruit: ["柑橘類", "青リンゴ", "リンゴ", "洋梨"],
+      aromaFlora: ["フレッシュ・アーモンド"],
+      aromaSpice: ["石灰", "貝殻", "海の香り", "パン・ドゥ・ミ", "トースト", "乳製品"],
+      aromaImpression: ["若々しい", "第1アロマが強い", "ニュートラル"],
+      attack: ["やや軽い"], sweetness: ["ドライ"], acidity: ["爽やかな", "軽やかな"],
+      bitterness: ["控えめ", "穏やかな"],
+      balance: ["スリムな", "ドライな"], alcohol: ["12%～13%未満"], finish: ["やや短い", "やや長い"],
+      evaluation: ["シンプル、フレッシュ感を楽しむ", "エレガントで、ミネラリー"],
+      temperature: ["8度未満", "8～10度"], glass: ["小ぶり", "バルーン型"],
+      vintage: ["2022年"], country: ["フランス"], grape: ["シャルドネ"],
+    },
+  },
+  {
+    id: "px-2025s3-zf-us", color: "red", origin: "past",
+    name: "ジンファンデル（アメリカ 2023）｜2025年ソムリエ③",
+    note: "濃淡は「やや濃い」で濃い赤と淡い赤の中間。タンニンは溶け込んでおり、バランスは豊満・ジューシー。",
+    answers: {
+      clarity: ["澄んだ"], brightness: ["輝きのある"],
+      color: ["紫がかった", "ルビー", "ラズベリーレッド"], intensity: ["やや濃い"], viscosity: ["やや強い", "強い"],
+      appearanceImpression: ["若々しい", "成熟度が高い"],
+      aromaFirst: ["開いている", "強い", "濃縮感がある"],
+      aromaFruit: ["イチゴ", "カシス", "干しプラム", "乾燥イチジク"],
+      aromaFlora: ["牡丹", "ローリエ", "ドライハーブ"],
+      aromaSpice: ["シナモン", "ナツメグ", "甘草", "乾いた肉", "なめし皮", "チョコレート"],
+      aromaImpression: ["第1アロマが強い", "木樽からのニュアンス"],
+      attack: ["強い"], sweetness: ["まろやか", "豊かな"], acidity: ["なめらかな", "しなやかな"],
+      tannin: ["溶け込んだ"],
+      balance: ["豊満な", "ジューシーな"], alcohol: ["14%以上"], finish: ["やや長い"],
+      evaluation: ["成熟度が高く、豊か", "濃縮し、力強い"],
+      temperature: ["17～20度"], glass: ["中庸", "大ぶり", "チューリップ型"],
+      vintage: ["2023年"], country: ["アメリカ"], grape: ["ジンファンデル"],
+    },
+  },
+  {
+    id: "px-2024we4-sg-it", color: "red", origin: "past",
+    name: "サンジョヴェーゼ（イタリア 2020）｜2024年WE④",
+    note: "淡い赤の骨格型。色は「やや明るい」なのにタンニンは力強い・緻密で、バランスは骨格のしっかりした側。",
+    caveat: "アルコールは原本が「やや強め・熱さを感じる」という当時の様式の表記だったため、用語シートの度数レンジへ読み替えている。",
+    answers: {
+      clarity: ["澄んだ"], brightness: ["輝きのある", "艶のある"],
+      color: ["オレンジがかった", "縁が明るい", "ルビー", "ラズベリーレッド"],
+      intensity: ["やや明るい"], viscosity: ["やや強い", "強い"],
+      appearanceImpression: ["若い状態を抜けた", "成熟度が高い"],
+      aromaFirst: ["開いている", "複雑な"],
+      aromaFruit: ["ラズベリー", "ブルーベリー", "カシス", "干しプラム"],
+      aromaFlora: ["バラ", "スミレ", "ゼラニウム", "ドライハーブ", "タバコ", "キノコ", "トマト", "黒オリーブ"],
+      aromaSpice: ["丁子", "シナモン", "ナツメグ", "甘草", "ヴァニラ", "乾いた肉", "なめし皮", "動物的なニュアンス", "鉄分"],
+      aromaImpression: ["熟成感が現れている", "第1アロマが強い", "木樽からのニュアンス"],
+      attack: ["強い"], sweetness: ["ドライ"], acidity: ["なめらかな", "しなやかな"],
+      tannin: ["力強い", "緻密"],
+      balance: ["骨格のしっかりした", "堅固な", "力強い"], alcohol: ["13%～14%未満"], finish: ["やや長い", "長い"],
+      evaluation: ["成熟度が高く、豊か", "エレガントで、余韻の長い", "複雑性があり、引き締まった"],
+      temperature: ["14～16度", "17～20度"], glass: ["中庸", "大ぶり"],
+      vintage: ["2020年"], country: ["イタリア"], grape: ["サンジョヴェーゼ"],
+    },
+  },
+  {
+    id: "px-2023s3-me-jp", color: "red", origin: "past",
+    name: "メルロ（日本 2018）｜2023年ソムリエ③",
+    note: "本来は濃い赤の品種なのに、正解は完全に淡い赤のコメント。品種ではなく目の前の状態でタイプを決める例。",
+    caveat: "第一印象の原本には「チャーミングな」が含まれるが、2025年度の用語シートから削除された表現のため除いている。アルコールは原本の「やや軽め・中程度」を度数レンジへ読み替えた。",
+    answers: {
+      clarity: ["澄んだ"], brightness: ["輝きのある", "艶のある"],
+      color: ["縁が明るい", "ルビー", "ラズベリーレッド"],
+      intensity: ["やや明るい", "やや濃い"], viscosity: ["やや強い"],
+      appearanceImpression: ["若い状態を抜けた", "成熟度が高い"],
+      aromaFirst: ["控えめ", "深みのある"],
+      aromaFruit: ["ラズベリー", "ブルーベリー", "干しプラム"],
+      aromaFlora: ["メントール", "シダ", "ドライハーブ", "タバコ", "キノコ", "土"],
+      aromaSpice: ["ナツメグ", "ヴァニラ", "ロースト", "乾いた肉", "なめし皮"],
+      aromaImpression: ["熟成感が現れている", "第1アロマが強い", "木樽からのニュアンス"],
+      attack: ["やや強い"], sweetness: ["ソフトな", "まろやか"], acidity: ["なめらかな", "しなやかな"],
+      tannin: ["サラサラとした", "溶け込んだ"],
+      balance: ["スマートな", "流れるような"], alcohol: ["12%～13%未満"], finish: ["やや長い", "長い"],
+      evaluation: ["エレガントで、余韻の長い"],
+      temperature: ["14～16度", "17～20度"], glass: ["中庸"],
+      vintage: ["2018年"], country: ["日本"], grape: ["メルロ"],
+    },
+  },
+  {
+    id: "px-2023we3-gr-fr", color: "red", origin: "past",
+    name: "グルナッシュ（フランス 2021）｜2023年WE③",
+    note: "淡い赤の骨格型のなかでも濃い側。濃淡は「やや濃い・濃い」で、アタックは強い・インパクトのある。",
+    caveat: "アルコールは原本が「やや強め・熱さを感じる」という当時の様式の表記だったため、用語シートの度数レンジへ読み替えている。",
+    answers: {
+      clarity: ["澄んだ"], brightness: ["輝きのある"],
+      color: ["紫がかった", "ルビー", "ラズベリーレッド"],
+      intensity: ["やや濃い", "濃い"], viscosity: ["やや強い", "強い"],
+      appearanceImpression: ["若々しい", "成熟度が高い", "濃縮感が強い"],
+      aromaFirst: ["開いている", "強い", "濃縮感がある"],
+      aromaFruit: ["ブルーベリー", "カシス", "ブラックチェリー", "干しプラム"],
+      aromaFlora: ["ローリエ", "ドライハーブ", "紅茶", "トマト", "黒オリーブ"],
+      aromaSpice: ["丁子", "シナモン", "ナツメグ", "甘草", "ヴァニラ", "乾いた肉", "鉄分", "グリエ", "煙・燻製", "チョコレート"],
+      aromaImpression: ["第1アロマが強い", "木樽からのニュアンス"],
+      attack: ["強い", "インパクトのある"], sweetness: ["ドライ"], acidity: ["なめらかな", "しなやかな"],
+      tannin: ["力強い"],
+      balance: ["骨格のしっかりした", "力強い"], alcohol: ["13%～14%未満"], finish: ["やや長い", "長い"],
+      evaluation: ["成熟度が高く、豊か", "濃縮し、力強い"],
+      temperature: ["17～20度"], glass: ["中庸", "大ぶり"],
+      vintage: ["2021年"], country: ["フランス"], grape: ["グルナッシュ"],
+    },
+  },
 ];
 
 // ------------------------------------------------------------
@@ -1243,46 +1364,71 @@ const GRAPES = [
 
 
 // ------------------------------------------------------------
-// 過去の出題品種データ（ワインエキスパート二次試験）
-// 出典: ワイン受験.com「過去の出題ワインの品種と生産国」(2026-08時点で取得)
-// https://www.wine-jyuken.com/second_exam/kakonosyutudai
+// 過去の出題品種データ
+// items    : ワインエキスパート二次試験の出題（品種別ランキングの集計対象）
+// sommelier: 同じ年のソムリエ二次試験の出題（参考表示のみ・ランキングには含めない）
+//
+// 出典1（品種・生産国）: ワイン受験.com「過去の出題ワインの品種と生産国」(2026-08取得)
+//   https://www.wine-jyuken.com/second_exam/kakonosyutudai
+// 出典2（ヴィンテージ・出題番号・ソムリエ試験分）: 個人ブログ「ニライカナイCH」
+//   2026年版 二次試験対策シリーズ (2026-09取得) https://niraikanao-ch1.com/tastingmatome-2026/
+//   ⚠ 出典2は個人ブログの転記であり未検証。品種・生産国は出典1と突き合わせて一致を確認済み。
+//   ヴィンテージと出題番号は出典2のみが根拠なので、公式資料で見かけたら上書きすること。
+//
 // type: "white" | "red" | "other"（その他の酒類）
+// no  : 本試験での出題番号（不明な場合は省略）
 // ------------------------------------------------------------
 const PAST_EXAMS = [
   { year: 2025, items: [
-    { type: "white", name: "リースリング", country: "オーストラリア" },
-    { type: "white", name: "ソーヴィニヨン・ブラン", country: "フランス" },
-    { type: "red", name: "テンプラニーリョ", country: "スペイン" },
-    { type: "red", name: "カルメネール", country: "チリ" },
+    { no: 1, type: "white", name: "リースリング", country: "オーストラリア", vintage: 2023 },
+    { no: 2, type: "white", name: "ソーヴィニヨン・ブラン", country: "フランス", vintage: 2024 },
+    { no: 3, type: "red", name: "テンプラニーリョ", country: "スペイン" },
+    { no: 4, type: "red", name: "カルメネール", country: "チリ", vintage: 2021 },
     { type: "other", name: "スコッチ・ウイスキー" },
+  ], sommelier: [
+    { no: 1, type: "white", name: "シャルドネ", country: "フランス", vintage: 2022 },
+    { no: 2, type: "white", name: "甲州", country: "日本", vintage: 2024 },
+    { no: 3, type: "red", name: "ジンファンデル", country: "アメリカ", vintage: 2023 },
   ]},
   { year: 2024, items: [
-    { type: "white", name: "ミュスカデ", country: "フランス" },
-    { type: "white", name: "シャルドネ", country: "日本" },
-    { type: "red", name: "カベルネ・ソーヴィニヨン", country: "アメリカ" },
-    { type: "red", name: "サンジョヴェーゼ", country: "イタリア" },
+    { no: 1, type: "white", name: "ミュスカデ", country: "フランス", vintage: 2021 },
+    { no: 2, type: "white", name: "シャルドネ", country: "日本", vintage: 2023 },
+    { no: 3, type: "red", name: "カベルネ・ソーヴィニヨン", country: "アメリカ", vintage: 2021 },
+    { no: 4, type: "red", name: "サンジョヴェーゼ", country: "イタリア", vintage: 2020 },
     { type: "other", name: "バーボン・ウイスキー" },
+  ], sommelier: [
+    { no: 1, type: "white", name: "リースリング", country: "ドイツ", vintage: 2021 },
+    { no: 2, type: "white", name: "ソーヴィニヨン・ブラン", country: "フランス", vintage: 2022 },
+    { no: 3, type: "red", name: "シラー", country: "オーストラリア", vintage: 2021 },
   ]},
   { year: 2023, items: [
-    { type: "white", name: "ソーヴィニヨン・ブラン", country: "チリ" },
-    { type: "white", name: "リースリング", country: "オーストラリア" },
-    { type: "red", name: "グルナッシュ", country: "フランス" },
-    { type: "red", name: "テンプラニーリョ", country: "スペイン" },
+    { no: 1, type: "white", name: "ソーヴィニヨン・ブラン", country: "チリ", vintage: 2021 },
+    { no: 2, type: "white", name: "リースリング", country: "オーストラリア", vintage: 2021 },
+    { no: 3, type: "red", name: "グルナッシュ", country: "フランス", vintage: 2021 },
+    { no: 4, type: "red", name: "テンプラニーリョ", country: "スペイン", vintage: 2017 },
     { type: "other", name: "ジン" },
+  ], sommelier: [
+    { no: 1, type: "white", name: "ソーヴィニヨン・ブラン", country: "フランス", vintage: 2021 },
+    { type: "red", name: "マルベック", country: "アルゼンチン", vintage: 2020 },
+    { no: 3, type: "red", name: "メルロー", country: "日本", vintage: 2018 },
   ]},
   { year: 2022, items: [
-    { type: "white", name: "ソーヴィニヨン・ブラン", country: "ニュージーランド" },
-    { type: "white", name: "甲州", country: "日本" },
-    { type: "red", name: "カベルネ・ソーヴィニヨン", country: "アメリカ" },
-    { type: "red", name: "シラー", country: "フランス" },
+    { no: 1, type: "white", name: "ソーヴィニヨン・ブラン", country: "ニュージーランド", vintage: 2019 },
+    { no: 2, type: "white", name: "甲州", country: "日本", vintage: 2021 },
+    { no: 3, type: "red", name: "カベルネ・ソーヴィニヨン", country: "アメリカ", vintage: 2019 },
+    { no: 4, type: "red", name: "シラー", country: "フランス", vintage: 2018 },
     { type: "other", name: "オー・ド・ヴィー・ド・キルシュ" },
   ]},
   { year: 2021, items: [
-    { type: "white", name: "リースリング", country: "フランス" },
-    { type: "white", name: "ヴィオニエ", country: "フランス" },
-    { type: "red", name: "テンプラニーリョ", country: "スペイン" },
-    { type: "red", name: "カベルネ・ソーヴィニヨン", country: "チリ" },
+    { no: 1, type: "white", name: "リースリング", country: "フランス", vintage: 2019 },
+    { no: 2, type: "white", name: "ヴィオニエ", country: "フランス", vintage: 2019 },
+    { no: 3, type: "red", name: "テンプラニーリョ", country: "スペイン", vintage: 2017 },
+    { no: 4, type: "red", name: "カベルネ・ソーヴィニヨン", country: "チリ", vintage: 2018 },
     { type: "other", name: "テキーラ" },
+  ], sommelier: [
+    { no: 1, type: "white", name: "シャルドネ", country: "フランス", vintage: 2019 },
+    { no: 2, type: "red", name: "サンジョヴェーゼ", country: "イタリア", vintage: 2018 },
+    { no: 3, type: "red", name: "メルロー", country: "アメリカ", vintage: 2017 },
   ]},
   { year: 2020, items: [
     { type: "white", name: "トロンテス", country: "アルゼンチン" },

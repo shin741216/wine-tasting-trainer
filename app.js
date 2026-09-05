@@ -16,6 +16,7 @@ const HELP = {
       <li>📝 <b>コメント選択練習</b> — 本番形式の用語シートで解答し採点</li>
       <li>🃏 <b>品種フラッシュカード</b> — 品種の特徴を暗記</li>
       <li>❓ <b>品種当てクイズ</b> — コメントから品種を推測</li>
+      <li>🧭 <b>タイプ別テッパン</b> — 5タイプ別の定石コメント早見表</li>
       <li>📊 <b>出題傾向データ</b> — 過去15年の出題実績</li>
       <li>📖 <b>模範解答 比較閲覧</b> — 品種×生産地で正解を見比べ</li>
     </ul>
@@ -57,22 +58,33 @@ const HELP = {
     </ul>
     <p>出典はワイン受験.com「過去の出題ワインの品種と生産国」。頻出品種から優先して対策するのがおすすめです。</p>` },
   data: { title: "収録データについて（重要）", body: `
-    <p>このアプリの出力が「何の情報をもとにしているか」の説明です。画面の各所に表示される出所バッジで見分けられます：<span class="src-badge ai">🤖 AI参考解答</span>＝AI作成の参考データ、<span class="src-badge real">📜 実物過去問</span>＝本試験で実際に発表された正解・実績データ。</p>
+    <p>このアプリの出力が「何の情報をもとにしているか」の説明です。画面の各所に表示される出所バッジで見分けられます：<span class="src-badge ai">🤖 AI参考解答</span>＝AI作成の参考データ、<span class="src-badge real">📜 実物過去問</span>＝本試験で実際に発表された正解・実績データ、<span class="src-badge transcribed">📝 転記・未検証</span>＝会員限定公開の正解を個人ブログが転記したもの、<span class="src-badge teppan">🧭 ブログ分析の定石</span>＝個人ブログが過去問から逆算した分析。</p>
     <ul>
       <li><b>用語選択シート</b> — ワイン受験.com公開の「テイスティング解答用紙 2026年版」（白・赤）に項目・用語・並び順を準拠しています。ただし各項目の「いくつ選べ」の数は本番で年により変わるため、本アプリ独自の目安です</li>
-      <li><b>模範解答（44ワイン）</b> — コメント選択練習の採点・品種当てクイズ・模範解答比較閲覧で使われる正解データです。<b>実際の試験の正解ではなく、AI（Claude）がソムリエ・ワインエキスパート試験対策の定石に基づいて作成した参考解答</b>です。過去15年（2011〜2025年）に出題された品種×生産地の組み合わせは全てカバーしています</li>
+      <li><b>模範解答（コメント練習用）</b> — コメント選択練習の採点・品種当てクイズ・模範解答比較閲覧で使われる正解データです。<b>実際の試験の正解ではなく、AI（Claude）がソムリエ・ワインエキスパート試験対策の定石に基づいて作成した参考解答</b>です。過去15年（2011〜2025年）に出題された品種×生産地の組み合わせは全てカバーしています</li>
       <li><b>品種フラッシュカード（26品種）</b> — 特徴文・生産地による違いも同じくAI執筆の参考情報です</li>
-      <li><b>過去の出題実績（2011〜2025年）</b> — 出題傾向データの元データで、ワイン受験.com「過去の出題ワインの品種と生産国」から取得した実績情報です（アプリ内に出典リンクあり）</li>
+      <li><b>過去の出題実績（2011〜2025年）</b> — 品種と生産国はワイン受験.com「過去の出題ワインの品種と生産国」から。<b>ヴィンテージ・出題番号・ソムリエ試験分</b>は個人ブログ「ニライカナイCH」2026年版シリーズから補ったもので、こちらは未検証です（品種・生産国が両者で一致することは確認済み）</li>
+      <li><b>タイプ別テッパン</b> — 同じ個人ブログが過去5年の模範解答から逆算した定石です。<b>協会の公式見解ではなく</b>、「採用率100%」などの数値も筆者の集計で、こちらで検証していません</li>
     </ul>
-    <p><b>過去問アーカイブ（21本）</b> — こちらは唯一の実物データで、本試験で実際に発表された正解（2015・2017・2018年出題分）です。2016年は正解未公表、2019年以降は日本ソムリエ協会の会員専用ページで前年分のみ期間限定公開のため、収録できるのはこの3年分です。</p>
-    <p>AI作成の参考解答には誤りが含まれる可能性があります。お手元の教材と記述が異なる場合は教材を優先してください。</p>` },
+    <p><b>過去問アーカイブ</b> — 本試験で実際に発表された正解です。2015・2017・2018年の21本は一般公開されている正解PDFから（📜）、2021〜2025年の8本は会員限定公開の正解を個人ブログが記事中に転記した内容から収録しています（📝・原本と未照合）。2016年は正解未公表、2019・2020・2022年は転記元にも記載がないため収録できていません。</p>
+    <p>AI作成の参考解答、および個人ブログ由来のデータには誤りが含まれる可能性があります。お手元の教材と記述が異なる場合は教材を優先してください。</p>` },
   archive: { title: "過去問アーカイブの使い方", body: `
     <ul>
       <li>本試験で実際に発表された正解（模範解答）を年度別に閲覧できます。<b>AI作成ではない実物のデータ</b>です</li>
       <li>年度をタップして開き、ワインをタップすると全項目の正解が表示されます</li>
-      <li>収録は一般公開されている2015・2017・2018年出題分（21本、ソムリエ・エキスパート両方の出題を含む）。2016年は正解未公表、2019年以降はJ.S.A.会員限定公開のため収録していません</li>
+      <li>📜 <b>実物過去問</b> — 一般公開されている正解PDF（2015・2017・2018年の21本）から収録</li>
+      <li>📝 <b>転記・未検証</b> — 2019年以降の正解はJ.S.A.会員限定公開のため、個人ブログが記事中に転記した内容から収録（2021〜2025年の8本）。<b>原本と照合していません</b>。公式PDFを入手できたら差し替えてください</li>
+      <li>ワイン名の前の「WE③」「ソムリエ②」は試験区分と出題番号です</li>
       <li>項目・用語は出題当時の解答用紙の様式のままなので、現在のシート（コメント練習）と一部異なります</li>
     </ul>` },
+  teppan: { title: "タイプ別テッパンの使い方", body: `
+    <p>ワインを「淡い白／濃い白／淡い赤／濃い赤／特殊」の5タイプに振り分け、そのタイプで採用率の高いコメントを機械的に置くための早見表です。</p>
+    <ul>
+      <li>上のタブでタイプを切り替えます</li>
+      <li><b>判定サイン</b>で目の前のワインがどのタイプかを決めてから、<b>項目別テッパン</b>を上から置いていきます</li>
+      <li>各項目の下の細い行は<b>条件分岐</b>です。下位タイプ（軽やか型／骨格型など）で選ぶ用語が変わる箇所を書いています</li>
+    </ul>
+    <p>⚠ この内容は<b>協会の公式見解ではありません</b>。個人ブログの筆者が過去5年の模範解答から逆算した分析で、採用率の数値も筆者の集計です。実物の正解は「🗄️ 過去問アーカイブ」で確認してください。</p>` },
   compare: { title: "模範解答 比較閲覧の使い方", body: `
     <ul>
       <li>「白ワイン品種」「赤ワイン品種」のタブを開いて品種を選びます</li>
@@ -90,6 +102,7 @@ function viewHelpKey() {
   if (view === "stats") return "stats";
   if (view === "compare") return "compare";
   if (view === "archive") return "archive";
+  if (view === "teppan") return "teppan";
   return "launcher";
 }
 
@@ -107,11 +120,16 @@ document.getElementById("help-backdrop").addEventListener("click", () =>
   document.getElementById("help-modal").classList.add("hidden"));
 
 // ---------------- 解答の出所バッジ ----------------
-// AI参考解答（WINES/GRAPES）と実物の過去問正解（PAST_ANSWERS）を見分けるための表示
+// データの出所を見分けるための表示
+//   real        : 一般公開されている実物の模範解答（PAST_ANSWERS の 2015/2017/2018年）
+//   transcribed : 会員専用公開分を個人ブログが転記したもの（PAST_ANSWERS の 2021〜2025年）
+//   teppan      : 個人ブログが過去問から逆算した定石（TEPPAN）
+//   ai          : AI参考解答（WINES / GRAPES）
 function srcBadge(kind) {
-  return kind === "real"
-    ? '<span class="src-badge real">📜 実物過去問</span>'
-    : '<span class="src-badge ai">🤖 AI参考解答</span>';
+  if (kind === "real") return '<span class="src-badge real">📜 実物過去問</span>';
+  if (kind === "transcribed") return '<span class="src-badge transcribed">📝 転記・未検証</span>';
+  if (kind === "teppan") return '<span class="src-badge teppan">🧭 ブログ分析の定石</span>';
+  return '<span class="src-badge ai">🤖 AI参考解答</span>';
 }
 
 // ---------------- 練習結果の一時保存 ----------------
@@ -154,9 +172,10 @@ const FEATURES = [
   { id: "comment", icon: "📝", title: "テイスティングコメント選択練習", desc: "本番の解答用紙を模した用語シートで練習", active: true, src: "ai" },
   { id: "flashcard", icon: "🃏", title: "主要品種フラッシュカード", desc: "品種ごとの特徴を暗記", active: true, src: "ai" },
   { id: "quiz", icon: "❓", title: "品種当てクイズ", desc: "コメントから品種を推測", active: true, src: "ai" },
+  { id: "teppan", icon: "🧭", title: "タイプ別テッパンコメント", desc: "4タイプ＋特殊の定石を暗記", active: true, src: "teppan" },
   { id: "stats", icon: "📊", title: "過去の出題品種 傾向データ", desc: "出題実績をチェック", active: true, src: "real" },
   { id: "compare", icon: "📖", title: "模範解答 比較閲覧", desc: "品種×生産地でコメント正解を見比べ", active: true, src: "ai" },
-  { id: "archive", icon: "🗄️", title: "過去問アーカイブ", desc: "本試験の実物の正解（2015・2017・2018年）", active: true, src: "real" },
+  { id: "archive", icon: "🗄️", title: "過去問アーカイブ", desc: "本試験の実物の正解（2015〜2025年の29本）", active: true, src: "real" },
   { id: "guide", icon: "📘", title: "使い方", desc: "各機能の説明・操作方法", active: true },
 ];
 
@@ -192,6 +211,74 @@ function showLauncher() {
       if (tile.dataset.feature === "compare") showCompare();
       if (tile.dataset.feature === "guide") showGuide();
       if (tile.dataset.feature === "archive") showArchive();
+      if (tile.dataset.feature === "teppan") showTeppan();
+    });
+  });
+  window.scrollTo(0, 0);
+}
+
+// ---------------- teppan (タイプ別テッパンコメント) ----------------
+const tpState = { id: null };
+
+function showTeppan() {
+  view = "teppan";
+  headerTitle.textContent = "タイプ別テッパン";
+  btnHome.classList.remove("hidden");
+  footerBar.classList.add("hidden");
+  if (!tpState.id) tpState.id = TEPPAN[0].id;
+  renderTeppan();
+}
+
+function renderTeppan() {
+  const t = TEPPAN.find(x => x.id === tpState.id) || TEPPAN[0];
+
+  let itemsHtml = "", lastG = null;
+  for (const it of t.items) {
+    if (it.g !== lastG) { itemsHtml += `<div class="tp-group">${it.g}</div>`; lastG = it.g; }
+    itemsHtml += `
+      <div class="tp-row">
+        <div class="tp-item">${it.item}</div>
+        <div class="tp-base">${it.base}</div>
+        ${it.branch ? `<div class="tp-branch">${it.branch}</div>` : ""}
+      </div>`;
+  }
+
+  screen.innerHTML = `
+    <p class="home-lead">タイプを見極めてから、その型のコメントを機械的に置いていくための早見表です。${srcBadge("teppan")}</p>
+    <div class="tp-tabs">
+      ${TEPPAN.map(x => `
+        <button class="chip tp-tab ${x.id === t.id ? "active" : ""}" data-tp="${x.id}">${x.icon} ${x.title}</button>
+      `).join("")}
+    </div>
+
+    <div class="section-card">
+      <div class="section-head"><span class="section-title">${t.icon} ${t.title}｜${t.subtitle}</span></div>
+      <p class="tp-lead">${t.lead}</p>
+      <div class="tp-sub">代表品種</div>
+      <p class="tp-text">${t.grapes}</p>
+      <div class="tp-sub">このタイプと判定するサイン</div>
+      <ul class="tp-list">${t.signs.map(s => `<li>${s}</li>`).join("")}</ul>
+      <div class="tp-sub">下位タイプ</div>
+      <ul class="tp-list">${t.subtypes.map(s => `<li><b>${s.name}</b> — ${s.grapes}</li>`).join("")}</ul>
+    </div>
+
+    <h2 class="group-title">項目別テッパン</h2>
+    <div class="section-card tp-table">${itemsHtml}</div>
+
+    <h2 class="group-title">過去5年から読み取れる法則</h2>
+    <div class="section-card">
+      <ul class="tp-list">${t.laws.map(l => `<li>${l}</li>`).join("")}</ul>
+      <div class="tp-caution">⚠ ${t.caution}</div>
+    </div>
+
+    <p class="reveal-note">出典: <a href="https://niraikanao-ch1.com/tastingmatome-2026/" target="_blank" rel="noopener">個人ブログ「ニライカナイCH」2026年版 二次試験対策シリーズ</a>（2026年9月取得）。<b>協会の公式見解ではなく、筆者が過去5年の模範解答から逆算した分析</b>です。採用率の数値も筆者の集計で、こちらで検証していません。実物の正解は「🗄️ 過去問アーカイブ」を参照してください。用語の表記はこのアプリの用語シート（data.js の VOCAB）に合わせているため、本番の用紙とは一部異なります。</p>
+  `;
+
+  screen.querySelectorAll(".tp-tab").forEach(b => {
+    b.addEventListener("click", () => {
+      tpState.id = b.dataset.tp;
+      renderTeppan();
+      window.scrollTo(0, 0);
     });
   });
   window.scrollTo(0, 0);
@@ -527,16 +614,25 @@ function showStats() {
     `;
   };
 
+  const itemRow = item => `
+    <div class="stat-exam-item">
+      <span>${item.type === "white" ? "🥂" : item.type === "red" ? "🍷" : "🥃"}</span>
+      <span class="stat-exam-no">${item.no ? `${item.no}` : ""}</span>
+      <span class="stat-exam-name">${item.name}</span>
+      <span class="stat-exam-country">${item.country || "その他の酒類"}</span>
+      <span class="stat-exam-vintage">${item.vintage ? `${item.vintage}` : ""}</span>
+    </div>
+  `;
+
   const yearHtml = PAST_EXAMS.map(exam => `
     <div class="section-card">
       <div class="section-head"><span class="section-title">${exam.year}年</span></div>
-      ${exam.items.map(item => `
-        <div class="stat-exam-item">
-          <span>${item.type === "white" ? "🥂" : item.type === "red" ? "🍷" : "🥃"}</span>
-          <span class="stat-exam-name">${item.name}</span>
-          <span class="stat-exam-country">${item.country || "その他の酒類"}</span>
-        </div>
-      `).join("")}
+      <div class="stat-exam-sub">ワインエキスパート</div>
+      ${exam.items.map(itemRow).join("")}
+      ${exam.sommelier ? `
+        <div class="stat-exam-sub sommelier">ソムリエ</div>
+        ${exam.sommelier.map(itemRow).join("")}
+      ` : ""}
     </div>
   `).join("");
 
@@ -546,8 +642,9 @@ function showStats() {
     ${rankingHtml("white", "白ワイン", "🥂")}
     ${rankingHtml("red", "赤ワイン", "🍷")}
     <h2 class="group-title">年度別の出題</h2>
+    <p class="reveal-note">左の数字は出題番号、右の数字はヴィンテージです。ランキングの集計対象はワインエキスパートの出題のみで、ソムリエ試験分は参考表示です。</p>
     ${yearHtml}
-    <p class="reveal-note">出典: <a href="https://www.wine-jyuken.com/second_exam/kakonosyutudai" target="_blank" rel="noopener">ワイン受験.com「過去の出題ワインの品種と生産国」</a>（2026年8月取得）。シラーズはシラーとして集計しています。最新情報や訂正は data.js の PAST_EXAMS を編集してください。</p>
+    <p class="reveal-note">出典: 品種・生産国は <a href="https://www.wine-jyuken.com/second_exam/kakonosyutudai" target="_blank" rel="noopener">ワイン受験.com「過去の出題ワインの品種と生産国」</a>（2026年8月取得）。ヴィンテージ・出題番号・ソムリエ試験分は<a href="https://niraikanao-ch1.com/tastingmatome-2026/" target="_blank" rel="noopener">個人ブログ「ニライカナイCH」2026年版シリーズ</a>（2026年9月取得）から補いました。後者は未検証の転記です（品種・生産国が両者で一致することは確認済み）。シラーズはシラーとして集計しています。最新情報や訂正は data.js の PAST_EXAMS を編集してください。</p>
   `;
   window.scrollTo(0, 0);
 }
@@ -560,16 +657,24 @@ function showArchive() {
   footerBar.classList.add("hidden");
 
   const years = [...new Set(PAST_ANSWERS.map(a => a.examYear))].sort((a, b) => b - a);
+  const circled = ["", "①", "②", "③", "④", "⑤"];
+  const examLabel = a => {
+    const e = a.exam === "sommelier" ? "ソムリエ" : a.exam === "we" ? "WE" : "";
+    if (!e) return "";
+    return `<span class="ar-exam">${e}${circled[a.no] || ""}</span>`;
+  };
   screen.innerHTML = `
-    <p class="home-lead">本試験で実際に発表された正解（模範解答）です。一般公開されている2015・2017・2018年出題分（全${PAST_ANSWERS.length}本、ソムリエ・ワインエキスパート両方の出題を含む）を収録しています。</p>
+    <p class="home-lead">本試験で実際に発表された正解（模範解答）です。全${PAST_ANSWERS.length}本。ソムリエ・ワインエキスパート両方の出題を含みます。</p>
+    <p class="reveal-note">📜 は一般公開されている正解PDF（2015・2017・2018年）から、📝 は2019年以降の会員専用公開分を個人ブログが転記したものからの収録です。<b>📝 は原本と照合していない未検証データ</b>なので、公式PDFを入手できたら差し替えてください。</p>
     ${years.map((y, yi) => `
       <details class="cmp-acc" ${yi === 0 ? "open" : ""}>
         <summary>📅 ${y}年出題（${PAST_ANSWERS.filter(a => a.examYear === y).length}本）</summary>
         <div class="cmp-acc-body ar-year">
           ${PAST_ANSWERS.filter(a => a.examYear === y).map((a, i) => `
             <details class="ar-wine">
-              <summary>${a.color === "white" ? "🥂" : "🍷"} ${a.grape}（${a.country}）<span class="ar-vintage">${a.vintage}</span> ${srcBadge("real")}</summary>
+              <summary>${a.color === "white" ? "🥂" : "🍷"} ${examLabel(a)} ${a.grape}（${a.country}）<span class="ar-vintage">${a.vintage}</span> ${srcBadge(a.source === "blog" ? "transcribed" : "real")}</summary>
               <div class="ar-body">
+                ${a.note ? `<div class="ar-note">⚠ ${a.note}</div>` : ""}
                 ${(() => {
                   let html = "", lastG = null;
                   for (const [g, title, terms] of a.sections) {
@@ -584,7 +689,7 @@ function showArchive() {
         </div>
       </details>
     `).join("")}
-    <p class="reveal-note">出典: <a href="https://www.wine-jyuken.com/second_exam/kakonoseikai" target="_blank" rel="noopener">ワイン受験.com「過去の出題のテイスティングコメントの正解（模範解答）」</a>。項目・用語は出題当時の解答用紙の様式のままです（現在のシートと一部異なります）。2016年は正解未公表、2019年以降はJ.S.A.会員専用ページのみでの公開のため収録していません。</p>
+    <p class="reveal-note">出典: 📜 は <a href="https://www.wine-jyuken.com/second_exam/kakonoseikai" target="_blank" rel="noopener">ワイン受験.com「過去の出題のテイスティングコメントの正解（模範解答）」</a>。📝 は<a href="https://niraikanao-ch1.com/tastingmatome-2026/" target="_blank" rel="noopener">個人ブログ「ニライカナイCH」2026年版シリーズ</a>（2026年9月取得）。項目・用語は出題当時の解答用紙の様式のままです（現在のシートと一部異なります）。2016年・2019年・2020年・2022年は正解を収録できていません。</p>
   `;
   window.scrollTo(0, 0);
 }
@@ -595,7 +700,7 @@ function showGuide() {
   headerTitle.textContent = "使い方";
   btnHome.classList.remove("hidden");
   footerBar.classList.add("hidden");
-  const order = ["launcher", "data", "comment", "sheet", "flashcards", "quiz", "stats", "compare", "archive"];
+  const order = ["launcher", "data", "comment", "sheet", "flashcards", "quiz", "teppan", "stats", "compare", "archive"];
   screen.innerHTML = order.map(k => `
     <div class="section-card">
       <div class="section-head"><span class="section-title">${HELP[k].title}</span></div>
@@ -615,10 +720,11 @@ function showCompare() {
   footerBar.classList.add("hidden");
 
   // WINESに存在する品種を白→赤の順で列挙（重複除去）
+  // 実物の模範解答から作った練習ワイン（origin: "past"）は生産地が重複するため比較表からは除く
   const grapes = [];
   for (const color of ["white", "red"]) {
     for (const g of VOCAB[color].find(s => s.id === "grape").terms) {
-      if (WINES.some(w => w.color === color && w.answers.grape[0] === g)) grapes.push({ name: g, color });
+      if (WINES.some(w => w.origin !== "past" && w.color === color && w.answers.grape[0] === g)) grapes.push({ name: g, color });
     }
   }
   if (!cmpGrape || !grapes.some(g => g.name === cmpGrape)) cmpGrape = grapes[0].name;
@@ -656,7 +762,7 @@ function showCompare() {
 function renderCompareTable() {
   screen.querySelectorAll(".cmp-grape").forEach(b =>
     b.classList.toggle("on", b.dataset.g === cmpGrape));
-  const wines = WINES.filter(w => w.answers.grape[0] === cmpGrape);
+  const wines = WINES.filter(w => w.origin !== "past" && w.answers.grape[0] === cmpGrape);
   const color = wines[0].color;
   const sections = VOCAB[color].filter(s => !["grape", "country", "vintage"].includes(s.id));
 
@@ -796,7 +902,7 @@ function startPractice(wine, blind) {
   const vocab = VOCAB[wine.color];
   let html = `
     <div class="sheet-wine-banner">
-      <div class="b-label">出題ワイン ${srcBadge("ai")}</div>
+      <div class="b-label">出題ワイン ${srcBadge(wine.origin === "past" ? "transcribed" : "ai")}</div>
       <div class="b-name">${blind ? (wine.color === "white" ? "白ワイン（銘柄非公開）" : "赤ワイン（銘柄非公開）") : wine.name}</div>
     </div>
   `;
@@ -811,7 +917,7 @@ function startPractice(wine, blind) {
       <div class="section-card" data-sec="${sec.id}">
         <div class="section-head">
           <span class="section-title">${sec.title}</span>
-          <span class="section-count" data-count>0/${sec.pick}</span>
+          <span class="section-count" data-count>0/${pickFor(wine, sec)}</span>
         </div>
         <div class="chips">
           ${sec.terms.map(t => `<button class="chip" data-term="${t}">${t}</button>`).join("")}
@@ -824,6 +930,7 @@ function startPractice(wine, blind) {
   screen.querySelectorAll(".section-card").forEach(card => {
     const secId = card.dataset.sec;
     const sec = vocab.find(s => s.id === secId);
+    const pick = pickFor(wine, sec);
     selections[secId] = new Set();
     card.querySelectorAll(".chip").forEach(chip => {
       chip.addEventListener("click", () => {
@@ -833,7 +940,7 @@ function startPractice(wine, blind) {
           set.delete(term);
           chip.classList.remove("on");
         } else {
-          if (set.size >= sec.pick) {
+          if (set.size >= pick) {
             // 上限に達していたら最も古い選択を外す（pick=1ならワンタップ切替）
             const oldest = set.values().next().value;
             set.delete(oldest);
@@ -844,8 +951,8 @@ function startPractice(wine, blind) {
           chip.classList.add("on");
         }
         const countEl = card.querySelector("[data-count]");
-        countEl.textContent = `${set.size}/${sec.pick}`;
-        countEl.classList.toggle("full", set.size === sec.pick);
+        countEl.textContent = `${set.size}/${pick}`;
+        countEl.classList.toggle("full", set.size === pick);
         updateProgress();
       });
     });
@@ -855,9 +962,19 @@ function startPractice(wine, blind) {
   window.scrollTo(0, 0);
 }
 
+// 項目ごとの選択数。実物の模範解答から作った練習ワイン（origin: "past"）だけは
+// 用語シート既定の pick ではなく、その年の正解の語数に合わせる
+function pickFor(wine, sec) {
+  if (wine && wine.origin === "past") {
+    const a = wine.answers[sec.id];
+    if (a && a.length) return a.length;
+  }
+  return sec.pick;
+}
+
 function updateProgress() {
   const vocab = VOCAB[currentWine.color];
-  const done = vocab.filter(s => selections[s.id] && selections[s.id].size === s.pick).length;
+  const done = vocab.filter(s => selections[s.id] && selections[s.id].size === pickFor(currentWine, s)).length;
   footerProgress.textContent = `記入済み ${done} / ${vocab.length} 項目`;
 }
 
@@ -918,13 +1035,14 @@ function showResult() {
     <div class="score-card">
       <div class="s-wine">${wine.name}</div>
       <div class="s-score">${pct}点</div>
-      <div class="s-detail">模範解答 ${totalModel} 語中 ${totalHit} 語一致 ${srcBadge("ai")}</div>
+      <div class="s-detail">模範解答 ${totalModel} 語中 ${totalHit} 語一致 ${srcBadge(wine.origin === "past" ? "transcribed" : "ai")}</div>
     </div>
     <div class="legend">
       <span class="l-ok">正解（選択して一致）</span>
       <span class="l-miss">選び漏れ</span>
       <span class="l-wrong">誤って選択</span>
     </div>
+    ${wine.origin === "past" ? `<div class="ar-note">📝 この正解は本試験で発表された模範解答ですが、会員限定公開分を個人ブログが転記した内容から収録したもので、原本と照合していません。${wine.caveat ? `<br>${wine.caveat}` : ""}</div>` : ""}
     ${sectionsHtml}
     <div class="result-actions">
       <button class="btn-secondary" id="btn-retry">同じワインでもう一度</button>
