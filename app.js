@@ -28,7 +28,7 @@ const HELP = {
       <li><b>ワインを選ぶ</b> — 銘柄を見て選ぶか、「ランダム出題」でブラインド練習ができます。ランダムは白・赤を選んでから出題されます</li>
       <li><b>ブラインドテイスティングでの使い方</b> — 実際にワインを飲みながらランダム出題でシートを記入→採点すると本番に近い練習になります</li>
       <li><b>結果の一時保存</b> — 採点結果は自動で一時保存され、この画面に一覧表示されます。複数本の練習が終わったら「練習完了」で記録を削除できます</li>
-      <li><b>一覧の末尾の5本</b>（名前に「2025年ソムリエ①」のように年度が入っているもの）は、AI参考解答ではなく<b>本試験の模範解答そのもの</b>で採点します。項目ごとの選択数もその年の正解の語数になります</li>
+      <li><b>一覧の末尾の27本</b>（名前に「2025年ソムリエ①」のように年度が入っているもの）は、AI参考解答ではなく<b>本試験の模範解答そのもの</b>で採点します。項目ごとの選択数もその年の正解の語数になります</li>
     </ul>
     <p><b>データの出所</b> — 一覧の各ワインにバッジが付いています。<span class="src-badge ai">🤖 AI参考解答</span> はAIが試験対策の定石に基づいて作成した参考解答、<span class="src-badge transcribed">📝 転記・未検証</span> は本試験で実際に発表された模範解答ですが、会員限定公開分を個人ブログが転記した内容から収録しており原本と照合していません。</p>` },
   sheet: { title: "用語シートの使い方", body: `
@@ -56,12 +56,13 @@ const HELP = {
       <li>回答すると正誤と正解ワインの解説が表示されます。解説の先頭のバッジで、そのコメントがAI参考解答か実物の模範解答かが分かります</li>
       <li>全問終了後にスコアが表示されます。中断は左上の ◀</li>
     </ul>
-    <p><b>データの出所</b> — 出題コメントの大半は <span class="src-badge ai">🤖 AI参考解答</span> から組み立てています。名前に年度が入った5本だけは <span class="src-badge transcribed">📝 転記・未検証</span> で、本試験の模範解答から組み立てたものです。</p>` },
+    <p><b>データの出所</b> — 出題コメントの大半は <span class="src-badge ai">🤖 AI参考解答</span> から組み立てています。名前に年度が入った27本だけは <span class="src-badge transcribed">📝 転記・未検証</span> で、本試験の模範解答から組み立てたものです。</p>` },
   stats: { title: "出題傾向データの見方", body: `
     <ul>
       <li><b>品種別ランキング</b> — 2011〜2025年の出題回数。バーの下の数字は出題年です。集計対象は<b>ワインエキスパートの出題のみ</b>で、ソムリエ試験分は含めていません</li>
       <li><b>年度別の出題</b> — 各年の出題ワイン（🥂白・🍷赤・🥃その他の酒類）。試験区分ごとに分けて表示します</li>
       <li>品種名の左の数字は<b>出題番号</b>、右の数字は<b>ヴィンテージ</b>です。空欄は出所が見つかっていない箇所です（2025年WE③のテンプラニーリョなど）</li>
+      <li><b>📜 付きの品種名</b>はタップすると、過去問アーカイブのその正解へ直接移動します。アーカイブ側の「この正解で採点する練習へ」から、そのまま用語シートで練習できます</li>
     </ul>
     <p><b>データの出所</b> — 品種・生産国はワイン受験.com「過去の出題ワインの品種と生産国」。出題番号・ヴィンテージ・ソムリエ試験分は個人ブログ「ニライカナイCH」から補ったもので<b>未検証</b>です（品種・生産国が両者で一致することは確認済み）。画面下部に出典リンクがあります。頻出品種から優先して対策するのがおすすめです。</p>` },
   data: { title: "収録データについて（重要）", body: `
@@ -83,6 +84,7 @@ const HELP = {
       <li>📝 <b>転記・未検証</b> — 2019年以降の正解はJ.S.A.会員限定公開のため、個人ブログが記事中に転記した内容から収録（2021〜2025年の31本）。<b>原本と照合していません</b>。公式PDFを入手できたら差し替えてください</li>
       <li>2021〜2025年で収録できていないのは、2025年WE③テンプラニーリョ（スペイン）と2022年ソムリエの3本です（転記元に記載なし）</li>
       <li>ワイン名の前の「WE③」「ソムリエ②」は試験区分と出題番号です</li>
+      <li>正解の上にある<b>「この正解で採点する練習へ」</b>を押すと、その模範解答で採点する用語シートが開きます（2021〜2025年の27本。収穫年が用語シートの範囲外の2017年ヴィンテージなどは対象外）</li>
       <li>項目・用語は出題当時の解答用紙の様式のままなので、現在のシート（コメント練習）と一部異なります</li>
     </ul>
     <p><b>データの出所</b> — 📜 はワイン受験.com が一般公開している正解PDF、📝 は個人ブログ「ニライカナイCH」2026年版シリーズが記事中に転記した内容です。画面下部に出典リンクがあります。</p>` },
@@ -101,7 +103,7 @@ const HELP = {
       <li>その品種の模範解答が<b>生産地ごとに横並びの表</b>で表示されます（横スクロール可）</li>
       <li><b>赤色の用語</b>は生産地間で答えが異なる箇所＝生産地当ての決め手です</li>
     </ul>
-    <p><b>データの出所</b> — この画面は <span class="src-badge ai">🤖 AI参考解答</span> だけを比較対象にしています。実物の模範解答から作った5本は、生産地が重複して表が読みにくくなるため除いています。本試験の正解は「🗄️ 過去問アーカイブ」で確認できます。</p>` },
+    <p><b>データの出所</b> — この画面は <span class="src-badge ai">🤖 AI参考解答</span> だけを比較対象にしています。実物の模範解答から作った27本は、生産地が重複して表が読みにくくなるため除いています。本試験の正解は「🗄️ 過去問アーカイブ」で確認できます。</p>` },
 };
 
 function viewHelpKey() {
@@ -146,7 +148,7 @@ function srcBadge(kind) {
 function srcNote(kind) {
   const notes = {
     wines: `<b>データの出所</b> — 模範解答の大半は ${srcBadge("ai")}（AIが試験対策の定石に基づいて作成した参考解答）です。
-      名前に年度が入った5本だけは ${srcBadge("transcribed")} で、本試験で実際に発表された模範解答ですが、
+      名前に年度が入った27本だけは ${srcBadge("transcribed")} で、本試験で実際に発表された模範解答ですが、
       会員限定公開分を個人ブログが転記した内容から収録しており、原本と照合していません。`,
     grapes: `<b>データの出所</b> — カードの特徴文と生産地による違いは ${srcBadge("ai")}（AI執筆の参考情報）です。
       本試験で実際に発表された正解は「🗄️ 過去問アーカイブ」で確認できます。`,
@@ -643,24 +645,31 @@ function showStats() {
     `;
   };
 
-  const itemRow = item => `
+  // 過去問アーカイブに同じ出題（年度・試験区分・番号）の正解があれば品種名をリンクにする
+  const archiveKeyFor = (year, examKind, item) =>
+    item.no && PAST_ANSWERS.some(a => a.examYear === year && a.exam === examKind && a.no === item.no)
+      ? `${year}|${examKind}|${item.no}` : null;
+  const itemRow = (item, year, examKind) => {
+    const key = archiveKeyFor(year, examKind, item);
+    return `
     <div class="stat-exam-item">
       <span>${item.type === "white" ? "🥂" : item.type === "red" ? "🍷" : "🥃"}</span>
       <span class="stat-exam-no">${item.no ? `${item.no}` : ""}</span>
-      <span class="stat-exam-name">${item.name}</span>
+      <span class="stat-exam-name">${key ? `<a href="#" class="stat-link" data-archive="${key}">${item.name} <span class="stat-link-mark">📜</span></a>` : item.name}</span>
       <span class="stat-exam-country">${item.country || "その他の酒類"}</span>
       <span class="stat-exam-vintage">${item.vintage ? `${item.vintage}` : ""}</span>
     </div>
   `;
+  };
 
   const yearHtml = PAST_EXAMS.map(exam => `
     <div class="section-card">
       <div class="section-head"><span class="section-title">${exam.year}年</span></div>
       <div class="stat-exam-sub">ワインエキスパート</div>
-      ${exam.items.map(itemRow).join("")}
+      ${exam.items.map(i => itemRow(i, exam.year, "we")).join("")}
       ${exam.sommelier ? `
         <div class="stat-exam-sub sommelier">ソムリエ</div>
-        ${exam.sommelier.map(itemRow).join("")}
+        ${exam.sommelier.map(i => itemRow(i, exam.year, "sommelier")).join("")}
       ` : ""}
     </div>
   `).join("");
@@ -671,20 +680,27 @@ function showStats() {
     ${rankingHtml("white", "白ワイン", "🥂")}
     ${rankingHtml("red", "赤ワイン", "🍷")}
     <h2 class="group-title">年度別の出題</h2>
-    <p class="reveal-note">左の数字は出題番号、右の数字はヴィンテージです。ランキングの集計対象はワインエキスパートの出題のみで、ソムリエ試験分は参考表示です。</p>
+    <p class="reveal-note">左の数字は出題番号、右の数字はヴィンテージです。📜 付きの品種名はタップすると、過去問アーカイブのその正解へ移動します。ランキングの集計対象はワインエキスパートの出題のみで、ソムリエ試験分は参考表示です。</p>
     ${yearHtml}
     <p class="reveal-note">出典: 品種・生産国は <a href="https://www.wine-jyuken.com/second_exam/kakonosyutudai" target="_blank" rel="noopener">ワイン受験.com「過去の出題ワインの品種と生産国」</a>（2026年8月取得）。ヴィンテージ・出題番号・ソムリエ試験分は<a href="https://niraikanao-ch1.com/tastingmatome-2026/" target="_blank" rel="noopener">個人ブログ「ニライカナイCH」2026年版シリーズ</a>（2026年9月取得）から補いました。後者は未検証の転記です（品種・生産国が両者で一致することは確認済み）。シラーズはシラーとして集計しています。最新情報や訂正は data.js の PAST_EXAMS を編集してください。</p>
   `;
+  screen.querySelectorAll(".stat-link").forEach(a => a.addEventListener("click", e => {
+    e.preventDefault();
+    showArchive(a.dataset.archive);
+  }));
   window.scrollTo(0, 0);
 }
 
 // ---------------- archive (過去問アーカイブ) ----------------
-function showArchive() {
+// focusKey: "年度|exam|番号"。指定があればその正解を開いてスクロールする（出題傾向データからのリンク用）
+function showArchive(focusKey) {
   view = "archive";
   headerTitle.textContent = "過去問アーカイブ";
   btnHome.classList.remove("hidden");
   footerBar.classList.add("hidden");
 
+  const keyOf = a => a.exam && a.no ? `${a.examYear}|${a.exam}|${a.no}` : "";
+  const practiceFor = a => WINES.find(w => w.origin === "past" && w.archiveKey === keyOf(a));
   const years = [...new Set(PAST_ANSWERS.map(a => a.examYear))].sort((a, b) => b - a);
   const circled = ["", "①", "②", "③", "④", "⑤"];
   const examLabel = a => {
@@ -703,10 +719,11 @@ function showArchive() {
             // 同じ年度内はソムリエ→WE、出題番号順に並べる（exam/no の無い古い年はファイル順のまま）
             .sort((a, b) => ((a.exam === "we") - (b.exam === "we")) || ((a.no || 0) - (b.no || 0)))
             .map((a, i) => `
-            <details class="ar-wine">
+            <details class="ar-wine" data-key="${keyOf(a)}">
               <summary>${a.color === "white" ? "🥂" : "🍷"} ${examLabel(a)} ${a.grape}（${a.country}）<span class="ar-vintage">${a.vintage}</span> ${srcBadge(a.source === "blog" ? "transcribed" : "real")}</summary>
               <div class="ar-body">
                 ${a.note ? `<div class="ar-note">⚠ ${a.note}</div>` : ""}
+                ${practiceFor(a) ? `<button class="btn-secondary ar-practice" data-id="${practiceFor(a).id}">📝 この正解で採点する練習へ</button>` : ""}
                 ${(() => {
                   let html = "", lastG = null;
                   for (const [g, title, terms] of a.sections) {
@@ -723,6 +740,20 @@ function showArchive() {
     `).join("")}
     <p class="reveal-note">出典: 📜 は <a href="https://www.wine-jyuken.com/second_exam/kakonoseikai" target="_blank" rel="noopener">ワイン受験.com「過去の出題のテイスティングコメントの正解（模範解答）」</a>。📝 は<a href="https://niraikanao-ch1.com/tastingmatome-2026/" target="_blank" rel="noopener">個人ブログ「ニライカナイCH」2026年版シリーズ</a>（2026年9月取得）。項目・用語は出題当時の解答用紙の様式のままです（現在のシートと一部異なります）。2016年・2019年・2020年、および2025年WE③・2022年ソムリエ3本は正解を収録できていません。</p>
   `;
+  screen.querySelectorAll(".ar-practice").forEach(b => b.addEventListener("click", e => {
+    e.preventDefault();
+    const w = WINES.find(x => x.id === b.dataset.id);
+    if (w) startPractice(w, false);
+  }));
+  if (focusKey) {
+    const target = screen.querySelector(`.ar-wine[data-key="${focusKey}"]`);
+    if (target) {
+      target.open = true;
+      target.closest("details.cmp-acc").open = true;
+      target.scrollIntoView({ block: "start" });
+      return;
+    }
+  }
   window.scrollTo(0, 0);
 }
 
@@ -1076,7 +1107,7 @@ function showResult() {
       <span class="l-miss">選び漏れ</span>
       <span class="l-wrong">誤って選択</span>
     </div>
-    ${wine.origin === "past" ? `<div class="ar-note">📝 この正解は本試験で発表された模範解答ですが、会員限定公開分を個人ブログが転記した内容から収録したもので、原本と照合していません。${wine.caveat ? `<br>${wine.caveat}` : ""}</div>` : ""}
+    ${wine.origin === "past" ? `<div class="ar-note">📝 この正解は本試験で発表された模範解答ですが、会員限定公開分を個人ブログが転記した内容から収録したもので、原本と照合していません。${wine.caveat ? `<br>${wine.caveat}` : ""}${wine.archiveKey ? `<br><a href="#" id="btn-archive-link">🗄️ 過去問アーカイブで原本どおりの正解を見る</a>` : ""}</div>` : ""}
     ${sectionsHtml}
     <div class="result-actions">
       <button class="btn-secondary" id="btn-retry">同じワインでもう一度</button>
@@ -1087,6 +1118,8 @@ function showResult() {
 
   document.getElementById("btn-retry").addEventListener("click", () => startPractice(wine, wine._blind));
   document.getElementById("btn-next").addEventListener("click", () => showHome());
+  const archiveLink = document.getElementById("btn-archive-link");
+  if (archiveLink) archiveLink.addEventListener("click", e => { e.preventDefault(); showArchive(wine.archiveKey); });
   window.scrollTo(0, 0);
 }
 
