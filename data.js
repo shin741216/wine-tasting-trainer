@@ -1409,7 +1409,7 @@ const PAST_EXAMS = [
     { type: "other", name: "ジン" },
   ], sommelier: [
     { no: 1, type: "white", name: "ソーヴィニヨン・ブラン", country: "フランス", vintage: 2021 },
-    { type: "red", name: "マルベック", country: "アルゼンチン", vintage: 2020 },
+    { no: 2, type: "red", name: "マルベック", country: "アルゼンチン", vintage: 2020 },
     { no: 3, type: "red", name: "メルロー", country: "日本", vintage: 2018 },
   ]},
   { year: 2022, items: [
