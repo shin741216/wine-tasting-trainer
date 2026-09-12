@@ -1292,6 +1292,12 @@ function showNotes(focusId) {
 
 // 白・赤それぞれの比較表。行＝項目、列＝ワイン。同色の全本で採用された語は太字（rc-common）、
 // 番号付きシートなら本番の番号を付ける。1本しかない色は共通語を出さない
+const NT_SHORT_TITLE = {
+  "特徴（果実・花・植物）": "果実・花・植物", "特徴（香辛料・芳香・化学物質）": "香辛料・芳香・化学物質",
+  "果実": "果実", "花・植物": "花・植物", "香辛料・芳香・化学物質": "香辛料・芳香・化学物質",
+  "甘み（アルコールのボリューム感も含む）": "甘み", "甘み（アルコールのボリューム感を含む）": "甘み",
+  "主なブドウ品種": "品種",
+};
 function notesTableHtml(wines, sheet, circled) {
   const tables = [];
   for (const color of ["white", "red"]) {
@@ -1304,13 +1310,13 @@ function notesTableHtml(wines, sheet, circled) {
       const cells = answers.map(a => a[sec.id] || []);
       const common = list.length >= 2 ? cells[0].filter(t => cells.every(c => c.includes(t))) : [];
       totalCommon += common.length;
-      rows += `<tr><th class="rc-item">${sec.title}</th>${cells.map(c => `<td>${c.map(t =>
-        `<span class="nt-term ${common.includes(t) ? "rc-common" : ""}">${sheet.numbered ? `<span class="chip-no">${sec.terms.indexOf(t) + 1}</span>` : ""}${t}</span>`).join("、") || "<span class='rc-none'>—</span>"}</td>`).join("")}</tr>`;
+      rows += `<tr><th class="rc-item">${NT_SHORT_TITLE[sec.title] || sec.title}</th>${cells.map(c => `<td>${c.map(t =>
+        `<span class="nt-term ${common.includes(t) ? "rc-common" : ""}">${sheet.numbered ? `<span class="chip-no">${sec.terms.indexOf(t) + 1}</span>` : ""}${t}</span>`).join("") || "<span class='rc-none'>—</span>"}</td>`).join("")}</tr>`;
     }
     tables.push(`
       <div class="section-card nt-table-card">
         <div class="section-head"><span class="section-title">${color === "white" ? "🥂 白ワイン" : "🍷 赤ワイン"}（${list.length}本）</span></div>
-        ${list.length >= 2 ? `<p class="rc-summary">${list.length}本すべてで共通する語: <b>${totalCommon}語</b>（<span class="rc-common">太字</span>）。横にスクロールできます。</p>` : ""}
+        ${list.length >= 2 ? `<p class="rc-summary">${list.length}本すべてで共通する語: <b>${totalCommon}語</b>（<span class="rc-common">太字</span>）。</p>` : ""}
         <div class="rc-wrap">
           <table class="rc-table">
             <thead><tr><th class="rc-item"></th>${list.map(w => `<th>${circled[w.noteNo] || w.noteNo} ${w.answers.grape[0]}<br><span class="rc-sub">${w.answers.country[0]}・${w.answers.vintage[0]}</span></th>`).join("")}</tr></thead>
