@@ -36,7 +36,7 @@ const HELP = {
     <ul>
       <li>選択数の上限に達した状態で別の用語をタップすると、最も古い選択と入れ替わります</li>
       <li>全項目を記入したら画面下の「採点する」をタップ。未記入があっても採点できます</li>
-      <li><b>🔍 推定</b> — 入力し終えたら（または途中でも5語以上選べば）タップすると、あなたの選択と解答データ（🤖AI参考解答44本＋📜実物過去問21本）を照合し、一致度の高い品種・生産地・収穫年の候補を表示します。ブラインド練習で採点前に自分の見立てを確かめるのに使えます</li>
+      <li><b>🔍 推定</b> — 入力し終えたら（または途中でも5語以上選べば）タップすると、あなたの選択を全解答データ（🤖AI参考解答、📜実物過去問、📝転記・未検証）と照合し、一致度の高い品種・生産地・収穫年の候補を出所バッジ付きで表示します。ブラインド練習で採点前に自分の見立てを確かめるのに使えます</li>
       <li>中断するときは左上の ◀（記入内容は破棄されます）</li>
       <li>採点結果は「正解（緑）／選び漏れ（黄）／誤って選択（赤）」で色分け表示されます</li>
     </ul>
@@ -191,9 +191,10 @@ function srcNote(kind) {
 }
 
 // ---------------- 選択からの品種・生産地・収穫年の推定 ----------------
-// ユーザーの選択用語を、AI参考解答（WINES）と実物過去問（PAST_ANSWERS）の
-// 両方と照合し、一致度の高い順に候補を表示する。
-// 旧様式（過去問）と現行シートの表記ゆれは TERM_ALIASES で吸収する。
+// ユーザーの選択用語を、AI参考解答（WINES）と過去問の模範解答（PAST_ANSWERS＝
+// 実物過去問＋転記・未検証）の両方と照合し、一致度の高い順に候補を表示する。
+// WINES の origin:"past"（実物解答から作った練習ワイン）は PAST_ANSWERS と
+// 重複するため候補から除く。表記ゆれは TERM_ALIASES で吸収する。
 const TERM_ALIASES = {
   "すいかずら": "スイカズラ", "洋ナシ": "洋梨", "ハチミツ": "蜂蜜",
   "パン・ド・ミ": "パン・ドゥ・ミ", "丁字": "丁子", "すみれ": "スミレ",
@@ -219,7 +220,7 @@ function runEstimate() {
 
   const cands = [];
   for (const w of WINES) {
-    if (w.color !== wine.color) continue;
+    if (w.color !== wine.color || w.origin === "past") continue;
     const s = new Set();
     for (const [id, arr] of Object.entries(w.answers)) {
       if (ESTIMATE_EXCLUDE.includes(id)) continue;
@@ -232,7 +233,7 @@ function runEstimate() {
     if (a.color !== wine.color) continue;
     const s = new Set();
     for (const [, , arr] of a.sections) arr.forEach(t => s.add(normTerm(t)));
-    cands.push({ src: "real", grape: a.grape, country: a.country,
+    cands.push({ src: a.source === "blog" ? "transcribed" : "real", grape: a.grape, country: a.country,
                  vintage: `${a.vintage}／${a.examYear}年出題`, color: a.color, terms: s });
   }
 
