@@ -518,3 +518,35 @@ main { padding: 16px 14px 120px; max-width: 640px; margin: 0 auto; }
   .tp-table .tp-group, .tp-table .tp-row { break-inside: avoid; }
   .tp-table .tp-group { margin-left: 0; margin-right: 0; padding-left: 8px; padding-right: 8px; border-radius: 6px; }
 }
+
+/* ---------- 用語シート切替・番号付きチップ ---------- */
+.sheet-switch {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+  background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+  padding: 10px 12px; margin-bottom: 6px;
+}
+.sheet-switch-label { font-size: .78rem; font-weight: 700; color: var(--muted); margin-right: 2px; }
+.sheet-note { margin-bottom: 14px; }
+.chip-no {
+  display: inline-block; min-width: 1.4em; margin-right: 4px; padding: 0 3px;
+  border-radius: 6px; font-size: .68rem; font-weight: 700; text-align: center;
+  background: rgba(0,0,0,.08); color: var(--muted); vertical-align: 1px;
+}
+.chip.on .chip-no { background: rgba(255,255,255,.25); color: #fff; }
+.chip.r-ok .chip-no { background: rgba(46,125,79,.15); color: var(--ok); }
+.chip.r-miss .chip-no { background: rgba(185,138,0,.18); color: #7a5c00; }
+.chip.r-wrong .chip-no { background: rgba(192,57,43,.15); color: var(--wrong); }
+
+/* ---------- 練習の記録 ---------- */
+.pr-clickable { cursor: pointer; }
+.pr-clickable:active { background: var(--chip-bg); }
+.pr-sheet {
+  display: inline-block; margin-left: 6px;
+  background: #e8e4ef; color: #5b4a7a; border: 1px solid #c9bede;
+  font-size: .62rem; font-weight: 700; border-radius: 999px; padding: 1px 7px;
+}
+.pr-del {
+  background: none; border: none; font-size: 1rem; cursor: pointer;
+  padding: 4px 6px; border-radius: 8px; color: var(--muted);
+}
+.pr-del:active { background: var(--wrong-bg); }

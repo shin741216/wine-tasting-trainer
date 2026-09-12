@@ -27,7 +27,8 @@ const HELP = {
     <ul>
       <li><b>ワインを選ぶ</b> — 銘柄を見て選ぶか、「ランダム出題」でブラインド練習ができます。ランダムは白・赤を選んでから出題されます</li>
       <li><b>ブラインドテイスティングでの使い方</b> — 実際にワインを飲みながらランダム出題でシートを記入→採点すると本番に近い練習になります</li>
-      <li><b>結果の一時保存</b> — 採点結果は自動で一時保存され、この画面に一覧表示されます。複数本の練習が終わったら「練習完了」で記録を削除できます</li>
+      <li><b>用語シートの切り替え</b> — 画面上部で「ワイン受験.com 2026年版」と「Wine-Flight 2025年版」を選べます。Wine-Flight版は本番同様に選択肢へ番号が付き、「果実」と「花・植物」が1項目に統合されています。模範解答は選んだシートの用語へ自動で読み替えて採点します</li>
+      <li><b>練習の記録</b> — 採点結果は自動で記録され、この画面に一覧表示されます（白・赤それぞれ最新5回分。超えた分は古いものから自動で消えます）。行をタップすると当時の選択と採点結果を再表示できます。削除はあなたの操作でのみ行われます（🗑 で1件ずつ、または「記録を全て削除」）</li>
       <li><b>一覧の末尾の27本</b>（名前に「2025年ソムリエ①」のように年度が入っているもの）は、AI参考解答ではなく<b>本試験の模範解答そのもの</b>で採点します。項目ごとの選択数もその年の正解の語数になります</li>
     </ul>
     <p><b>データの出所</b> — 一覧の各ワインにバッジが付いています。<span class="src-badge ai">🤖 AI参考解答</span> はAIが試験対策の定石に基づいて作成した参考解答、<span class="src-badge transcribed">📝 転記・未検証</span> は本試験で実際に発表された模範解答ですが、会員限定公開分を個人ブログが転記した内容から収録しており原本と照合していません。</p>` },
@@ -41,7 +42,7 @@ const HELP = {
       <li>採点結果は「正解（緑）／選び漏れ（黄）／誤って選択（赤）」で色分け表示されます</li>
     </ul>
     <p>※「いくつ選べ」の数は本番で年により変わるため目安です。ただし <span class="src-badge transcribed">📝 転記・未検証</span> が付いた実物由来のワインだけは、目安ではなく<b>その年の正解の語数</b>を使います（色調が4語なら「0/4」）。</p>
-    <p><b>データの出所</b> — 採点に使う模範解答の出所は、画面上部の「出題ワイン」欄のバッジで確認できます。用語シートの項目・用語・並び順はワイン受験.com公開の「テイスティング解答用紙 2026年版」に準拠しています。</p>` },
+    <p><b>データの出所</b> — 採点に使う模範解答の出所は、画面上部の「出題ワイン」欄のバッジで確認できます。用語シートは「ワイン受験.com 2026年版」または「Wine-Flight 2025年版」（ワイン選択画面で切り替え）に準拠し、どちらを使ったかは出題ワイン欄と採点結果に表示されます。</p>` },
   flashcards: { title: "品種フラッシュカードの使い方", body: `
     <ul>
       <li><b>カードをタップ</b>すると裏返り、外観・香り・味わい・決め手・主産地が表示されます</li>
@@ -69,7 +70,7 @@ const HELP = {
   data: { title: "収録データについて（重要）", body: `
     <p>このアプリの出力が「何の情報をもとにしているか」の説明です。画面の各所に表示される出所バッジで見分けられます：<span class="src-badge ai">🤖 AI参考解答</span>＝AI作成の参考データ、<span class="src-badge real">📜 実物過去問</span>＝本試験で実際に発表された正解・実績データ、<span class="src-badge transcribed">📝 転記・未検証</span>＝会員限定公開の正解を個人ブログが転記したもの、<span class="src-badge teppan">🧭 ブログ分析の定石</span>＝個人ブログが過去問から逆算した分析。</p>
     <ul>
-      <li><b>用語選択シート</b> — ワイン受験.com公開の「テイスティング解答用紙 2026年版」（白・赤）に項目・用語・並び順を準拠しています。ただし各項目の「いくつ選べ」の数は本番で年により変わるため、本アプリ独自の目安です</li>
+      <li><b>用語選択シート（2種類）</b> — 「ワイン受験.com 2026年版」はワイン受験.com公開の「テイスティング解答用紙 2026年版」（白・赤）に、「Wine-Flight 2025年版」はWine-Flight公開の「2025年版テイスティング用語選択シート（白・赤）」に、それぞれ項目・用語・並び順を準拠しています。模範解答はワイン受験.com版の用語で作られており、Wine-Flight版で採点するときは用語を自動で読み替えます（シートにない用語は採点対象外）。各項目の「いくつ選べ」の数は本番で年により変わるため、本アプリ独自の目安です</li>
       <li><b>模範解答（コメント練習用）</b> — コメント選択練習の採点・品種当てクイズ・模範解答比較閲覧で使われる正解データです。<b>実際の試験の正解ではなく、AI（Claude）がソムリエ・ワインエキスパート試験対策の定石に基づいて作成した参考解答</b>です。過去15年（2011〜2025年）に出題された品種×生産地の組み合わせは全てカバーしています</li>
       <li><b>品種フラッシュカード（26品種）</b> — 特徴文・生産地による違いも同じくAI執筆の参考情報です</li>
       <li><b>過去の出題実績（2011〜2025年）</b> — 品種と生産国はワイン受験.com「過去の出題ワインの品種と生産国」から。<b>ヴィンテージ・出題番号・ソムリエ試験分</b>は個人ブログ「ニライカナイCH」2026年版シリーズから補ったもので、こちらは未検証です（品種・生産国が両者で一致することは確認済み）</li>
@@ -202,6 +203,13 @@ const TERM_ALIASES = {
   "赤ピーマン": "ピーマン", "なめし革": "なめし皮", "カカオ": "チョコレート",
   "スムースな": "スムーズな", "溌剌とした": "はつらつとした",
   "骨格のしっかりとした": "骨格のしっかりした", "腐葉土": "スーボア",
+  // Wine-Flight 2025 シートの表記 → 現行シートの表記
+  "10.9%以下": "11%未満", "11.0-11.9%": "11%～12%未満", "12.0-12.9%": "12%～13%未満",
+  "13.0-13.9%": "13%～14%未満", "14.0%以上": "14%以上",
+  "8-10度": "8～10度", "11-14度": "11～14度", "15-18度": "15～18度",
+  "10-13度": "10～13度", "14-16度": "14～16度", "17-20度": "17～20度",
+  "コク（深み）を与える": "コク(深み)を与える", "強い（突出した）": "強い(突出した)",
+  "ヘーゼル・ナッツ": "ヘーゼルナッツ",
 };
 const normTerm = (t) => TERM_ALIASES[t] || t;
 const ESTIMATE_EXCLUDE = ["vintage", "country", "grape"]; // 結論欄は照合対象外
@@ -209,7 +217,7 @@ const ESTIMATE_EXCLUDE = ["vintage", "country", "grape"]; // 結論欄は照合�
 function runEstimate() {
   const wine = currentWine;
   const userTerms = new Set();
-  for (const sec of VOCAB[wine.color]) {
+  for (const sec of sheetVocab(wine.color)) {
     if (ESTIMATE_EXCLUDE.includes(sec.id)) continue;
     for (const t of (selections[sec.id] || [])) userTerms.add(normTerm(t));
   }
@@ -263,17 +271,42 @@ function runEstimate() {
 // ---------------- 練習結果の一時保存 ----------------
 const RESULTS_KEY = "wtt-practice-results";
 
+const RESULTS_PER_COLOR = 5; // 白・赤それぞれ最新5回分を保持
+
 function loadResults() {
   try { return JSON.parse(localStorage.getItem(RESULTS_KEY)) || []; } catch { return []; }
 }
 function savePracticeResult(entry) {
-  const list = loadResults();
+  let list = loadResults();
   list.push(entry);
+  // 色ごとに最新 RESULTS_PER_COLOR 件だけ残す（古いものから自動で消える）
+  list = ["white", "red"].flatMap(c => list.filter(r => r.color === c).slice(-RESULTS_PER_COLOR))
+    .sort((a, b) => a.t - b.t);
+  try { localStorage.setItem(RESULTS_KEY, JSON.stringify(list)); } catch {}
+}
+function deleteResult(t) {
+  const list = loadResults().filter(r => r.t !== t);
   try { localStorage.setItem(RESULTS_KEY, JSON.stringify(list)); } catch {}
 }
 function clearResults() {
   localStorage.removeItem(RESULTS_KEY);
 }
+
+// ---------------- 用語シートの選択 ----------------
+const SHEET_KEY = "wtt-sheet";
+function activeSheet() {
+  let k = null;
+  try { k = localStorage.getItem(SHEET_KEY); } catch {}
+  return SHEETS[k] || SHEETS.jyuken2026;
+}
+function setActiveSheet(key) {
+  try { localStorage.setItem(SHEET_KEY, key); } catch {}
+}
+function sheetVocab(color, sheet = activeSheet()) { return sheet.vocab[color]; }
+// 模範解答を選択中シートの項目・用語に変換したもの（{answers, dropped}）
+function modelAnswers(wine, sheet = activeSheet()) { return sheetAnswers(wine, sheet); }
+// チップの表示（番号付きシートは本番同様に番号を前置）
+function chipLabel(sheet, i, t) { return sheet.numbered ? `<span class="chip-no">${i + 1}</span>${t}` : t; }
 
 let currentWine = null;
 let selections = {}; // sectionId -> Set of terms
@@ -1235,23 +1268,36 @@ function showHome() {
   const reds = WINES.filter(w => w.color === "red");
 
   const results = loadResults();
-  const resultsHtml = results.length === 0 ? "" : `
-    <h2 class="wine-section-title">練習結果（一時保存中 ${results.length}件）</h2>
-    <div class="section-card">
-      ${results.map(r => `
-        <div class="pr-row">
+  const nWhite = results.filter(r => r.color === "white").length;
+  const nRed = results.filter(r => r.color === "red").length;
+  const recordRow = r => `
+        <div class="pr-row pr-clickable" data-t="${r.t}" title="タップで採点結果を再表示">
           <span>${r.color === "white" ? "🥂" : "🍷"}</span>
-          <span class="pr-name">${r.name}${r.blind ? '<span class="pr-blind">ブラインド</span>' : ""}</span>
+          <span class="pr-name">${r.name}${r.blind ? '<span class="pr-blind">ブラインド</span>' : ""}${r.sheet && SHEETS[r.sheet] ? `<span class="pr-sheet">${SHEETS[r.sheet].short}</span>` : ""}</span>
           <span class="pr-score">${r.pct}点</span>
           <span class="pr-time">${new Date(r.t).toLocaleString("ja-JP", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" })}</span>
-        </div>
-      `).join("")}
-      <button class="btn-secondary pr-clear" id="btn-finish-practice">✅ 練習完了（記録を削除）</button>
+          <button class="pr-del" data-del="${r.t}" aria-label="この記録を削除">🗑</button>
+        </div>`;
+  const resultsHtml = results.length === 0 ? "" : `
+    <h2 class="wine-section-title">練習の記録（白 ${nWhite}/${RESULTS_PER_COLOR}・赤 ${nRed}/${RESULTS_PER_COLOR}）</h2>
+    <div class="section-card">
+      ${[...results].sort((a, b) => b.t - a.t).map(recordRow).join("")}
+      <p class="reveal-note">行をタップすると採点結果を再表示します。白・赤それぞれ最新${RESULTS_PER_COLOR}回分を保存し、超えた分は古いものから自動で消えます。🗑 で1件ずつ、下のボタンで全件削除できます。</p>
+      <button class="btn-secondary pr-clear" id="btn-finish-practice">🗑 記録を全て削除</button>
     </div>
+  `;
+  const curSheet = activeSheet();
+  const sheetSwitchHtml = `
+    <div class="sheet-switch">
+      <span class="sheet-switch-label">用語シート</span>
+      ${Object.values(SHEETS).map(sh => `<button class="chip sheet-opt ${sh.key === curSheet.key ? "on" : ""}" data-sheet="${sh.key}">${sh.label}</button>`).join("")}
+    </div>
+    <p class="reveal-note sheet-note">${curSheet.note}</p>
   `;
 
   screen.innerHTML = `
     <p class="home-lead">ワインを選んで、本番形式の用語選択シートでコメントを作成しましょう。採点すると模範解答と照合できます。</p>
+    ${sheetSwitchHtml}
     <button class="wine-card random" data-random="white">
       <span class="glass">🥂</span>
       <span>
@@ -1291,11 +1337,25 @@ function showHome() {
   const finishBtn = document.getElementById("btn-finish-practice");
   if (finishBtn) {
     finishBtn.addEventListener("click", () => {
-      if (!confirm(`一時保存中の練習結果 ${results.length}件 を削除して練習を完了しますか？`)) return;
+      if (!confirm(`練習の記録 ${results.length}件 を全て削除しますか？`)) return;
       clearResults();
       showHome();
     });
   }
+  screen.querySelectorAll(".pr-del").forEach(b => b.addEventListener("click", e => {
+    e.stopPropagation();
+    if (!confirm("この記録を削除しますか？")) return;
+    deleteResult(+b.dataset.del);
+    showHome();
+  }));
+  screen.querySelectorAll(".pr-clickable").forEach(row => row.addEventListener("click", () => {
+    const rec = results.find(r => r.t === +row.dataset.t);
+    if (rec) showResult({ record: rec });
+  }));
+  screen.querySelectorAll(".sheet-opt").forEach(b => b.addEventListener("click", () => {
+    setActiveSheet(b.dataset.sheet);
+    showHome();
+  }));
   window.scrollTo(0, 0);
 }
 
@@ -1325,7 +1385,8 @@ function startPractice(wine, blind) {
   btnGrade.textContent = "採点する";
   btnGrade.disabled = false;
 
-  const vocab = VOCAB[wine.color];
+  const sheet = activeSheet();
+  const vocab = sheetVocab(wine.color, sheet);
   const blindName = wine.color === "white" ? "白ワイン（銘柄非公開）" : "赤ワイン（銘柄非公開）";
   const setLabel = setState ? `${setState.title}｜ワイン${"①②③④"[(setState.queue[setState.index].no || 1) - 1]}` : "出題ワイン";
   let html = `
@@ -1333,6 +1394,7 @@ function startPractice(wine, blind) {
       <div class="b-label">${setLabel} ${srcBadge(wine.origin === "past" ? "transcribed" : "ai")}</div>
       <div class="b-name">${blind ? blindName : wine.name}</div>
       ${setState ? `<div class="b-sub">${setState.index + 1} / ${setState.queue.length} 本目</div>` : ""}
+      <div class="b-sub">用語シート: ${sheet.label}</div>
     </div>
   `;
 
@@ -1346,10 +1408,10 @@ function startPractice(wine, blind) {
       <div class="section-card" data-sec="${sec.id}">
         <div class="section-head">
           <span class="section-title">${sec.title}</span>
-          <span class="section-count" data-count>0/${pickFor(wine, sec)}</span>
+          <span class="section-count" data-count>0/${pickFor(wine, sec, sheet)}</span>
         </div>
         <div class="chips">
-          ${sec.terms.map(t => `<button class="chip" data-term="${t}">${t}</button>`).join("")}
+          ${sec.terms.map((t, i) => `<button class="chip" data-term="${t}">${chipLabel(sheet, i, t)}</button>`).join("")}
         </div>
       </div>
     `;
@@ -1359,7 +1421,7 @@ function startPractice(wine, blind) {
   screen.querySelectorAll(".section-card").forEach(card => {
     const secId = card.dataset.sec;
     const sec = vocab.find(s => s.id === secId);
-    const pick = pickFor(wine, sec);
+    const pick = pickFor(wine, sec, sheet);
     selections[secId] = new Set();
     card.querySelectorAll(".chip").forEach(chip => {
       chip.addEventListener("click", () => {
@@ -1393,26 +1455,39 @@ function startPractice(wine, blind) {
 
 // 項目ごとの選択数。実物の模範解答から作った練習ワイン（origin: "past"）だけは
 // 用語シート既定の pick ではなく、その年の正解の語数に合わせる
-function pickFor(wine, sec) {
+function pickFor(wine, sec, sheet = activeSheet()) {
   if (wine && wine.origin === "past") {
-    const a = wine.answers[sec.id];
+    const a = modelAnswers(wine, sheet).answers[sec.id];
     if (a && a.length) return a.length;
   }
   return sec.pick;
 }
 
 function updateProgress() {
-  const vocab = VOCAB[currentWine.color];
-  const done = vocab.filter(s => selections[s.id] && selections[s.id].size === pickFor(currentWine, s)).length;
+  const sheet = activeSheet();
+  const vocab = sheetVocab(currentWine.color, sheet);
+  const done = vocab.filter(s => selections[s.id] && selections[s.id].size === pickFor(currentWine, s, sheet)).length;
   footerProgress.textContent = `記入済み ${done} / ${vocab.length} 項目`;
 }
 
 // ---------------- result ----------------
-function showResult() {
+// opts.record を渡すと、保存済みの記録（ワイン・シート・選択内容）から採点結果を再表示する
+function showResult(opts = {}) {
   view = "result";
-  const wine = currentWine;
-  const vocab = VOCAB[wine.color];
-  headerTitle.textContent = "採点結果";
+  const record = opts.record || null;
+  const wine = record ? WINES.find(w => w.id === record.wineId) : currentWine;
+  if (record && !wine) {
+    openModal("記録を表示できません", "<p>このワインは現在のデータに存在しないため、採点結果を再表示できません。</p>");
+    return;
+  }
+  const sheet = record ? (SHEETS[record.sheet] || activeSheet()) : activeSheet();
+  const vocab = sheetVocab(wine.color, sheet);
+  const sel = record
+    ? Object.fromEntries(Object.entries(record.sel || {}).map(([k, v]) => [k, new Set(v)]))
+    : selections;
+  const blind = record ? !!record.blind : !!wine._blind;
+  const { answers: modelAll, dropped } = modelAnswers(wine, sheet);
+  headerTitle.textContent = record ? "採点結果（記録）" : "採点結果";
   btnHome.classList.remove("hidden");
   footerBar.classList.add("hidden");
 
@@ -1422,8 +1497,8 @@ function showResult() {
   let lastGroup = null;
 
   for (const sec of vocab) {
-    const model = new Set(wine.answers[sec.id] || []);
-    const chosen = selections[sec.id] || new Set();
+    const model = new Set(modelAll[sec.id] || []);
+    const chosen = sel[sec.id] || new Set();
     const hits = [...chosen].filter(t => model.has(t)).length;
     totalModel += model.size;
     totalHit += hits;
@@ -1438,17 +1513,17 @@ function showResult() {
       <div class="section-card">
         <div class="section-head">
           <span class="section-title">${sec.title}</span>
-          <span class="section-score ${scoreClass}">${hits}/${model.size}</span>
+          <span class="section-score ${scoreClass}">${model.size ? `${hits}/${model.size}` : "採点対象外"}</span>
         </div>
         <div class="chips">
-          ${sec.terms.map(t => {
+          ${sec.terms.map((t, i) => {
             const inModel = model.has(t);
             const picked = chosen.has(t);
             let cls = "r-dim";
             if (inModel && picked) cls = "r-ok";
             else if (inModel && !picked) cls = "r-miss";
             else if (!inModel && picked) cls = "r-wrong";
-            return `<span class="chip ${cls}">${t}</span>`;
+            return `<span class="chip ${cls}">${chipLabel(sheet, i, t)}</span>`;
           }).join("")}
         </div>
       </div>
@@ -1456,24 +1531,33 @@ function showResult() {
   }
 
   const pct = totalModel ? Math.round((totalHit / totalModel) * 100) : 0;
-  savePracticeResult({
-    t: Date.now(), name: wine.name, color: wine.color,
-    blind: !!wine._blind, pct, hit: totalHit, total: totalModel,
-  });
+  if (!record) {
+    savePracticeResult({
+      t: Date.now(), wineId: wine.id, name: wine.name, color: wine.color,
+      blind, pct, hit: totalHit, total: totalModel, sheet: sheet.key,
+      sel: Object.fromEntries(Object.entries(selections).map(([k, v]) => [k, [...v]])),
+    });
+  }
+  const srcKind = wine.origin === "past" ? "transcribed" : "ai";
   screen.innerHTML = `
     <div class="score-card">
-      <div class="s-wine">${wine.name}</div>
+      <div class="s-wine">${wine.name}${blind ? "（ブラインド）" : ""}</div>
       <div class="s-score">${pct}点</div>
-      <div class="s-detail">模範解答 ${totalModel} 語中 ${totalHit} 語一致 ${srcBadge(wine.origin === "past" ? "transcribed" : "ai")}</div>
+      <div class="s-detail">模範解答 ${totalModel} 語中 ${totalHit} 語一致 ${srcBadge(srcKind)}</div>
+      <div class="s-detail">用語シート: ${sheet.label}${record ? `　記録 ${new Date(record.t).toLocaleString("ja-JP", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" })}` : ""}</div>
     </div>
     <div class="legend">
       <span class="l-ok">正解（選択して一致）</span>
       <span class="l-miss">選び漏れ</span>
       <span class="l-wrong">誤って選択</span>
     </div>
+    ${dropped ? `<div class="ar-note">ℹ️ 模範解答のうち ${dropped} 語は「${sheet.label}」のシートに存在しないため、採点から除外しています（例：このシートにない品種・収穫年・用語）。</div>` : ""}
     ${wine.origin === "past" ? `<div class="ar-note">📝 この正解は本試験で発表された模範解答ですが、会員限定公開分を個人ブログが転記した内容から収録したもので、原本と照合していません。${wine.caveat ? `<br>${wine.caveat}` : ""}${wine.archiveKey ? `<br><a href="#" id="btn-archive-link">🗄️ 過去問アーカイブで原本どおりの正解を見る</a>` : ""}</div>` : ""}
     ${sectionsHtml}
-    ${setState ? `
+    ${record ? `
+    <div class="result-actions">
+      <button class="btn-primary" id="btn-next">ワイン選択へ戻る</button>
+    </div>` : setState ? `
     <div class="result-actions">
       <button class="btn-primary" id="btn-set-next">${setState.index + 1 < setState.queue.length ? `次のワイン（${"①②③④"[(setState.queue[setState.index + 1].no || 2) - 1]}）へ` : "セットの結果を見る"}</button>
     </div>` : `
@@ -1484,7 +1568,9 @@ function showResult() {
     ${srcNote("wines")}
   `;
 
-  if (setState) {
+  if (record) {
+    document.getElementById("btn-next").addEventListener("click", () => showHome());
+  } else if (setState) {
     setState.results.push({ wine, pct, hit: totalHit, total: totalModel });
     document.getElementById("btn-set-next").addEventListener("click", () => {
       setState.index++;
