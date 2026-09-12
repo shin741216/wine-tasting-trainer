@@ -446,6 +446,8 @@ main { padding: 16px 14px 120px; max-width: 640px; margin: 0 auto; }
 .ar-row:last-child { border-bottom: none; }
 .ar-title { flex: 0 0 96px; font-weight: 700; color: var(--muted); font-size: .78rem; line-height: 1.5; }
 .ar-terms { flex: 1; line-height: 1.55; }
+.nt-term { white-space: nowrap; }
+#screen:has(.ar-year) .sheet-switch { margin-bottom: 6px; }
 
 /* ---------- estimate ---------- */
 .est-list { margin: 10px 0 6px 4px; padding-left: 20px; }
@@ -504,7 +506,8 @@ main { padding: 16px 14px 120px; max-width: 640px; margin: 0 auto; }
   #screen > .home-lead, #screen > .group-title, #screen > .reveal-note,
   #screen > .sheet-wine-banner, #screen > .score-card, #screen > .legend,
   #screen > .ar-note, #screen > .result-actions, #screen > .es-toggle,
-  #screen > .wine-card, #screen > .wine-section-title, #screen > .fc-filters, #screen > details.cmp-acc {
+  #screen > .wine-card, #screen > .wine-section-title, #screen > .fc-filters, #screen > details.cmp-acc,
+  #screen > .sheet-switch, #screen > .ar-year {
     grid-column: 1 / -1;
   }
 
