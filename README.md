@@ -41,6 +41,7 @@ iPhone / iPad のSafariで開き「共有 → ホーム画面に追加」する�
 | 📜 実物過去問 | `PAST_ANSWERS` の2015・2017・2018年（21本）、`PAST_EXAMS` の品種・生産国 | [ワイン受験.com](https://www.wine-jyuken.com/second_exam/kakonoseikai)（一般公開） |
 | 📝 転記・未検証 | `PAST_ANSWERS` の2021〜2025年（31本）、`PAST_EXAMS` のヴィンテージ・出題番号・ソムリエ試験分、`WINES` の `origin: "past"`（27本） | [ニライカナイCH](https://niraikanao-ch1.com/tastingmatome-2026/) 2026年版シリーズ（個人ブログ） |
 | 🧭 ブログ分析の定石 | `TEPPAN` | 同上。筆者が過去5年の模範解答から逆算した分析で、協会の公式見解ではない |
+| 🍷 テイスティング会メモ | `WINES` の `origin: "note"`（6本） | Wine-Flightのテイスティング会で用語選択シート（2025年版）に取った手書きメモ。香りの語はメモどおり、メモにない項目は定石で補った。`memo` に元のメモ、`note` に補い方を記載 |
 | 🤖 AI参考解答 | `WINES` の大半、`GRAPES` | AI作成 |
 
 2019年以降の模範解答はJ.S.A.会員専用ページでのみ公開されるため、📝 は原本と照合できていません。

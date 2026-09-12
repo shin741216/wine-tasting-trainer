@@ -171,6 +171,8 @@ main { padding: 16px 14px 120px; max-width: 640px; margin: 0 auto; }
 .src-badge.real { background: #fdf3d7; color: #8a6a00; border: 1px solid #dcc26a; }
 .src-badge.transcribed { background: #fbe9e3; color: #8f4a2c; border: 1px solid #e0b49f; }
 .src-badge.teppan { background: #e2f0e8; color: #2f6b4c; border: 1px solid #a9d2bd; }
+.src-badge.note { background: #f6e6ee; color: #7a2d55; border: 1px solid #d9a7c2; }
+.score-card .src-badge.note { background: rgba(255,255,255,.2); color: #fff; border-color: rgba(255,255,255,.4); }
 .score-card .src-badge.ai { background: rgba(255,255,255,.2); color: #fff; border-color: rgba(255,255,255,.4); }
 
 /* ---------- タイプ別テッパン ---------- */
