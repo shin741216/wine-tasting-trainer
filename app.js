@@ -37,6 +37,7 @@ const HELP = {
     <ul>
       <li>選択数の上限に達した状態で別の用語をタップすると、最も古い選択と入れ替わります</li>
       <li>全項目を記入したら画面下の「採点する」をタップ。未記入があっても採点できます</li>
+      <li><b>💾 一時保存</b> — 採点せずに途中の記入内容を保存します。ワイン選択画面の「練習の記録」に「一時保存」として並び、タップすると同じシート・同じ選択状態で再開できます。採点すると一時保存は採点済みの記録に置き換わります</li>
       <li><b>🔍 推定</b> — 入力し終えたら（または途中でも5語以上選べば）タップすると、あなたの選択を全解答データ（🤖AI参考解答、📜実物過去問、📝転記・未検証）と照合し、一致度の高い品種・生産地・収穫年の候補を出所バッジ付きで表示します。ブラインド練習で採点前に自分の見立てを確かめるのに使えます</li>
       <li>中断するときは左上の ◀（記入内容は破棄されます）</li>
       <li>採点結果は「正解（緑）／選び漏れ（黄）／誤って選択（赤）」で色分け表示されます</li>
@@ -278,11 +279,46 @@ function loadResults() {
 }
 function savePracticeResult(entry) {
   let list = loadResults();
+  // 採点したら、同じワイン×シートの一時保存は役目を終えるので消す
+  list = list.filter(r => !(r.draft && r.wineId === entry.wineId && r.sheet === entry.sheet));
   list.push(entry);
-  // 色ごとに最新 RESULTS_PER_COLOR 件だけ残す（古いものから自動で消える）
-  list = ["white", "red"].flatMap(c => list.filter(r => r.color === c).slice(-RESULTS_PER_COLOR))
-    .sort((a, b) => a.t - b.t);
+  // 採点済みは色ごとに最新 RESULTS_PER_COLOR 件だけ残す（古いものから自動で消える）。一時保存は対象外
+  const drafts = list.filter(r => r.draft);
+  const graded = ["white", "red"].flatMap(c => list.filter(r => !r.draft && r.color === c).slice(-RESULTS_PER_COLOR));
+  list = [...graded, ...drafts].sort((a, b) => a.t - b.t);
   try { localStorage.setItem(RESULTS_KEY, JSON.stringify(list)); } catch {}
+}
+// 一時保存: 採点せずに途中の選択内容を保存する（同じワイン×シートの一時保存は上書き）
+function saveDraft() {
+  const wine = currentWine;
+  const sheet = activeSheet();
+  const sel = Object.fromEntries(Object.entries(selections).map(([k, v]) => [k, [...v]]));
+  const filled = Object.values(sel).filter(a => a.length).length;
+  if (filled === 0) {
+    openModal("一時保存するものがありません", "<p>1項目以上選択してから一時保存してください。</p>");
+    return;
+  }
+  let list = loadResults().filter(r => !(r.draft && r.wineId === wine.id && r.sheet === sheet.key));
+  list.push({
+    t: Date.now(), draft: true, wineId: wine.id, name: wine.name, color: wine.color,
+    blind: !!wine._blind, sheet: sheet.key, sel,
+    filled, total: sheetVocab(wine.color, sheet).length,
+  });
+  try { localStorage.setItem(RESULTS_KEY, JSON.stringify(list)); } catch {}
+  openModal("💾 一時保存しました", `
+    <p><b>${wine._blind ? (wine.color === "white" ? "白ワイン（銘柄非公開）" : "赤ワイン（銘柄非公開）") : wine.name}</b> の記入内容（${filled} / ${sheetVocab(wine.color, sheet).length} 項目）を保存しました。</p>
+    <p>ワイン選択画面の「練習の記録」からいつでも再開できます。このまま記入を続けても構いません（再度一時保存すると上書きされます）。</p>`);
+}
+// 一時保存から作業を再開する
+function resumeDraft(rec) {
+  const wine = WINES.find(w => w.id === rec.wineId);
+  if (!wine) {
+    openModal("再開できません", "<p>このワインは現在のデータに存在しないため、再開できません。</p>");
+    return;
+  }
+  if (rec.sheet && SHEETS[rec.sheet]) setActiveSheet(rec.sheet);
+  setState = null;
+  startPractice(wine, !!rec.blind, rec);
 }
 function deleteResult(t) {
   const list = loadResults().filter(r => r.t !== t);
@@ -338,6 +374,9 @@ btnHome.addEventListener("click", () => {
 btnGrade.addEventListener("click", () => showResult());
 document.getElementById("btn-estimate").addEventListener("click", () => {
   if (view === "sheet") runEstimate();
+});
+document.getElementById("btn-draft").addEventListener("click", () => {
+  if (view === "sheet") saveDraft();
 });
 
 // ---------------- launcher ----------------
@@ -1268,21 +1307,22 @@ function showHome() {
   const reds = WINES.filter(w => w.color === "red");
 
   const results = loadResults();
-  const nWhite = results.filter(r => r.color === "white").length;
-  const nRed = results.filter(r => r.color === "red").length;
+  const nWhite = results.filter(r => !r.draft && r.color === "white").length;
+  const nRed = results.filter(r => !r.draft && r.color === "red").length;
+  const nDraft = results.filter(r => r.draft).length;
   const recordRow = r => `
-        <div class="pr-row pr-clickable" data-t="${r.t}" title="タップで採点結果を再表示">
+        <div class="pr-row pr-clickable ${r.draft ? "pr-row-draft" : ""}" data-t="${r.t}" title="${r.draft ? "タップで作業を再開" : "タップで採点結果を再表示"}">
           <span>${r.color === "white" ? "🥂" : "🍷"}</span>
-          <span class="pr-name">${r.name}${r.blind ? '<span class="pr-blind">ブラインド</span>' : ""}${r.sheet && SHEETS[r.sheet] ? `<span class="pr-sheet">${SHEETS[r.sheet].short}</span>` : ""}</span>
-          <span class="pr-score">${r.pct}点</span>
+          <span class="pr-name">${r.blind && r.draft ? (r.color === "white" ? "白ワイン（銘柄非公開）" : "赤ワイン（銘柄非公開）") : r.name}${r.blind ? '<span class="pr-blind">ブラインド</span>' : ""}${r.sheet && SHEETS[r.sheet] ? `<span class="pr-sheet">${SHEETS[r.sheet].short}</span>` : ""}</span>
+          <span class="pr-score${r.draft ? " pr-draft" : ""}">${r.draft ? `💾 一時保存 ${r.filled}/${r.total}` : `${r.pct}点`}</span>
           <span class="pr-time">${new Date(r.t).toLocaleString("ja-JP", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" })}</span>
           <button class="pr-del" data-del="${r.t}" aria-label="この記録を削除">🗑</button>
         </div>`;
   const resultsHtml = results.length === 0 ? "" : `
-    <h2 class="wine-section-title">練習の記録（白 ${nWhite}/${RESULTS_PER_COLOR}・赤 ${nRed}/${RESULTS_PER_COLOR}）</h2>
+    <h2 class="wine-section-title">練習の記録（採点済 白 ${nWhite}/${RESULTS_PER_COLOR}・赤 ${nRed}/${RESULTS_PER_COLOR}${nDraft ? `・一時保存 ${nDraft}件` : ""}）</h2>
     <div class="section-card">
       ${[...results].sort((a, b) => b.t - a.t).map(recordRow).join("")}
-      <p class="reveal-note">行をタップすると採点結果を再表示します。白・赤それぞれ最新${RESULTS_PER_COLOR}回分を保存し、超えた分は古いものから自動で消えます。🗑 で1件ずつ、下のボタンで全件削除できます。</p>
+      <p class="reveal-note">採点済みの行をタップすると採点結果を再表示、💾 一時保存の行をタップすると同じシート・同じ選択状態で作業を再開できます（採点すると一時保存は採点済みに置き換わります）。採点済みは白・赤それぞれ最新${RESULTS_PER_COLOR}回分を保存し、超えた分は古いものから自動で消えます。🗑 で1件ずつ、下のボタンで全件削除できます。</p>
       <button class="btn-secondary pr-clear" id="btn-finish-practice">🗑 記録を全て削除</button>
     </div>
   `;
@@ -1350,7 +1390,8 @@ function showHome() {
   }));
   screen.querySelectorAll(".pr-clickable").forEach(row => row.addEventListener("click", () => {
     const rec = results.find(r => r.t === +row.dataset.t);
-    if (rec) showResult({ record: rec });
+    if (!rec) return;
+    if (rec.draft) resumeDraft(rec); else showResult({ record: rec });
   }));
   screen.querySelectorAll(".sheet-opt").forEach(b => b.addEventListener("click", () => {
     setActiveSheet(b.dataset.sheet);
@@ -1374,7 +1415,7 @@ function wineCardHtml(w) {
 }
 
 // ---------------- practice sheet ----------------
-function startPractice(wine, blind) {
+function startPractice(wine, blind, restore = null) {
   view = "sheet";
   currentWine = wine;
   currentWine._blind = blind;
@@ -1448,6 +1489,25 @@ function startPractice(wine, blind) {
       });
     });
   });
+
+  // 一時保存から再開: 保存されていた選択を復元してチップを点灯
+  if (restore && restore.sel) {
+    for (const [secId, terms] of Object.entries(restore.sel)) {
+      const card = screen.querySelector(`.section-card[data-sec="${CSS.escape(secId)}"]`);
+      if (!card || !selections[secId]) continue;
+      const sec = vocab.find(s => s.id === secId);
+      const pick = pickFor(wine, sec, sheet);
+      for (const t of terms) {
+        const chip = card.querySelector(`.chip[data-term="${CSS.escape(t)}"]`);
+        if (!chip || selections[secId].size >= pick) continue;
+        selections[secId].add(t);
+        chip.classList.add("on");
+      }
+      const countEl = card.querySelector("[data-count]");
+      countEl.textContent = `${selections[secId].size}/${pick}`;
+      countEl.classList.toggle("full", selections[secId].size === pick);
+    }
+  }
 
   updateProgress();
   window.scrollTo(0, 0);

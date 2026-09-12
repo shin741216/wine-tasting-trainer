@@ -550,3 +550,9 @@ main { padding: 16px 14px 120px; max-width: 640px; margin: 0 auto; }
   padding: 4px 6px; border-radius: 8px; color: var(--muted);
 }
 .pr-del:active { background: var(--wrong-bg); }
+
+/* ---------- 一時保存 ---------- */
+.btn-icon { padding: 12px 12px; font-size: 1rem; }
+.footer-bar { gap: 8px; }
+.pr-row-draft { background: #fffaf0; border-radius: 8px; }
+.pr-score.pr-draft { color: #8a6a00; font-size: .74rem; white-space: nowrap; }
