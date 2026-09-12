@@ -449,6 +449,14 @@ main { padding: 16px 14px 120px; max-width: 640px; margin: 0 auto; }
 .nt-term { white-space: nowrap; }
 .nt-mode { margin-bottom: 10px; }
 .nt-table-card { padding-bottom: 8px; }
+/* 比較表は横スクロールさせず、列幅を画面幅に合わせて自動調整（セル内で折り返す） */
+.nt-table-card .rc-wrap { overflow-x: visible; }
+.nt-table-card .rc-table { table-layout: fixed; width: 100%; min-width: 0; font-size: .74rem; }
+.nt-table-card .rc-table th, .nt-table-card .rc-table td { min-width: 0; padding: 5px 4px; word-break: break-word; overflow-wrap: anywhere; line-height: 1.45; }
+.nt-table-card .rc-table .rc-item { width: 4.6em; position: static; font-size: .68rem; }
+.nt-table-card .rc-table thead th { position: static; font-size: .7rem; }
+.nt-table-card .nt-term { white-space: normal; display: block; }
+.nt-table-card .rc-table .chip-no { margin-right: 2px; }
 .rc-table .cmp-group th, .rc-table .cmp-group td { background: var(--wine); color: #fff; padding: 4px 8px; font-size: .72rem; }
 .rc-table .cmp-group .rc-item { background: var(--wine); color: #fff; }
 #screen:has(.ar-year) .sheet-switch { margin-bottom: 6px; }
@@ -511,7 +519,7 @@ main { padding: 16px 14px 120px; max-width: 640px; margin: 0 auto; }
   #screen > .sheet-wine-banner, #screen > .score-card, #screen > .legend,
   #screen > .ar-note, #screen > .result-actions, #screen > .es-toggle,
   #screen > .wine-card, #screen > .wine-section-title, #screen > .fc-filters, #screen > details.cmp-acc,
-  #screen > .sheet-switch, #screen > .ar-year, #screen > .nt-mode, #screen > .nt-table-card {
+  #screen > .sheet-switch, #screen > .ar-year, #screen > .nt-mode {
     grid-column: 1 / -1;
   }
 
@@ -521,6 +529,8 @@ main { padding: 16px 14px 120px; max-width: 640px; margin: 0 auto; }
 
   /* 横断ビュー: 列を少し狭めて多く収める */
   .rc-table th, .rc-table td { min-width: 118px; }
+  .nt-table-card .rc-table { font-size: .8rem; }
+  .nt-table-card .rc-table th, .nt-table-card .rc-table td { min-width: 0; }
 
   /* タイプ別テッパン: 項目表を2列 */
   .tp-table { column-count: 2; column-gap: 24px; }
