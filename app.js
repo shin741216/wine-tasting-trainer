@@ -36,6 +36,7 @@ const HELP = {
     <ul>
       <li>選択数の上限に達した状態で別の用語をタップすると、最も古い選択と入れ替わります</li>
       <li>全項目を記入したら画面下の「採点する」をタップ。未記入があっても採点できます</li>
+      <li><b>🔍 推定</b> — 入力し終えたら（または途中でも5語以上選べば）タップすると、あなたの選択と解答データ（🤖AI参考解答44本＋📜実物過去問21本）を照合し、一致度の高い品種・生産地・収穫年の候補を表示します。ブラインド練習で採点前に自分の見立てを確かめるのに使えます</li>
       <li>中断するときは左上の ◀（記入内容は破棄されます）</li>
       <li>採点結果は「正解（緑）／選び漏れ（黄）／誤って選択（赤）」で色分け表示されます</li>
     </ul>
@@ -147,12 +148,16 @@ function viewHelpKey() {
   return "launcher";
 }
 
+function openModal(title, bodyHtml) {
+  document.getElementById("help-title").textContent = title;
+  document.getElementById("help-body").innerHTML = bodyHtml;
+  document.getElementById("help-modal").classList.remove("hidden");
+}
+
 function openHelp(key) {
   const h = HELP[key];
   if (!h) return;
-  document.getElementById("help-title").textContent = h.title;
-  document.getElementById("help-body").innerHTML = h.body;
-  document.getElementById("help-modal").classList.remove("hidden");
+  openModal(h.title, h.body);
 }
 btnInfo.addEventListener("click", () => openHelp(viewHelpKey()));
 document.getElementById("help-close").addEventListener("click", () =>
@@ -183,6 +188,75 @@ function srcNote(kind) {
       本試験で実際に発表された正解は「🗄️ 過去問アーカイブ」で確認できます。`,
   };
   return `<p class="reveal-note">${notes[kind]}</p>`;
+}
+
+// ---------------- 選択からの品種・生産地・収穫年の推定 ----------------
+// ユーザーの選択用語を、AI参考解答（WINES）と実物過去問（PAST_ANSWERS）の
+// 両方と照合し、一致度の高い順に候補を表示する。
+// 旧様式（過去問）と現行シートの表記ゆれは TERM_ALIASES で吸収する。
+const TERM_ALIASES = {
+  "すいかずら": "スイカズラ", "洋ナシ": "洋梨", "ハチミツ": "蜂蜜",
+  "パン・ド・ミ": "パン・ドゥ・ミ", "丁字": "丁子", "すみれ": "スミレ",
+  "アーモンド": "フレッシュ・アーモンド", "コリアンダー": "コリアンダーシード",
+  "赤ピーマン": "ピーマン", "なめし革": "なめし皮", "カカオ": "チョコレート",
+  "スムースな": "スムーズな", "溌剌とした": "はつらつとした",
+  "骨格のしっかりとした": "骨格のしっかりした", "腐葉土": "スーボア",
+};
+const normTerm = (t) => TERM_ALIASES[t] || t;
+const ESTIMATE_EXCLUDE = ["vintage", "country", "grape"]; // 結論欄は照合対象外
+
+function runEstimate() {
+  const wine = currentWine;
+  const userTerms = new Set();
+  for (const sec of VOCAB[wine.color]) {
+    if (ESTIMATE_EXCLUDE.includes(sec.id)) continue;
+    for (const t of (selections[sec.id] || [])) userTerms.add(normTerm(t));
+  }
+  if (userTerms.size < 5) {
+    openModal("推定するには選択が足りません", "<p>外観・香り・味わいの項目を5語以上選んでから推定してください。</p>");
+    return;
+  }
+
+  const cands = [];
+  for (const w of WINES) {
+    if (w.color !== wine.color) continue;
+    const s = new Set();
+    for (const [id, arr] of Object.entries(w.answers)) {
+      if (ESTIMATE_EXCLUDE.includes(id)) continue;
+      arr.forEach(t => s.add(normTerm(t)));
+    }
+    cands.push({ src: "ai", grape: w.answers.grape[0], country: w.answers.country[0],
+                 vintage: w.answers.vintage[0], color: w.color, terms: s });
+  }
+  for (const a of PAST_ANSWERS) {
+    if (a.color !== wine.color) continue;
+    const s = new Set();
+    for (const [, , arr] of a.sections) arr.forEach(t => s.add(normTerm(t)));
+    cands.push({ src: "real", grape: a.grape, country: a.country,
+                 vintage: `${a.vintage}／${a.examYear}年出題`, color: a.color, terms: s });
+  }
+
+  for (const c of cands) {
+    let inter = 0;
+    for (const t of userTerms) if (c.terms.has(t)) inter++;
+    c.score = Math.round(200 * inter / (userTerms.size + c.terms.size)); // F1風の一致度%
+    c.hit = inter;
+  }
+  cands.sort((x, y) => y.score - x.score);
+  const top = cands.slice(0, 5);
+
+  openModal("🔍 あなたの選択からの推定", `
+    <p>選択された ${userTerms.size} 語と一致度の高い順に表示しています（同色の候補 全${cands.length}本と照合）。</p>
+    <ol class="est-list">
+      ${top.map(c => `
+        <li class="est-row">
+          <div class="est-main">${wine.color === "white" ? "🥂" : "🍷"} <b>${c.grape}</b>（${c.country}）</div>
+          <div class="est-sub">収穫年: ${c.vintage}　一致 ${c.hit}語 <span class="est-score">${c.score}%</span> ${srcBadge(c.src)}</div>
+        </li>
+      `).join("")}
+    </ol>
+    <p class="est-note">※ 一致度は選択語と各解答データの重なりの割合です。推定を確認したら「採点する」で正解と照合できます。</p>
+  `);
 }
 
 // ---------------- 練習結果の一時保存 ----------------
@@ -228,6 +302,9 @@ btnHome.addEventListener("click", () => {
 });
 
 btnGrade.addEventListener("click", () => showResult());
+document.getElementById("btn-estimate").addEventListener("click", () => {
+  if (view === "sheet") runEstimate();
+});
 
 // ---------------- launcher ----------------
 const FEATURES = [
