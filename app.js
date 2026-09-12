@@ -64,7 +64,8 @@ const HELP = {
     <p><b>データの出所</b> — 出題コメントの大半は <span class="src-badge ai">🤖 AI参考解答</span> から組み立てています。名前に年度が入った27本だけは <span class="src-badge transcribed">📝 転記・未検証</span> で、本試験の模範解答から組み立てたものです。</p>` },
   stats: { title: "出題傾向データの見方", body: `
     <ul>
-      <li><b>品種別ランキング</b> — 2011〜2025年の出題回数。バーの下の数字は出題年です。集計対象は<b>ワインエキスパートの出題のみ</b>で、ソムリエ試験分は含めていません。🥃 その他の酒類も同じ方法で集計しています</li>
+      <li><b>品種別ランキング</b> — 2011〜2025年の出題回数。バーの下の数字は出題年、その後ろは生産国の内訳です。集計対象は<b>ワインエキスパートの出題のみ</b>で、ソムリエ試験分は含めていません。🥃 その他の酒類も同じ方法で集計しています</li>
+      <li><b>生産国別ランキング</b> — 同じ出題を生産国で数え直したものです（白・赤別）。出題年の後ろは品種の内訳です</li>
       <li><b>年度別の出題</b> — 各年の出題ワイン（🥂白・🍷赤・🥃その他の酒類）。試験区分ごとに分けて表示します</li>
       <li>品種名の左の数字は<b>出題番号</b>、右の数字は<b>ヴィンテージ</b>です。空欄は出所が見つかっていない箇所です（2025年WE③のテンプラニーリョなど）</li>
       <li><b>📜 付きの品種名</b>はタップすると、過去問アーカイブのその正解へ直接移動します。アーカイブ側の「この正解で採点する練習へ」から、そのまま用語シートで練習できます</li>
@@ -1131,19 +1132,27 @@ function showStats() {
 
   // 品種ごとの出題回数を集計（白・赤別）
   const counts = { white: new Map(), red: new Map(), other: new Map() };
+  // 生産国ごとの出題回数（白・赤別）。sub に品種の内訳を持つ
+  const byCountry = { white: new Map(), red: new Map() };
+  const add = (m, key, year, sub) => {
+    if (!m.has(key)) m.set(key, { count: 0, years: [], sub: new Map() });
+    const rec = m.get(key);
+    rec.count++;
+    rec.years.push(year);
+    if (sub) rec.sub.set(sub, (rec.sub.get(sub) || 0) + 1);
+  };
   for (const exam of PAST_EXAMS) {
     for (const item of exam.items) {
-      const m = counts[item.type];
-      if (!m.has(item.name)) m.set(item.name, { count: 0, years: [] });
-      const rec = m.get(item.name);
-      rec.count++;
-      rec.years.push(exam.year);
+      add(counts[item.type], item.name, exam.year, item.country || null);
+      if (item.country) add(byCountry[item.type], item.country, exam.year, item.name);
     }
   }
 
-  const rankingHtml = (type, title, icon) => {
-    const sorted = [...counts[type].entries()].sort((a, b) => b[1].count - a[1].count || Math.max(...b[1].years) - Math.max(...a[1].years));
+  // ランキング表示。sub（内訳）があれば出題年の後ろに「フランス3・ドイツ2」のように添える
+  const rankingHtml = (map, type, title, icon) => {
+    const sorted = [...map.entries()].sort((a, b) => b[1].count - a[1].count || Math.max(...b[1].years) - Math.max(...a[1].years));
     const max = sorted[0][1].count;
+    const subText = rec => rec.sub.size ? [...rec.sub.entries()].sort((a, b) => b[1] - a[1]).map(([k, n]) => `${k}${n}`).join("・") : "";
     return `
       <div class="section-card">
         <div class="section-head"><span class="section-title">${icon} ${title}（出題回数）</span></div>
@@ -1153,7 +1162,7 @@ function showStats() {
             <span class="stat-bar-wrap"><span class="stat-bar ${type}" style="width:${(rec.count / max) * 100}%"></span></span>
             <span class="stat-count">${rec.count}回</span>
           </div>
-          <div class="stat-years">${rec.years.slice().sort((a, b) => b - a).map(y => `'${String(y).slice(2)}`).join(" ")}</div>
+          <div class="stat-years">${rec.years.slice().sort((a, b) => b - a).map(y => `'${String(y).slice(2)}`).join(" ")}${subText(rec) ? `<span class="stat-sub">${subText(rec)}</span>` : ""}</div>
         `).join("")}
       </div>
     `;
@@ -1191,9 +1200,13 @@ function showStats() {
   screen.innerHTML = `
     <p class="home-lead">ワインエキスパート二次試験の出題実績（${minYear}〜${maxYear}年）です。頻出品種を優先して対策しましょう。</p>
     <h2 class="group-title">品種別ランキング</h2>
-    ${rankingHtml("white", "白ワイン", "🥂")}
-    ${rankingHtml("red", "赤ワイン", "🍷")}
-    ${rankingHtml("other", "その他の酒類", "🥃")}
+    ${rankingHtml(counts.white, "white", "白ワイン", "🥂")}
+    ${rankingHtml(counts.red, "red", "赤ワイン", "🍷")}
+    ${rankingHtml(counts.other, "other", "その他の酒類", "🥃")}
+    <h2 class="group-title">生産国別ランキング</h2>
+    <p class="reveal-note">出題年の後ろは品種の内訳です（品種別ランキングでは生産国の内訳）。</p>
+    ${rankingHtml(byCountry.white, "white", "白ワイン 生産国", "🥂")}
+    ${rankingHtml(byCountry.red, "red", "赤ワイン 生産国", "🍷")}
     <h2 class="group-title">年度別の出題</h2>
     <p class="reveal-note">左の数字は出題番号、右の数字はヴィンテージです。📜 付きの品種名はタップすると、過去問アーカイブのその正解へ移動します。ランキングの集計対象はワインエキスパートの出題のみで、ソムリエ試験分は参考表示です。</p>
     ${yearHtml}

@@ -344,6 +344,7 @@ main { padding: 16px 14px 120px; max-width: 640px; margin: 0 auto; }
 .stat-bar.other { background: linear-gradient(90deg, #c9a46a, #8a6a2e); }
 .stat-count { flex: 0 0 34px; text-align: right; font-size: .8rem; font-weight: 700; }
 .stat-years { font-size: .68rem; color: var(--muted); margin: 2px 0 0 126px; letter-spacing: .02em; }
+.stat-sub { margin-left: 8px; color: #8a6a72; letter-spacing: 0; }
 /* アイコン / 出題番号 / 品種 / 生産国 / ヴィンテージ の5列を固定して縦に揃える。
    flex + margin-left:auto を複数使うと余白の取り合いで列位置がずれるため grid にしている */
 .stat-exam-item {
