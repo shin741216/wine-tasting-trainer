@@ -49,22 +49,22 @@ const HELP = {
   flashcards: { title: "品種フラッシュカードの使い方", body: `
     <ul>
       <li><b>カードをタップ</b>すると裏返り、外観・香り・味わい・決め手・主産地が表示されます</li>
-      <li><b>すべて／白／赤</b> と <b>生産地</b> の2軸で絞り込めます</li>
+      <li><b>すべて／白／赤／🥃 その他の酒類</b> と <b>生産地</b> の2軸で絞り込めます。その他の酒類（ブランデー・ウイスキー・スピリッツ・リキュールなど32種）は裏面に分類・原料・産地・外観・香り・味わい・度数・決め手が出ます。生産地フィルタはワイン用なので、その他の酒類には効きません</li>
       <li>複数の生産国を持つ品種は、裏面に<b>生産地による違い</b>が表示されます。生産地フィルタ選択中はその国がハイライトされます</li>
       <li>🔀 シャッフルで並びをランダムにできます</li>
     </ul>
     <p><b>データの出所</b> — カードの特徴文と生産地による違いは <span class="src-badge ai">🤖 AI参考解答</span>（AI執筆の参考情報）です。本試験で実際に発表された正解は「🗄️ 過去問アーカイブ」で確認できます。</p>` },
   quiz: { title: "品種当てクイズの使い方", body: `
     <ul>
-      <li>出題範囲（すべて／白のみ／赤のみ）を選ぶとスタート。出題順はランダムです</li>
-      <li>テイスティングコメントを読み、4択から品種を選びます</li>
+      <li>出題範囲（すべて／白のみ／赤のみ／🥃 その他の酒類）を選ぶとスタート。出題順はランダムです</li>
+      <li>テイスティングコメントを読み、4択から品種を選びます。その他の酒類は外観・香り・味わい・度数から酒類名を当てます（誤答は同じ分類から優先して出ます）</li>
       <li>回答すると正誤と正解ワインの解説が表示されます。解説の先頭のバッジで、そのコメントがAI参考解答か実物の模範解答かが分かります</li>
       <li>全問終了後にスコアが表示されます。中断は左上の ◀</li>
     </ul>
     <p><b>データの出所</b> — 出題コメントの大半は <span class="src-badge ai">🤖 AI参考解答</span> から組み立てています。名前に年度が入った27本だけは <span class="src-badge transcribed">📝 転記・未検証</span> で、本試験の模範解答から組み立てたものです。</p>` },
   stats: { title: "出題傾向データの見方", body: `
     <ul>
-      <li><b>品種別ランキング</b> — 2011〜2025年の出題回数。バーの下の数字は出題年です。集計対象は<b>ワインエキスパートの出題のみ</b>で、ソムリエ試験分は含めていません</li>
+      <li><b>品種別ランキング</b> — 2011〜2025年の出題回数。バーの下の数字は出題年です。集計対象は<b>ワインエキスパートの出題のみ</b>で、ソムリエ試験分は含めていません。🥃 その他の酒類も同じ方法で集計しています</li>
       <li><b>年度別の出題</b> — 各年の出題ワイン（🥂白・🍷赤・🥃その他の酒類）。試験区分ごとに分けて表示します</li>
       <li>品種名の左の数字は<b>出題番号</b>、右の数字は<b>ヴィンテージ</b>です。空欄は出所が見つかっていない箇所です（2025年WE③のテンプラニーリョなど）</li>
       <li><b>📜 付きの品種名</b>はタップすると、過去問アーカイブのその正解へ直接移動します。アーカイブ側の「この正解で採点する練習へ」から、そのまま用語シートで練習できます</li>
@@ -76,7 +76,7 @@ const HELP = {
       <li><b>用語選択シート（2種類）</b> — 「ワイン受験.com 2026年版」はワイン受験.com公開の「テイスティング解答用紙 2026年版」（白・赤）に、「Wine-Flight 2025年版」はWine-Flight公開の「2025年版テイスティング用語選択シート（白・赤）」に、それぞれ項目・用語・並び順を準拠しています。模範解答はワイン受験.com版の用語で作られており、Wine-Flight版で採点するときは用語を自動で読み替えます（シートにない用語は採点対象外）。各項目の「いくつ選べ」の数は本番で年により変わるため、本アプリ独自の目安です</li>
       <li><b>模範解答（コメント練習用）</b> — コメント選択練習の採点・品種当てクイズ・模範解答比較閲覧で使われる正解データです。<b>実際の試験の正解ではなく、AI（Claude）がソムリエ・ワインエキスパート試験対策の定石に基づいて作成した参考解答</b>です。過去15年（2011〜2025年）に出題された品種×生産地の組み合わせは全てカバーしています</li>
       <li><b>テイスティング会メモ（6本）</b> — Wine-Flightのテイスティング会で用語選択シート（2025年版）に取った手書きメモを模範解答に流し込んだ練習ワインです。メモにある香りの語はそのまま、メモにない項目はタイプ別テッパンと実物過去問の定石で補っています。銘柄名は手書きの判読で、読み違いの可能性があります</li>
-      <li><b>品種フラッシュカード（26品種）</b> — 特徴文・生産地による違いも同じくAI執筆の参考情報です</li>
+      <li><b>品種フラッシュカード（26品種）とその他の酒類（32種）</b> — 特徴文・生産地による違い・酒類の特徴も同じくAI執筆の参考情報です。その他の酒類は本試験で出題された19種（出題実績データより）に定番の候補を加えたものです</li>
       <li><b>過去の出題実績（2011〜2025年）</b> — 品種と生産国はワイン受験.com「過去の出題ワインの品種と生産国」から。<b>ヴィンテージ・出題番号・ソムリエ試験分</b>は個人ブログ「ニライカナイCH」2026年版シリーズから補ったもので、こちらは未検証です（品種・生産国が両者で一致することは確認済み）</li>
       <li><b>タイプ別テッパン</b> — 同じ個人ブログが過去5年の模範解答から逆算した定石です。<b>協会の公式見解ではなく</b>、「採用率100%」などの数値も筆者の集計で、こちらで検証していません</li>
     </ul>
@@ -210,7 +210,7 @@ function srcNote(kind) {
       名前に年度が入った27本だけは ${srcBadge("transcribed")} で、本試験で実際に発表された模範解答ですが、
       会員限定公開分を個人ブログが転記した内容から収録しており、原本と照合していません。
       テイスティング会の手書きメモから作った6本（${srcBadge("note")}）はこの一覧には含めず、メニューの「🍷 テイスティング会メモ」にまとめてあります。`,
-    grapes: `<b>データの出所</b> — カードの特徴文と生産地による違いは ${srcBadge("ai")}（AI執筆の参考情報）です。
+    grapes: `<b>データの出所</b> — カードの特徴文と生産地による違い、その他の酒類の特徴は ${srcBadge("ai")}（AI執筆の参考情報）です。
       本試験で実際に発表された正解は「🗄️ 過去問アーカイブ」で確認できます。`,
   };
   return `<p class="reveal-note">${notes[kind]}</p>`;
@@ -406,8 +406,8 @@ document.getElementById("btn-draft").addEventListener("click", () => {
 // ---------------- launcher ----------------
 const FEATURES = [
   { id: "comment", icon: "📝", title: "テイスティングコメント選択練習", desc: "本番の解答用紙を模した用語シートで練習", active: true, src: "ai" },
-  { id: "flashcard", icon: "🃏", title: "主要品種フラッシュカード", desc: "品種ごとの特徴を暗記", active: true, src: "ai" },
-  { id: "quiz", icon: "❓", title: "品種当てクイズ", desc: "コメントから品種を推測", active: true, src: "ai" },
+  { id: "flashcard", icon: "🃏", title: "主要品種フラッシュカード", desc: "品種ごとの特徴を暗記（🥃 その他の酒類も）", active: true, src: "ai" },
+  { id: "quiz", icon: "❓", title: "品種当てクイズ", desc: "コメントから品種を推測（🥃 その他の酒類も）", active: true, src: "ai" },
   { id: "teppan", icon: "🧭", title: "タイプ別テッパンコメント", desc: "4タイプ＋特殊の定石を暗記", active: true, src: "teppan" },
   { id: "stats", icon: "📊", title: "過去の出題品種 傾向データ", desc: "出題実績をチェック", active: true, src: "real" },
   { id: "compare", icon: "📖", title: "模範解答 比較閲覧", desc: "品種×生産地でコメント正解を見比べ", active: true, src: "ai" },
@@ -776,10 +776,14 @@ const fcState = { filter: "all", country: "all", order: [], index: 0, flipped: f
 const FC_COUNTRIES = ["フランス", "イタリア", "スペイン", "ドイツ", "アメリカ", "オーストラリア",
                       "ニュージーランド", "チリ", "アルゼンチン", "南アフリカ", "日本"];
 
+// その他の酒類（OTHERS）はカード用に color:"other" を付けて品種と同じ山に入れる。
+// 生産地フィルタはワイン用なので、その他の酒類には適用しない（「すべて」＋生産地指定のときは除く）
+function fcAllCards() { return [...GRAPES, ...OTHERS.map(o => ({ ...o, color: "other" }))]; }
 function fcDeck() {
   return fcState.order.filter(g =>
     (fcState.filter === "all" || g.color === fcState.filter) &&
-    (fcState.country === "all" || (g.countries || []).includes(fcState.country)));
+    (g.color === "other" ? fcState.country === "all" || fcState.filter === "other"
+                         : fcState.country === "all" || (g.countries || []).includes(fcState.country)));
 }
 
 function showFlashcards() {
@@ -787,7 +791,7 @@ function showFlashcards() {
   headerTitle.textContent = "品種フラッシュカード";
   btnHome.classList.remove("hidden");
   footerBar.classList.add("hidden");
-  if (fcState.order.length === 0) fcState.order = [...GRAPES];
+  if (fcState.order.length === 0) fcState.order = fcAllCards();
   fcState.index = 0;
   fcState.flipped = false;
 
@@ -796,6 +800,7 @@ function showFlashcards() {
       <button class="chip fc-filter" data-f="all">すべて</button>
       <button class="chip fc-filter" data-f="white">白</button>
       <button class="chip fc-filter" data-f="red">赤</button>
+      <button class="chip fc-filter" data-f="other">🥃 その他の酒類</button>
       <button class="chip fc-shuffle" id="fc-shuffle">🔀 シャッフル</button>
     </div>
     <div class="fc-filters fc-countries">
@@ -885,6 +890,26 @@ function renderFlashcard() {
   const g = deck[fcState.index];
   document.getElementById("fc-inner").classList.toggle("flipped", fcState.flipped);
   document.getElementById("fc-counter").textContent = `${fcState.index + 1} / ${deck.length}`;
+  if (g.color === "other") {
+    document.getElementById("fc-front").innerHTML = `
+      <span class="fc-glass">🥃</span>
+      <span class="fc-name">${g.name}</span>
+      <span class="fc-colorlabel">その他の酒類 ・ ${g.cat}</span>
+    `;
+    document.getElementById("fc-back").innerHTML = `
+      <div class="fc-back-name">${g.name} ${srcBadge("ai")}</div>
+      <dl class="fc-facts">
+        <dt>🏷 分類・原料</dt><dd>${g.cat}／${g.base}</dd>
+        <dt>🌍 産地</dt><dd>${g.origin}</dd>
+        <dt>👁 外観</dt><dd>${g.appearance}</dd>
+        <dt>👃 香り</dt><dd>${g.aroma}</dd>
+        <dt>👅 味わい</dt><dd>${g.taste}</dd>
+        <dt>🔥 度数の目安</dt><dd>${g.abv}</dd>
+        <dt>🔑 決め手</dt><dd>${g.key}</dd>
+      </dl>
+    `;
+    return;
+  }
   document.getElementById("fc-front").innerHTML = `
     <span class="fc-glass">${g.color === "white" ? "🥂" : "🍷"}</span>
     <span class="fc-name">${g.name}</span>
@@ -950,6 +975,12 @@ function showQuizStart() {
       <span class="wine-sub" style="display:block">赤ワイン用品種から出題</span></span>
       <span class="chev">▶</span>
     </button>
+    <button class="wine-card" data-mode="other">
+      <span class="glass">🥃</span>
+      <span><span class="wine-label">その他の酒類（${OTHERS.length}問）</span>
+      <span class="wine-sub" style="display:block">外観・香り・味わい・度数から酒類名を当てる（本試験の5問目対策）</span></span>
+      <span class="chev">▶</span>
+    </button>
     ${srcNote("wines")}
   `;
   screen.querySelectorAll(".wine-card").forEach(b =>
@@ -958,7 +989,10 @@ function showQuizStart() {
 }
 
 // クイズの出題プール（テイスティング会メモの6本は専用画面に分けているので除く）
-function quizPool(mode) { return WINES.filter(w => w.origin !== "note" && (mode === "all" || w.color === mode)); }
+function quizPool(mode) {
+  if (mode === "other") return OTHERS.map(o => ({ ...o, kind: "other" }));
+  return WINES.filter(w => w.origin !== "note" && (mode === "all" || w.color === mode));
+}
 
 function startQuiz(mode) {
   quizState.queue = shuffleArray(quizPool(mode));
@@ -991,16 +1025,34 @@ function renderQuizQuestion() {
   headerTitle.textContent = `品種当てクイズ ${quizState.index + 1}/${quizState.queue.length}`;
   footerBar.classList.add("hidden");
 
-  const grapeSection = VOCAB[wine.color].find(s => s.id === "grape");
-  const correct = wine.answers.grape[0];
-  const distractors = shuffleArray(grapeSection.terms.filter(t => t !== correct)).slice(0, 3);
-  const choices = shuffleArray([correct, ...distractors]);
+  const isOther = wine.kind === "other";
+  let correct, choices, questionHtml;
+  if (isOther) {
+    // その他の酒類: 同じ分類から誤答を優先して選び、足りなければ他の分類から補う
+    correct = wine.name;
+    const same = shuffleArray(OTHERS.filter(o => o.cat === wine.cat && o.name !== correct).map(o => o.name));
+    const rest = shuffleArray(OTHERS.filter(o => o.cat !== wine.cat).map(o => o.name));
+    choices = shuffleArray([correct, ...[...same, ...rest].slice(0, 3)]);
+    questionHtml = `
+      <div class="section-card quiz-comment">
+        <div class="section-head"><span class="section-title">この酒類は？（その他の酒類）</span></div>
+        ${[["👁", "外観", wine.appearance], ["👃", "香り", wine.aroma], ["👅", "味わい", wine.taste], ["🔥", "度数", wine.abv]].map(([icon, label, text]) => `
+          <div class="quiz-comment-row"><span class="quiz-comment-label">${icon} ${label}</span><span class="quiz-comment-text">${text}</span></div>`).join("")}
+      </div>`;
+  } else {
+    const grapeSection = VOCAB[wine.color].find(s => s.id === "grape");
+    correct = wine.answers.grape[0];
+    const distractors = shuffleArray(grapeSection.terms.filter(t => t !== correct)).slice(0, 3);
+    choices = shuffleArray([correct, ...distractors]);
+    questionHtml = `
+      <div class="section-card quiz-comment">
+        <div class="section-head"><span class="section-title">このワインの品種は？（${wine.color === "white" ? "白" : "赤"}ワイン）</span></div>
+        ${buildQuizComment(wine)}
+      </div>`;
+  }
 
   screen.innerHTML = `
-    <div class="section-card quiz-comment">
-      <div class="section-head"><span class="section-title">このワインの品種は？（${wine.color === "white" ? "白" : "赤"}ワイン）</span></div>
-      ${buildQuizComment(wine)}
-    </div>
+    ${questionHtml}
     <div class="quiz-choices">
       ${choices.map(c => `<button class="quiz-choice" data-grape="${c}">${c}</button>`).join("")}
     </div>
@@ -1027,8 +1079,9 @@ function renderQuizQuestion() {
       const fb = document.getElementById("quiz-feedback");
       document.getElementById("quiz-verdict").textContent = isCorrect ? "⭕ 正解！" : "❌ 不正解…";
       document.getElementById("quiz-verdict").className = "quiz-verdict " + (isCorrect ? "good" : "bad");
-      document.getElementById("quiz-explain").innerHTML =
-        `${srcBadge(srcKindOf(wine))} 正解：${wine.name} — ${wine.note}`;
+      document.getElementById("quiz-explain").innerHTML = isOther
+        ? `${srcBadge("ai")} 正解：${wine.name}（${wine.cat}／${wine.base}／${wine.origin}） — 決め手: ${wine.key}`
+        : `${srcBadge(srcKindOf(wine))} 正解：${wine.name} — ${wine.note}`;
       const nextBtn = document.getElementById("quiz-next");
       nextBtn.textContent = quizState.index + 1 < quizState.queue.length ? "次の問題へ" : "結果を見る";
       nextBtn.addEventListener("click", () => {
@@ -1077,10 +1130,9 @@ function showStats() {
   const maxYear = Math.max(...years);
 
   // 品種ごとの出題回数を集計（白・赤別）
-  const counts = { white: new Map(), red: new Map() };
+  const counts = { white: new Map(), red: new Map(), other: new Map() };
   for (const exam of PAST_EXAMS) {
     for (const item of exam.items) {
-      if (item.type === "other") continue;
       const m = counts[item.type];
       if (!m.has(item.name)) m.set(item.name, { count: 0, years: [] });
       const rec = m.get(item.name);
@@ -1090,7 +1142,7 @@ function showStats() {
   }
 
   const rankingHtml = (type, title, icon) => {
-    const sorted = [...counts[type].entries()].sort((a, b) => b[1].count - a[1].count);
+    const sorted = [...counts[type].entries()].sort((a, b) => b[1].count - a[1].count || Math.max(...b[1].years) - Math.max(...a[1].years));
     const max = sorted[0][1].count;
     return `
       <div class="section-card">
@@ -1141,6 +1193,7 @@ function showStats() {
     <h2 class="group-title">品種別ランキング</h2>
     ${rankingHtml("white", "白ワイン", "🥂")}
     ${rankingHtml("red", "赤ワイン", "🍷")}
+    ${rankingHtml("other", "その他の酒類", "🥃")}
     <h2 class="group-title">年度別の出題</h2>
     <p class="reveal-note">左の数字は出題番号、右の数字はヴィンテージです。📜 付きの品種名はタップすると、過去問アーカイブのその正解へ移動します。ランキングの集計対象はワインエキスパートの出題のみで、ソムリエ試験分は参考表示です。</p>
     ${yearHtml}
