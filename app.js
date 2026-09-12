@@ -123,7 +123,8 @@ const HELP = {
     <p>Wine-Flightのテイスティング会で用語選択シート（2025年版）に取った手書きメモ6本を、<b>模範解答の形に流し込んで</b>並べた画面です。他の機能（コメント練習の一覧・クイズ・推定）には含めていません。</p>
     <ul>
       <li>上の用語シートで「Wine-Flight 2025年版」を選ぶと、本番と同じ<b>番号付き</b>で正解が表示されます</li>
-      <li>各ワインを開くと、<b>元のメモ</b>（手書きの転記）、<b>補い方</b>（メモにない項目をどの定石で埋めたか）、全項目の正解が見られます</li>
+      <li><b>📋 1本ずつ／📊 比較表</b>を切り替えられます。比較表は白3本・赤3本を横並びにし、同色の全本で共通する語を太字にします（横スクロール可）</li>
+      <li>「1本ずつ」で各ワインを開くと、<b>元のメモ</b>（手書きの転記）、<b>補い方</b>（メモにない項目をどの定石で埋めたか）、全項目の正解が見られます</li>
       <li>「この正解で採点する練習へ」で、その正解を使って用語シートの練習ができます。採点結果からはこの画面に戻ります</li>
       <li>メモは香りが中心なので、外観・味わい・総合評価はタイプ別テッパンと実物過去問の定石で補っています。銘柄名は手書きの判読で、読み違いの可能性があります</li>
     </ul>
@@ -1221,6 +1222,8 @@ function showArchive(focusKey) {
 // 手書きメモから作った練習ワイン（WINES の origin:"note"）だけを、模範解答の形で
 // 番号順に閲覧する画面。用語シートは他の画面と共通の設定（activeSheet）を使い、
 // Wine-Flight 2025年版なら本番と同じ番号を付けて表示する。
+let ntMode = "list"; // list（1本ずつ）| table（白3本・赤3本を横並び）
+
 function showNotes(focusId) {
   view = "notes";
   currentWine = null;
@@ -1241,7 +1244,12 @@ function showNotes(focusId) {
       ${Object.values(SHEETS).map(sh => `<button class="chip sheet-opt ${sh.key === sheet.key ? "on" : ""}" data-sheet="${sh.key}">${sh.label}</button>`).join("")}
     </div>
     <p class="reveal-note sheet-note">${sheet.numbered ? "本番と同じ番号付きで表示しています。" : "番号付きで見るには「Wine-Flight 2025年版」を選んでください。"}メモにある語はそのまま、メモにない項目は定石で補っています（各ワインの「補い方」参照）。</p>
-    <div class="ar-year">
+    <div class="fc-filters nt-mode">
+      <button class="chip nt-mode-opt ${ntMode === "list" ? "on" : ""}" data-mode="list">📋 1本ずつ</button>
+      <button class="chip nt-mode-opt ${ntMode === "table" ? "on" : ""}" data-mode="table">📊 比較表（横並び）</button>
+    </div>
+    ${ntMode === "table" ? notesTableHtml(wines, sheet, circled) : ""}
+    <div class="ar-year" ${ntMode === "table" ? "hidden" : ""}>
       ${wines.map(w => {
         const { answers, dropped } = modelAnswers(w, sheet);
         let rows = "", lastG = null;
@@ -1266,6 +1274,10 @@ function showNotes(focusId) {
     setActiveSheet(b.dataset.sheet);
     showNotes();
   }));
+  screen.querySelectorAll(".nt-mode-opt").forEach(b => b.addEventListener("click", () => {
+    ntMode = b.dataset.mode;
+    showNotes();
+  }));
   screen.querySelectorAll(".ar-practice").forEach(b => b.addEventListener("click", e => {
     e.preventDefault();
     const w = WINES.find(x => x.id === b.dataset.id);
@@ -1276,6 +1288,38 @@ function showNotes(focusId) {
     if (target) { target.open = true; target.scrollIntoView({ block: "start" }); return; }
   }
   window.scrollTo(0, 0);
+}
+
+// 白・赤それぞれの比較表。行＝項目、列＝ワイン。同色の全本で採用された語は太字（rc-common）、
+// 番号付きシートなら本番の番号を付ける。1本しかない色は共通語を出さない
+function notesTableHtml(wines, sheet, circled) {
+  const tables = [];
+  for (const color of ["white", "red"]) {
+    const list = wines.filter(w => w.color === color);
+    if (!list.length) continue;
+    const answers = list.map(w => modelAnswers(w, sheet).answers);
+    let rows = "", lastG = null, totalCommon = 0;
+    for (const sec of sheetVocab(color, sheet)) {
+      if (sec.group !== lastG) { rows += `<tr class="cmp-group"><th class="rc-item">${sec.group}</th><td colspan="${list.length}"></td></tr>`; lastG = sec.group; }
+      const cells = answers.map(a => a[sec.id] || []);
+      const common = list.length >= 2 ? cells[0].filter(t => cells.every(c => c.includes(t))) : [];
+      totalCommon += common.length;
+      rows += `<tr><th class="rc-item">${sec.title}</th>${cells.map(c => `<td>${c.map(t =>
+        `<span class="nt-term ${common.includes(t) ? "rc-common" : ""}">${sheet.numbered ? `<span class="chip-no">${sec.terms.indexOf(t) + 1}</span>` : ""}${t}</span>`).join("、") || "<span class='rc-none'>—</span>"}</td>`).join("")}</tr>`;
+    }
+    tables.push(`
+      <div class="section-card nt-table-card">
+        <div class="section-head"><span class="section-title">${color === "white" ? "🥂 白ワイン" : "🍷 赤ワイン"}（${list.length}本）</span></div>
+        ${list.length >= 2 ? `<p class="rc-summary">${list.length}本すべてで共通する語: <b>${totalCommon}語</b>（<span class="rc-common">太字</span>）。横にスクロールできます。</p>` : ""}
+        <div class="rc-wrap">
+          <table class="rc-table">
+            <thead><tr><th class="rc-item"></th>${list.map(w => `<th>${circled[w.noteNo] || w.noteNo} ${w.answers.grape[0]}<br><span class="rc-sub">${w.answers.country[0]}・${w.answers.vintage[0]}</span></th>`).join("")}</tr></thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>
+      </div>`);
+  }
+  return tables.join("");
 }
 
 // ---------------- guide (使い方ページ) ----------------

@@ -447,6 +447,10 @@ main { padding: 16px 14px 120px; max-width: 640px; margin: 0 auto; }
 .ar-title { flex: 0 0 96px; font-weight: 700; color: var(--muted); font-size: .78rem; line-height: 1.5; }
 .ar-terms { flex: 1; line-height: 1.55; }
 .nt-term { white-space: nowrap; }
+.nt-mode { margin-bottom: 10px; }
+.nt-table-card { padding-bottom: 8px; }
+.rc-table .cmp-group th, .rc-table .cmp-group td { background: var(--wine); color: #fff; padding: 4px 8px; font-size: .72rem; }
+.rc-table .cmp-group .rc-item { background: var(--wine); color: #fff; }
 #screen:has(.ar-year) .sheet-switch { margin-bottom: 6px; }
 
 /* ---------- estimate ---------- */
@@ -507,7 +511,7 @@ main { padding: 16px 14px 120px; max-width: 640px; margin: 0 auto; }
   #screen > .sheet-wine-banner, #screen > .score-card, #screen > .legend,
   #screen > .ar-note, #screen > .result-actions, #screen > .es-toggle,
   #screen > .wine-card, #screen > .wine-section-title, #screen > .fc-filters, #screen > details.cmp-acc,
-  #screen > .sheet-switch, #screen > .ar-year {
+  #screen > .sheet-switch, #screen > .ar-year, #screen > .nt-mode, #screen > .nt-table-card {
     grid-column: 1 / -1;
   }
 
