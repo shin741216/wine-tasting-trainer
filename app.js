@@ -37,6 +37,7 @@ const HELP = {
     <p>各項目で指定された数（例：2/2）の用語を選びます。</p>
     <ul>
       <li>選択数の上限に達した状態で別の用語をタップすると、最も古い選択と入れ替わります</li>
+      <li><b>グラス</b>は本番では「小ぶり／中庸／大ぶり」から1つと「バルーン型／チューリップ型」から1つの<b>2語</b>を選びます。シートでも2段に分けて表示し、同じ段の語をタップすると入れ替わります（実物の模範解答で採点する練習だけは、その年の正解の語数に合わせます）</li>
       <li>全項目を記入したら画面下の「採点する」をタップ。未記入があっても採点できます</li>
       <li><b>💾 一時保存</b> — 採点せずに途中の記入内容を保存します。ワイン選択画面の「練習の記録」に「一時保存」として並び、タップすると同じシート・同じ選択状態で再開できます。採点すると一時保存は採点済みの記録に置き換わります</li>
       <li><b>🔍 推定</b> — 入力し終えたら（または途中でも5語以上選べば）タップすると、あなたの選択を全解答データ（🤖AI参考解答、📜実物過去問、📝転記・未検証）と照合し、一致度の高い品種・生産地・収穫年の候補を出所バッジ付きで表示します。ブラインド練習で採点前に自分の見立てを確かめるのに使えます</li>
@@ -1587,12 +1588,14 @@ function startPractice(wine, blind, restore = null) {
     html += `
       <div class="section-card" data-sec="${sec.id}">
         <div class="section-head">
-          <span class="section-title">${sec.title}</span>
+          <span class="section-title">${sec.title}${subsetsFor(wine, sec) ? `<span class="section-hint">${subsetsFor(wine, sec).map(g => g.label).join("と")}から1つずつ</span>` : ""}</span>
           <span class="section-count" data-count>0/${pickFor(wine, sec, sheet)}</span>
         </div>
-        <div class="chips">
+        ${subsetsFor(wine, sec)
+          ? subsetsFor(wine, sec).map(g => `<div class="chips chips-sub"><span class="chip-sub">${g.label}</span>${g.terms.map(t => `<button class="chip" data-term="${t}">${chipLabel(sheet, sec.terms.indexOf(t), t)}</button>`).join("")}</div>`).join("")
+          : `<div class="chips">
           ${sec.terms.map((t, i) => `<button class="chip" data-term="${t}">${chipLabel(sheet, i, t)}</button>`).join("")}
-        </div>
+        </div>`}
       </div>
     `;
   }
@@ -1611,12 +1614,19 @@ function startPractice(wine, blind, restore = null) {
           set.delete(term);
           chip.classList.remove("on");
         } else {
-          if (set.size >= pick) {
+          const unselect = t => {
+            set.delete(t);
+            const c = card.querySelector(`.chip[data-term="${CSS.escape(t)}"]`);
+            if (c) c.classList.remove("on");
+          };
+          // グループ制約（例: グラスは大きさから1つ＋形から1つ）: 同じグループで選択済みの語と入れ替える
+          const subsets = subsetsFor(wine, sec);
+          const grp = subsets && subsets.find(g => g.terms.includes(term));
+          const sameGrp = grp ? [...set].find(t => grp.terms.includes(t)) : null;
+          if (sameGrp) unselect(sameGrp);
+          else if (set.size >= pick) {
             // 上限に達していたら最も古い選択を外す（pick=1ならワンタップ切替）
-            const oldest = set.values().next().value;
-            set.delete(oldest);
-            const oldChip = card.querySelector(`.chip[data-term="${CSS.escape(oldest)}"]`);
-            if (oldChip) oldChip.classList.remove("on");
+            unselect(set.values().next().value);
           }
           set.add(term);
           chip.classList.add("on");
@@ -1650,6 +1660,14 @@ function startPractice(wine, blind, restore = null) {
 
   updateProgress();
   window.scrollTo(0, 0);
+}
+
+// 項目内のグループ制約（例: グラスは「大きさ」と「形」から1つずつ）。
+// 実物の模範解答で採点する練習ワイン（origin: "past"）は、正解が「中庸・大ぶり」のように
+// 同じグループから複数選んでいる年があるため、制約を外して正解の語数だけで数える
+function subsetsFor(wine, sec) {
+  if (!sec.subsets || (wine && wine.origin === "past")) return null;
+  return sec.subsets;
 }
 
 // 項目ごとの選択数。実物の模範解答から作った練習ワイン（origin: "past"）だけは
