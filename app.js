@@ -1061,7 +1061,7 @@ function renderQuizQuestion() {
       <div class="quiz-explain" id="quiz-explain"></div>
       <button class="btn-primary" id="quiz-next"></button>
     </div>
-    ${srcNote("wines")}
+    ${srcNote(isOther ? "grapes" : "wines")}
   `;
 
   screen.querySelectorAll(".quiz-choice").forEach(btn => {
