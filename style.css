@@ -56,13 +56,15 @@ body {
 main { padding: 16px 14px 120px; max-width: 640px; margin: 0 auto; }
 
 /* ---------- launcher ---------- */
+/* minmax(0, 1fr) にしないと、中身（nowrap のバッジなど）より狭くできず
+   列幅がばらつき、狭い画面では右にはみ出す。以降のグリッドもすべて同じ理由で 0 を下限にする */
 .tile-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
 }
 .tile {
-  position: relative;
+  position: relative; min-width: 0;
   display: flex; flex-direction: column; align-items: flex-start; gap: 6px;
   background: var(--card); border: 1px solid var(--border); border-radius: 16px;
   padding: 16px 14px; min-height: 148px;
@@ -72,6 +74,8 @@ main { padding: 16px 14px 120px; max-width: 640px; margin: 0 auto; }
 .tile-icon { font-size: 1.8rem; }
 .tile-title { font-weight: 700; font-size: .9rem; line-height: 1.35; }
 .tile-desc { font-size: .74rem; color: var(--muted); line-height: 1.4; }
+/* タイルの中は幅が限られるので、バッジは少し小さくし、収まらないときは折り返す */
+.tile .src-badge { font-size: .58rem; padding: 2px 7px; white-space: normal; border-radius: 10px; text-align: center; }
 .tile.disabled { opacity: .55; cursor: default; background: var(--chip-bg); }
 .tile-badge {
   position: absolute; top: 10px; right: 10px;
@@ -335,7 +339,7 @@ body.has-update-bar main { padding-bottom: calc(120px + var(--update-bar-h, 0px)
 .quiz-comment-row { display: flex; flex-direction: column; gap: 2px; margin-top: 10px; }
 .quiz-comment-label { font-size: .78rem; font-weight: 700; color: var(--muted); }
 .quiz-comment-text { font-size: .9rem; line-height: 1.6; }
-.quiz-choices { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+.quiz-choices { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 14px; }
 .quiz-choice {
   background: var(--card); border: 1px solid var(--border); border-radius: 14px;
   padding: 16px 10px; font: inherit; font-size: .9rem; font-weight: 700; color: inherit;
@@ -562,7 +566,7 @@ body.has-update-bar main { padding-bottom: calc(120px + var(--update-bar-h, 0px)
   .footer-bar { padding-left: max(14px, calc((100% - 1000px) / 2 + 24px)); padding-right: max(14px, calc((100% - 1000px) / 2 + 24px)); }
 
   /* ランチャー: タイル3列 */
-  .tile-grid { grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .tile-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
 
   /* 2列グリッドにする画面。見出し・注記・ボタン行は全幅 */
   #screen:has(.sheet-wine-banner),      /* 用語シート */
@@ -570,7 +574,7 @@ body.has-update-bar main { padding-bottom: calc(120px + var(--update-bar-h, 0px)
   #screen:has(.stat-exam-item),         /* 出題傾向データ */
   #screen:has(.es-card),                /* 本番セット練習 */
   #screen:has(.ar-year) {               /* 過去問アーカイブ */
-    display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px; align-items: start;
+    display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 16px; align-items: start;
   }
   #screen > .home-lead, #screen > .group-title, #screen > .reveal-note,
   #screen > .sheet-wine-banner, #screen > .score-card, #screen > .legend,
@@ -581,7 +585,7 @@ body.has-update-bar main { padding-bottom: calc(120px + var(--update-bar-h, 0px)
   }
 
   /* 用語の採用率: 項目カードを2列 */
-  #ts-body { display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px; align-items: start; }
+  #ts-body { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 16px; align-items: start; }
   #ts-body > .ts-n { grid-column: 1 / -1; }
 
   /* 比較表: 文字はゆったりに、列は最多の8年ぶんが1画面に収まる幅に */
