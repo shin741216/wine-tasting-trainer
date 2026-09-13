@@ -151,6 +151,28 @@ main { padding: 16px 14px 120px; max-width: 640px; margin: 0 auto; }
   padding: 10px 14px calc(10px + env(safe-area-inset-bottom));
 }
 .footer-progress { flex: 1; font-size: .82rem; color: var(--muted); line-height: 1.4; }
+
+/* ---------- 更新のお知らせバー ---------- */
+.update-bar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 12;
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  background: var(--wine); color: #fff;
+  border-top: 1px solid rgba(255,255,255,.25);
+  padding: 12px 14px calc(12px + env(safe-area-inset-bottom));
+  box-shadow: 0 -6px 18px rgba(0,0,0,.18);
+}
+.update-bar.done { background: #2f6b4c; }
+.ub-text { flex: 1 1 100%; font-size: .86rem; font-weight: 700; line-height: 1.45; }
+@media (min-width: 520px) { .ub-text { flex: 1 1 220px; } }
+.ub-sub { display: block; font-size: .74rem; font-weight: 400; opacity: .85; margin-top: 2px; }
+.ub-actions { display: flex; gap: 8px; margin-left: auto; }
+.ub-btn { padding: 9px 14px; font-size: .84rem; }
+.update-bar .btn-secondary { background: rgba(255,255,255,.16); color: #fff; border-color: rgba(255,255,255,.45); }
+.update-bar .btn-primary { background: #fff; color: var(--wine); }
+.update-bar.done .btn-primary { color: #2f6b4c; }
+/* バーの分だけフッターと本文を持ち上げる（高さはJSが測って入れる） */
+body.has-update-bar .footer-bar { bottom: var(--update-bar-h, 0px); }
+body.has-update-bar main { padding-bottom: calc(120px + var(--update-bar-h, 0px)); }
 .btn-primary {
   background: var(--wine); color: #fff; border: none; border-radius: 12px;
   padding: 12px 22px; font-size: .95rem; font-weight: 700; font-family: inherit; cursor: pointer;

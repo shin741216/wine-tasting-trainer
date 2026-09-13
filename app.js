@@ -26,7 +26,8 @@ const HELP = {
       <li>🍷 <b>テイスティング会メモ</b> — テイスティング会で取った手書きメモ6本を模範解答の形で閲覧・比較</li>
       <li>📘 <b>使い方</b> — 全機能の説明と「収録データについて」をまとめて読めます</li>
     </ul>
-    <p>各画面の右上 ⓘ でその画面の使い方が見られます。採点や解説の元になっているデータの出所は、📘使い方の「収録データについて」をご覧ください。</p>` },
+    <p>各画面の右上 ⓘ でその画面の使い方が見られます。採点や解説の元になっているデータの出所は、📘使い方の「収録データについて」をご覧ください。</p>
+    <p><b>アプリの更新について</b> — 画面を開いたままにしていると、更新されても古い表示のままになります。アプリに戻ってきたタイミングで更新を確認し、あれば画面下にバーでお知らせします。「再読み込み」を押すと最新の表示になります。記入中の内容は自動で一時保存し、開いていた画面のまま戻ってくるので、そのまま続けられます。</p>` },
   comment: { title: "コメント選択練習の使い方", body: `
     <p>本番の解答用紙を模した用語シートでコメントを作り、模範解答と照合して採点する練習です。</p>
     <ul>
@@ -47,6 +48,7 @@ const HELP = {
       <li><b>💾 一時保存</b> — 採点せずに途中の記入内容を保存します。ワイン選択画面の「練習の記録」に「一時保存」として並び、タップすると同じシート・同じ選択状態で再開できます。採点すると一時保存は採点済みの記録に置き換わります</li>
       <li><b>🔍 推定</b> — 入力し終えたら（または途中でも5語以上選べば）タップすると、あなたの選択を全解答データ（🤖AI参考解答、📜実物過去問、📝転記・未検証）と照合し、一致度の高い品種・生産地・収穫年の候補を出所バッジ付きで表示します。ブラインド練習で採点前に自分の見立てを確かめるのに使えます</li>
       <li>中断するときは左上の ◀（記入内容は破棄されます）</li>
+      <li><b>アプリが更新されたとき</b> — 画面下に「新しいバージョンがあります」のバーが出ます。「再読み込み」を押すと、記入中の内容を自動で一時保存してから読み込み直し、同じシートの同じ記入状態で開き直します</li>
       <li>採点結果は「正解（緑）／選び漏れ（黄）／誤って選択（赤）」で色分け表示されます</li>
     </ul>
     <p>※「いくつ選べ」の数は本番で年により変わるため目安です。ただし <span class="src-badge transcribed">📝 転記・未検証</span> が付いた実物由来のワインだけは、目安ではなく<b>その年の正解の語数</b>を使います（色調が4語なら「0/4」）。</p>
@@ -319,14 +321,17 @@ function savePracticeResult(entry) {
   try { localStorage.setItem(RESULTS_KEY, JSON.stringify(list)); } catch {}
 }
 // 一時保存: 採点せずに途中の選択内容を保存する（同じワイン×シートの一時保存は上書き）
-function saveDraft() {
+// silent=true では確認モーダルを出さない。更新の再読み込み前に自動保存するときに使う。
+// 保存したら true、選択が空で保存しなかったら false を返す
+function saveDraft(silent = false) {
   const wine = currentWine;
+  if (!wine) return false;
   const sheet = activeSheet();
   const sel = Object.fromEntries(Object.entries(selections).map(([k, v]) => [k, [...v]]));
   const filled = Object.values(sel).filter(a => a.length).length;
   if (filled === 0) {
-    openModal("一時保存するものがありません", "<p>1項目以上選択してから一時保存してください。</p>");
-    return;
+    if (!silent) openModal("一時保存するものがありません", "<p>1項目以上選択してから一時保存してください。</p>");
+    return false;
   }
   let list = loadResults().filter(r => !(r.draft && r.wineId === wine.id && r.sheet === sheet.key));
   list.push({
@@ -335,9 +340,11 @@ function saveDraft() {
     filled, total: sheetVocab(wine.color, sheet).length,
   });
   try { localStorage.setItem(RESULTS_KEY, JSON.stringify(list)); } catch {}
+  if (silent) return true;
   openModal("💾 一時保存しました", `
     <p><b>${wine._blind ? (wine.color === "white" ? "白ワイン（銘柄非公開）" : "赤ワイン（銘柄非公開）") : wine.name}</b> の記入内容（${filled} / ${sheetVocab(wine.color, sheet).length} 項目）を保存しました。</p>
     <p>ワイン選択画面の「練習の記録」からいつでも再開できます。このまま記入を続けても構いません（再度一時保存すると上書きされます）。</p>`);
+  return true;
 }
 // 一時保存から作業を再開する
 function resumeDraft(rec) {
@@ -1876,4 +1883,209 @@ function showResult(opts = {}) {
   window.scrollTo(0, 0);
 }
 
-showLauncher();
+// ================= アプリの更新検知・画面の復元 =================
+// 画面を開いたままにしているユーザーは、裏でアプリが更新されても古い表示のまま
+// 使い続けてしまう。復帰時にバージョンを確かめ、更新があればバーで知らせる。
+// 再読み込みの前に、記入中の内容を一時保存し、開いていた画面を控えておき、
+// 読み込み後は元の場所へ戻す。
+
+const VIEW_KEY = "wtt-last-view";
+const RESUME_MAX_AGE = 30 * 60 * 1000;         // 通常の復帰でここまで前なら元の画面へ戻す
+const UPDATE_RESTORE_MAX_AGE = 60 * 60 * 1000; // 更新の再読み込みはもう少し猶予を持たせる
+const UPDATE_CHECK_MIN_INTERVAL = 60 * 1000;   // 短時間の連続チェックを抑える
+const UPDATE_POLL_INTERVAL = 30 * 60 * 1000;   // 開きっぱなしのときの定期チェック
+let lastUpdateCheck = Date.now();
+let updateBarVersion = null;   // バーで知らせ中のバージョン
+let dismissedVersion = null;   // 「後で」を押されたバージョン（同じ版では再表示しない）
+let updatingNow = false;       // 更新の再読み込み中。控えた画面を上書きさせないための目印
+
+// ---------------- 画面の記録と復元 ----------------
+// 復元できない画面（クイズや本番セット練習の途中）は、いちばん近い一覧に戻す
+function snapshotView(extra = {}) {
+  // 更新の再読み込み中は pagehide などが後から走る。せっかく控えた内容を
+  // 素の記録で上書きしてしまわないよう、更新用の記録だけを残す
+  if (updatingNow && !extra.reason) return;
+  const s = { view, t: Date.now(), ...extra };
+  try {
+    if (view === "sheet" && currentWine) {
+      s.wineId = currentWine.id; s.blind = !!currentWine._blind; s.sheet = activeSheet().key;
+    } else if (view === "result" && currentWine) {
+      s.wineId = currentWine.id;
+    } else if (view === "flashcards") {
+      s.fc = { filter: fcState.filter, country: fcState.country, index: fcState.index };
+    } else if (view === "teppan") { s.tp = tpState.id;
+    } else if (view === "realcmp") { s.rc = rcGrape;
+    } else if (view === "termstats") { s.ts = { color: tsState.color, scope: tsState.scope };
+    } else if (view === "compare") { s.cmp = cmpGrape;
+    } else if (view === "notes") { s.nt = ntMode; }
+    localStorage.setItem(VIEW_KEY, JSON.stringify(s));
+  } catch {}
+}
+
+function readViewSnapshot() {
+  try {
+    const s = JSON.parse(localStorage.getItem(VIEW_KEY));
+    if (!s || !s.view) return null;
+    const maxAge = s.reason === "update" ? UPDATE_RESTORE_MAX_AGE : RESUME_MAX_AGE;
+    return Date.now() - (s.t || 0) > maxAge ? null : s;
+  } catch { return null; }
+}
+
+// 記録した画面を開き直す。開けたら true
+function restoreView(s) {
+  switch (s.view) {
+    case "sheet": {
+      const wine = WINES.find(w => w.id === s.wineId);
+      if (!wine) return false;
+      if (s.sheet && SHEETS[s.sheet]) setActiveSheet(s.sheet);
+      // 記入していた内容は一時保存から戻す
+      const draft = loadResults().find(r => r.draft && r.wineId === s.wineId && r.sheet === s.sheet);
+      startPractice(wine, !!s.blind, draft || null);
+      return true;
+    }
+    case "result": {
+      const rec = loadResults().filter(r => !r.draft && r.wineId === s.wineId).sort((a, b) => b.t - a.t)[0];
+      if (rec) showResult({ record: rec }); else showHome();
+      return true;
+    }
+    case "wineList": showHome(); return true;
+    case "flashcards":
+      showFlashcards();
+      if (s.fc) {
+        fcState.filter = s.fc.filter; fcState.country = s.fc.country; fcState.index = s.fc.index || 0;
+        renderFlashcard();
+      }
+      return true;
+    case "quiz": case "quizStart": showQuizStart(); return true;
+    case "stats": showStats(); return true;
+    case "archive": showArchive(); return true;
+    case "guide": showGuide(); return true;
+    case "examset": case "setSummary": showExamSets(); return true;
+    case "teppan": if (s.tp) tpState.id = s.tp; showTeppan(); return true;
+    case "realcmp": if (s.rc) rcGrape = s.rc; showRealCompare(); return true;
+    case "termstats":
+      if (s.ts) { tsState.color = s.ts.color; tsState.scope = s.ts.scope; }
+      showTermStats(); return true;
+    case "compare": if (s.cmp) cmpGrape = s.cmp; showCompare(); return true;
+    case "notes": if (s.nt) ntMode = s.nt; showNotes(); return true;
+    default: return false;
+  }
+}
+
+// 起動時の入口。記録が壊れていても必ずメニューは開く
+function restoreOrLaunch() {
+  const s = readViewSnapshot();
+  try { localStorage.removeItem(VIEW_KEY); } catch {}
+  let restored = false;
+  if (s) { try { restored = restoreView(s); } catch { restored = false; } }
+  if (!restored) showLauncher();
+  if (s && s.reason === "update") showUpdatedBar(s, restored);
+}
+
+// ---------------- 更新の検知 ----------------
+// version.js を取り直して、動作中の APP_VERSION と比べる。サービスワーカーの状態に
+// 左右されないので、復帰直後でも判定できる。オフラインなら失敗するだけで何も起きない。
+async function checkForUpdate(force = false) {
+  const now = Date.now();
+  if (!force && now - lastUpdateCheck < UPDATE_CHECK_MIN_INTERVAL) return;
+  lastUpdateCheck = now;
+  try {
+    const reg = navigator.serviceWorker && await navigator.serviceWorker.getRegistration();
+    if (reg) reg.update();
+  } catch {}
+  try {
+    const res = await fetch(`version.js?_=${now}`, { cache: "no-store" });
+    if (!res.ok) return;
+    const m = (await res.text()).match(/APP_VERSION\s*=\s*"([^"]+)"/);
+    if (!m || m[1] === APP_VERSION || m[1] === dismissedVersion) return;
+    showUpdateBar(m[1]);
+  } catch {}
+}
+
+function removeUpdateBar() {
+  const el = document.getElementById("update-bar");
+  if (el) el.remove();
+  document.body.classList.remove("has-update-bar");
+  document.documentElement.style.removeProperty("--update-bar-h");
+}
+
+// バーは画面下に固定する。高さは文字の折り返しで変わるので測ってCSS変数に入れ、
+// 用語シートのフッター（採点するボタン）とページ末尾をその分だけ持ち上げる
+function mountUpdateBar(className, html) {
+  removeUpdateBar();
+  const bar = document.createElement("div");
+  bar.className = className;
+  bar.id = "update-bar";
+  bar.innerHTML = html;
+  document.body.appendChild(bar);
+  document.body.classList.add("has-update-bar");
+  const measure = () => {
+    const el = document.getElementById("update-bar");
+    if (el) document.documentElement.style.setProperty("--update-bar-h", `${el.offsetHeight}px`);
+  };
+  measure();
+  window.addEventListener("resize", measure);
+  return bar;
+}
+
+function showUpdateBar(latest) {
+  if (updateBarVersion === latest) return;
+  updateBarVersion = latest;
+  mountUpdateBar("update-bar", `
+    <span class="ub-text">🔄 新しいバージョン <b>${latest}</b> があります
+      <span class="ub-sub">この画面は更新前の内容です。再読み込みすると最新になります（記入中の内容は自動保存します）</span></span>
+    <span class="ub-actions">
+      <button class="btn-secondary ub-btn" id="ub-later">後で</button>
+      <button class="btn-primary ub-btn" id="ub-now">再読み込み</button>
+    </span>`);
+  document.getElementById("ub-later").addEventListener("click", () => {
+    dismissedVersion = latest;
+    updateBarVersion = null;
+    removeUpdateBar();
+  });
+  document.getElementById("ub-now").addEventListener("click", () => applyUpdate(latest));
+}
+
+// 更新を適用する。失うと困るものを先に保存してから読み込み直す
+async function applyUpdate(latest) {
+  if (view === "quiz" || setState) {
+    if (!confirm("進行中のクイズ・本番セット練習は最初からになります。再読み込みしますか？")) return;
+  }
+  const savedDraft = view === "sheet" ? saveDraft(true) : false;
+  updatingNow = true;
+  snapshotView({ reason: "update", from: APP_VERSION, to: latest, savedDraft });
+  try {
+    const reg = navigator.serviceWorker && await navigator.serviceWorker.getRegistration();
+    if (reg) await reg.update();
+  } catch {}
+  location.reload();
+}
+
+// 更新後に一度だけ出す確認バー
+function showUpdatedBar(s, restored) {
+  const sub = restored
+    ? (s.savedDraft ? "記入中だった内容を保存して、同じ画面で開き直しました。" : "元の画面で開き直しました。")
+    : (s.savedDraft ? "記入中だった内容は「練習の記録」に一時保存してあります。" : "メニューから続けてください。");
+  mountUpdateBar("update-bar done", `
+    <span class="ub-text">✅ <b>${s.to || ""}</b> に更新しました<span class="ub-sub">${sub}</span></span>
+    <span class="ub-actions"><button class="btn-secondary ub-btn" id="ub-close">閉じる</button></span>`);
+  document.getElementById("ub-close").addEventListener("click", removeUpdateBar);
+  setTimeout(() => {
+    const el = document.getElementById("update-bar");
+    if (el && el.classList.contains("done")) removeUpdateBar();
+  }, 12000);
+}
+
+// ---------------- 復帰の検知 ----------------
+// ホーム画面から起動したPWAをアプリスイッチャーから戻すと visibilitychange、
+// 履歴で戻ると pageshow が発火する。背面に回るたびに画面を控えておけば、
+// OSにアプリを終了させられても元の場所へ戻れる。
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "visible") checkForUpdate();
+  else snapshotView();
+});
+window.addEventListener("pageshow", () => checkForUpdate());
+window.addEventListener("pagehide", () => snapshotView());
+setInterval(() => { if (document.visibilityState === "visible") checkForUpdate(); }, UPDATE_POLL_INTERVAL);
+
+restoreOrLaunch();
