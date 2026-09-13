@@ -453,6 +453,11 @@ main { padding: 16px 14px 120px; max-width: 640px; margin: 0 auto; }
 .ar-title { flex: 0 0 96px; font-weight: 700; color: var(--muted); font-size: .78rem; line-height: 1.5; }
 .ar-terms { flex: 1; line-height: 1.55; }
 .nt-term { white-space: nowrap; }
+.nt-session {
+  font-size: .76rem; color: var(--muted); font-weight: 600; line-height: 1.7;
+  background: #f6e6ee; border: 1px solid #d9a7c2; border-radius: 12px;
+  padding: 8px 12px; margin: 0 0 12px;
+}
 .nt-mode { margin-bottom: 10px; }
 .nt-table-card { padding-bottom: 8px; }
 /* 比較表は横スクロールさせず、列幅を画面幅に合わせて自動調整（セル内で折り返す） */
@@ -525,7 +530,7 @@ main { padding: 16px 14px 120px; max-width: 640px; margin: 0 auto; }
   #screen > .sheet-wine-banner, #screen > .score-card, #screen > .legend,
   #screen > .ar-note, #screen > .result-actions, #screen > .es-toggle,
   #screen > .wine-card, #screen > .wine-section-title, #screen > .fc-filters, #screen > details.cmp-acc,
-  #screen > .sheet-switch, #screen > .ar-year, #screen > .nt-mode {
+  #screen > .sheet-switch, #screen > .ar-year, #screen > .nt-mode, #screen > .nt-session {
     grid-column: 1 / -1;
   }
 
