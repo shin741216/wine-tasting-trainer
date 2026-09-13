@@ -116,7 +116,7 @@ const HELP = {
     <ul>
       <li>品種のチップを選ぶと、その品種が出題された回の正解が列に並びます（列見出しは 年度・試験区分・番号・生産国・ヴィンテージ）</li>
       <li><b>色付きの太字</b>は、並んだすべての回で採用された語です。年をまたいで共通する語＝その品種の定石が、ブログの主張ではなく実データで見えます</li>
-      <li>横に長い表は横スクロールできます</li>
+      <li>列は画面に合わせて狭くしてあり、長い用語はセル内で折り返します。それでも収まらないときは横にスクロールできます</li>
       <li>「果実」「花・植物」が分かれていた旧様式（2015〜2018年）は「果実・花・植物」にまとめて並べています</li>
     </ul>
     <p><b>データの出所</b> — 📜 一般公開の正解PDF（2015・2017・2018年）と 📝 個人ブログの転記（2021〜2025年・未検証）を混ぜて並べています。列見出しのバッジで区別できます。</p>` },
@@ -150,7 +150,7 @@ const HELP = {
   compare: { title: "模範解答 比較閲覧の使い方", body: `
     <ul>
       <li>「白ワイン品種」「赤ワイン品種」のタブを開いて品種を選びます</li>
-      <li>その品種の模範解答が<b>生産地ごとに横並びの表</b>で表示されます（横スクロール可）</li>
+      <li>その品種の模範解答が<b>生産地ごとに横並びの表</b>で表示されます。収まらないときは横にスクロールできます</li>
       <li><b>赤色の用語</b>は生産地間で答えが異なる箇所＝生産地当ての決め手です</li>
     </ul>
     <p><b>データの出所</b> — この画面は <span class="src-badge ai">🤖 AI参考解答</span> だけを比較対象にしています。実物の模範解答から作った27本とテイスティング会メモの6本は、生産地が重複して表が読みにくくなるため除いています。本試験の正解は「🗄️ 過去問アーカイブ」で確認できます。</p>` },
@@ -222,6 +222,18 @@ function srcNote(kind) {
       本試験で実際に発表された正解は「🗄️ 過去問アーカイブ」で確認できます。`,
   };
   return `<p class="reveal-note">${notes[kind]}</p>`;
+}
+
+// 比較表の列定義。列幅は colgroup で指定する。幅そのものは style.css の
+// 「比較表の共通仕様」（--ct-item / --ct-col）で決める
+function ctCols(dataCols) {
+  return `<colgroup><col class="ct-col-item">${"<col>".repeat(dataCols)}</colgroup>`;
+}
+// 横スクロールする比較表の <table> に付ける幅。
+// table-layout:fixed は幅が auto のままだと無効になり自動レイアウトに戻ってしまうので、
+// 列数から幅を計算して確定させる（画面より狭くなるときは CSS の min-width:100% が効く）
+function ctWidth(dataCols) {
+  return `style="width: calc(var(--ct-item) + ${dataCols} * var(--ct-col))"`;
 }
 
 // ---------------- 選択からの品種・生産地・収穫年の推定 ----------------
@@ -618,14 +630,15 @@ function renderRealCompare() {
     const cells = maps.map(m => m[item] || []);
     const common = list.length >= 2 ? cells[0].filter(t => cells.every(c => c.includes(t))) : [];
     commonCount[item] = common.length;
-    rows += `<tr><th class="rc-item">${item}</th>${cells.map(c => `<td>${c.map(t => `<span class="${common.includes(t) ? "rc-common" : ""}">${t}</span>`).join("、") || "<span class='rc-none'>—</span>"}</td>`).join("")}</tr>`;
+    rows += `<tr><th class="rc-item">${item}</th>${cells.map(c => `<td>${c.map(t => `<span class="ct-term ${common.includes(t) ? "rc-common" : ""}">${t}</span>`).join("") || "<span class='rc-none'>—</span>"}</td>`).join("")}</tr>`;
   }
   const totalCommon = Object.values(commonCount).reduce((s, n) => s + n, 0);
   document.getElementById("rc-body").innerHTML = `
     <div class="section-card">
       <div class="section-head"><span class="section-title">${color === "white" ? "🥂" : "🍷"} ${rcGrape}（${list.length}回）</span></div>
       ${list.length >= 2 ? `<p class="rc-summary">${list.length}回すべてで採用された語: <b>${totalCommon}語</b></p>` : `<p class="rc-summary">出題は1回のみです。比較対象がないため共通語は出しません。</p>`}
-      <div class="rc-wrap"><table class="rc-table">
+      <div class="rc-wrap"><table class="rc-table" ${ctWidth(list.length)}>
+        ${ctCols(list.length)}
         <thead><tr><th class="rc-item"></th>${list.map(a => `<th>${arColLabel(a)}<br><span class="rc-sub">${a.country}・${a.vintage.replace(/（.*$/, "")}</span><br>${srcBadge(a.source === "blog" ? "transcribed" : "real")}</th>`).join("")}</tr></thead>
         <tbody>${rows}</tbody>
       </table></div>
@@ -1314,7 +1327,7 @@ function showNotes(focusId) {
   const sheet = activeSheet();
   const wines = WINES.filter(w => w.origin === "note").sort((a, b) => (a.noteNo || 0) - (b.noteNo || 0));
   const circled = ["", "①", "②", "③", "④", "⑤", "⑥", "⑦", "⑧", "⑨"];
-  const termHtml = (sec, t) => sheet.numbered ? `<span class="nt-term"><span class="chip-no">${sec.terms.indexOf(t) + 1}</span>${t}</span>` : `<span class="nt-term">${t}</span>`;
+  const termHtml = (sec, t) => sheet.numbered ? `<span class="ct-term"><span class="chip-no">${sec.terms.indexOf(t) + 1}</span>${t}</span>` : `<span class="ct-term">${t}</span>`;
 
   screen.innerHTML = `
     <p class="home-lead">テイスティング会で取った手書きメモ${wines.length}本を、模範解答の形に流し込んで並べています。${srcBadge("note")}</p>
@@ -1391,7 +1404,7 @@ function notesTableHtml(wines, sheet, circled) {
       const common = list.length >= 2 ? cells[0].filter(t => cells.every(c => c.includes(t))) : [];
       totalCommon += common.length;
       rows += `<tr><th class="rc-item">${NT_SHORT_TITLE[sec.title] || sec.title}</th>${cells.map(c => `<td>${c.map(t =>
-        `<span class="nt-term ${common.includes(t) ? "rc-common" : ""}">${sheet.numbered ? `<span class="chip-no">${sec.terms.indexOf(t) + 1}</span>` : ""}${t}</span>`).join("") || "<span class='rc-none'>—</span>"}</td>`).join("")}</tr>`;
+        `<span class="ct-term ${common.includes(t) ? "rc-common" : ""}">${sheet.numbered ? `<span class="chip-no">${sec.terms.indexOf(t) + 1}</span>` : ""}${t}</span>`).join("") || "<span class='rc-none'>—</span>"}</td>`).join("")}</tr>`;
     }
     tables.push(`
       <div class="section-card nt-table-card">
@@ -1399,6 +1412,7 @@ function notesTableHtml(wines, sheet, circled) {
         ${list.length >= 2 ? `<p class="rc-summary">${list.length}本すべてで共通する語: <b>${totalCommon}語</b>（<span class="rc-common">太字</span>）。</p>` : ""}
         <div class="rc-wrap">
           <table class="rc-table">
+            ${ctCols(list.length)}
             <thead><tr><th class="rc-item"></th>${list.map(w => `<th>${circled[w.noteNo] || w.noteNo} ${w.answers.grape[0]}<br><span class="rc-sub">${w.answers.country[0]}・${w.answers.vintage[0]}</span></th>`).join("")}</tr></thead>
             <tbody>${rows}</tbody>
           </table>
@@ -1493,15 +1507,16 @@ function renderCompareTable() {
       const terms = w.answers[sec.id] || [];
       return terms.map(t => {
         const shared = wines.every(x => (x.answers[sec.id] || []).includes(t));
-        return shared || wines.length < 2 ? t : `<span class="cmp-diff">${t}</span>`;
-      }).join("、");
+        return `<span class="ct-term ${shared || wines.length < 2 ? "" : "cmp-diff"}">${t}</span>`;
+      }).join("");
     });
     rows += `<tr><th class="cmp-item">${sec.title}</th>${cells.map(c => `<td>${c}</td>`).join("")}</tr>`;
   }
 
   document.getElementById("cmp-body").innerHTML = `
     <div class="cmp-wrap">
-      <table class="cmp-table">
+      <table class="cmp-table" ${ctWidth(wines.length)}>
+        ${ctCols(wines.length)}
         <thead><tr>
           <th class="cmp-item">項目</th>
           ${wines.map(w => `<th class="cmp-head">${w.answers.country[0]}<span class="cmp-vintage">${w.answers.vintage[0]}</span></th>`).join("")}

@@ -3,6 +3,11 @@
   --wine-light: #7d2a42;
   --bg: #faf7f4;
   --card: #ffffff;
+  /* 比較表の寸法（style.css「比較表の共通仕様」を参照） */
+  --ct-col: 96px;
+  --ct-item: 62px;
+  --ct-font: .7rem;
+  --ct-head: .66rem;
   --text: #2b2320;
   --muted: #8a7d76;
   --border: #e6ddd6;
@@ -244,12 +249,6 @@ body.has-update-bar main { padding-bottom: calc(120px + var(--update-bar-h, 0px)
 /* ---------- 実物正解 品種×年度 横断 ---------- */
 .rc-n { font-size: .68rem; margin-left: 4px; opacity: .7; }
 .rc-summary { font-size: .84rem; margin: 0 0 8px; }
-.rc-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; max-width: 100%; }
-.rc-table { border-collapse: collapse; font-size: .78rem; width: max-content; min-width: 100%; }
-.rc-table th, .rc-table td { border-bottom: 1px solid #f0e8ea; padding: 6px 8px; vertical-align: top; text-align: left; min-width: 150px; }
-.rc-table thead th { font-size: .74rem; line-height: 1.5; background: #fbf7f8; position: sticky; top: 0; }
-.rc-table .rc-item { min-width: 5.5em; font-weight: 700; color: #8a6a72; font-size: .72rem; position: sticky; left: 0; background: #fff; }
-.rc-table thead .rc-item { background: #fbf7f8; z-index: 1; }
 .rc-sub { font-weight: 400; color: #9a8a8e; }
 .rc-common { color: var(--wine); font-weight: 700; }
 .rc-none { color: #c8bcc0; }
@@ -382,26 +381,50 @@ body.has-update-bar main { padding-bottom: calc(120px + var(--update-bar-h, 0px)
 .reveal-note a { color: var(--wine); }
 
 /* ---------- compare ---------- */
-.cmp-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 14px; background: var(--card); }
-.cmp-table { border-collapse: collapse; width: 100%; min-width: 480px; font-size: .82rem; }
-.cmp-table th, .cmp-table td {
-  padding: 8px 10px; border-bottom: 1px solid var(--border);
-  text-align: left; vertical-align: top; line-height: 1.5;
-}
-.cmp-table td { min-width: 150px; }
-.cmp-item {
-  position: sticky; left: 0; background: var(--card);
-  font-weight: 700; font-size: .78rem; color: var(--muted);
-  min-width: 96px; max-width: 120px;
-}
-.cmp-head { font-weight: 800; color: var(--wine); white-space: nowrap; }
-.cmp-vintage { display: block; font-size: .7rem; color: var(--muted); font-weight: 600; }
-.cmp-group .cmp-item {
-  background: var(--wine); color: #fff; font-size: .78rem; font-weight: 700;
-  padding: 5px 10px;
-}
-.cmp-group td { background: var(--wine); padding: 5px 10px; }
+.cmp-wrap { border: 1px solid var(--border); border-radius: 14px; background: var(--card); }
+.cmp-head { font-weight: 800; color: var(--wine); }
+.cmp-vintage { display: block; font-size: var(--ct-head); color: var(--muted); font-weight: 600; }
 .cmp-diff { color: var(--wrong); font-weight: 700; }
+
+@media (min-width: 520px) { :root { --ct-col: 110px; --ct-item: 72px; --ct-font: .74rem; --ct-head: .7rem; } }
+
+/* ---------- 比較表の共通仕様（横並びで見比べる表はここで一括して決める） ----------
+   対象: 実物正解 品種×年度（.rc-table）／模範解答 比較閲覧（.cmp-table）／
+         テイスティング会メモの比較表（.nt-table-card 配下。こちらは画面幅に収める）
+   --ct-col  データ列の幅   --ct-item 左端の項目名列の幅
+   --ct-font 本文の文字サイズ   --ct-head 見出しと項目名の文字サイズ
+   列を狭くするほど横スクロールは減り、そのぶんセル内で折り返して縦に伸びる。
+   用語は .ct-term で囲み、語の途中ではなく語と語の間で折り返す。
+*/
+.rc-wrap, .cmp-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; max-width: 100%; }
+.rc-table, .cmp-table {
+  border-collapse: collapse; table-layout: fixed;
+  width: auto; min-width: 100%; font-size: var(--ct-font);
+}
+/* 列幅は colgroup で指定する（table-layout:fixed ではこれがいちばん確実） */
+.rc-table col, .cmp-table col { width: var(--ct-col); }
+.rc-table col.ct-col-item, .cmp-table col.ct-col-item { width: var(--ct-item); }
+.rc-table th, .rc-table td, .cmp-table th, .cmp-table td {
+  padding: 5px 6px;
+  border-bottom: 1px solid #f0e8ea;
+  text-align: left; vertical-align: top; line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.rc-table thead th, .cmp-table thead th {
+  font-size: var(--ct-head); line-height: 1.45;
+  background: #fbf7f8; position: sticky; top: 0;
+}
+.rc-table .rc-item, .cmp-table .cmp-item {
+  font-weight: 700; font-size: var(--ct-head); color: #8a6a72;
+  position: sticky; left: 0; background: var(--card); z-index: 1;
+}
+.rc-table thead .rc-item, .cmp-table thead .cmp-item { background: #fbf7f8; z-index: 2; }
+.cmp-group .cmp-item, .cmp-group td, .rc-table .cmp-group th, .rc-table .cmp-group td {
+  background: var(--wine); color: #fff; font-size: var(--ct-head); font-weight: 700; padding: 4px 6px;
+}
+/* 用語は1語のかたまりとして扱い、語と語の間で改行する。長すぎる語だけ内部で折る */
+.ct-term { display: inline-block; max-width: 100%; vertical-align: top; }
+.ct-term:not(:last-child)::after { content: "、"; }
 
 /* ---------- help modal ---------- */
 .help-modal { position: fixed; inset: 0; z-index: 50; }
@@ -474,7 +497,6 @@ body.has-update-bar main { padding-bottom: calc(120px + var(--update-bar-h, 0px)
 .ar-row:last-child { border-bottom: none; }
 .ar-title { flex: 0 0 96px; font-weight: 700; color: var(--muted); font-size: .78rem; line-height: 1.5; }
 .ar-terms { flex: 1; line-height: 1.55; }
-.nt-term { white-space: nowrap; }
 .nt-session {
   font-size: .76rem; color: var(--muted); font-weight: 600; line-height: 1.7;
   background: #f6e6ee; border: 1px solid #d9a7c2; border-radius: 12px;
@@ -482,15 +504,17 @@ body.has-update-bar main { padding-bottom: calc(120px + var(--update-bar-h, 0px)
 }
 .nt-mode { margin-bottom: 10px; }
 .nt-table-card { padding-bottom: 8px; }
-/* 比較表は横スクロールさせず、列幅を画面幅に合わせて自動調整（セル内で折り返す） */
+/* こちらだけは横スクロールさせず、列幅を画面幅に合わせる（1語1行で折り返す） */
 .nt-table-card .rc-wrap { overflow-x: visible; }
-.nt-table-card .rc-table { table-layout: fixed; width: 100%; min-width: 0; font-size: .74rem; }
-.nt-table-card .rc-table th, .nt-table-card .rc-table td { min-width: 0; padding: 5px 4px; word-break: break-word; overflow-wrap: anywhere; line-height: 1.45; }
-.nt-table-card .rc-table .rc-item { width: 4.6em; position: static; font-size: .68rem; }
-.nt-table-card .rc-table thead th { position: static; font-size: .7rem; }
-.nt-table-card .nt-term { white-space: normal; display: block; }
+.nt-table-card .rc-table { width: 100%; min-width: 0; }
+.nt-table-card .rc-table th, .nt-table-card .rc-table td { padding: 5px 4px; line-height: 1.45; }
+.nt-table-card .rc-table col { width: auto; }
+.nt-table-card .rc-table col.ct-col-item { width: 4.6em; }
+.nt-table-card .rc-table .rc-item { position: static; }
+.nt-table-card .rc-table thead th { position: static; }
+.nt-table-card .ct-term { display: block; }
+.nt-table-card .ct-term::after { content: none; }
 .nt-table-card .rc-table .chip-no { margin-right: 2px; }
-.rc-table .cmp-group th, .rc-table .cmp-group td { background: var(--wine); color: #fff; padding: 4px 8px; font-size: .72rem; }
 .rc-table .cmp-group .rc-item { background: var(--wine); color: #fff; }
 #screen:has(.ar-year) .sheet-switch { margin-bottom: 6px; }
 
@@ -560,10 +584,8 @@ body.has-update-bar main { padding-bottom: calc(120px + var(--update-bar-h, 0px)
   #ts-body { display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px; align-items: start; }
   #ts-body > .ts-n { grid-column: 1 / -1; }
 
-  /* 横断ビュー: 列を少し狭めて多く収める */
-  .rc-table th, .rc-table td { min-width: 118px; }
-  .nt-table-card .rc-table { font-size: .8rem; }
-  .nt-table-card .rc-table th, .nt-table-card .rc-table td { min-width: 0; }
+  /* 比較表: 文字はゆったりに、列は最多の8年ぶんが1画面に収まる幅に */
+  :root { --ct-col: 102px; --ct-item: 76px; --ct-font: .78rem; --ct-head: .72rem; }
 
   /* タイプ別テッパン: 項目表を2列 */
   .tp-table { column-count: 2; column-gap: 24px; }
