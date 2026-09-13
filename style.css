@@ -430,6 +430,27 @@ body.has-update-bar main { padding-bottom: calc(120px + var(--update-bar-h, 0px)
 .ct-term { display: inline-block; max-width: 100%; vertical-align: top; }
 .ct-term:not(:last-child)::after { content: "、"; }
 
+/* ---------- ご意見・不具合の報告 ---------- */
+.fb-hint { font-size: .78rem; color: var(--muted); line-height: 1.6; margin: 8px 0 2px; }
+.fb-label { display: block; font-size: .78rem; font-weight: 700; color: var(--muted); margin: 14px 0 4px; }
+.fb-input {
+  width: 100%; font: inherit; font-size: .9rem; color: var(--text);
+  background: var(--bg); border: 1px solid var(--border); border-radius: 10px;
+  padding: 10px 12px; line-height: 1.6;
+}
+.fb-input:focus { outline: 2px solid var(--wine); outline-offset: 1px; }
+.fb-area { resize: vertical; min-height: 7em; }
+.fb-check { display: flex; align-items: center; gap: 8px; font-size: .84rem; margin-top: 14px; }
+.fb-ctx-detail { margin-top: 6px; }
+.fb-ctx-detail summary { font-size: .78rem; color: var(--muted); cursor: pointer; }
+.fb-ctx-body {
+  margin-top: 6px; padding: 8px 10px; border-radius: 8px; background: var(--chip-bg);
+  font-size: .72rem; line-height: 1.7; color: var(--muted); overflow-wrap: anywhere;
+}
+.fb-actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 16px 0 10px; }
+.fb-actions button { flex: 1 1 auto; }
+.help-body .fb-area { margin-top: 8px; }
+
 /* ---------- help modal ---------- */
 .help-modal { position: fixed; inset: 0; z-index: 50; }
 .help-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,.45); }

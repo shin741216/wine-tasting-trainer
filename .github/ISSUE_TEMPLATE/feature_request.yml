@@ -1,0 +1,24 @@
+name: ✨ 機能の追加リクエスト
+description: こんな機能がほしい、ここをこう変えたい
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        アプリ内の「📮 ご意見・不具合の報告」からも送れます。
+  - type: textarea
+    id: want
+    attributes:
+      label: どんな場面で、何ができると嬉しいか
+      placeholder: 例）本番セット練習で、その回の平均点を過去の記録と比べたい
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: なぜそれが必要か（今どう困っているか）
+  - type: input
+    id: screen
+    attributes:
+      label: 関係する画面
+      placeholder: 例）本番セット練習

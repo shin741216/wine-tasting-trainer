@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 📮 アプリから報告する
+    url: https://shin741216.github.io/wine-tasting-trainer/
+    about: アプリの「ご意見・不具合の報告」から送ると、バージョンや端末の情報が自動で付きます。

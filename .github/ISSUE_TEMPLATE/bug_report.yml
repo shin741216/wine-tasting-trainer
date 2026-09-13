@@ -1,0 +1,41 @@
+name: 🐞 不具合の報告
+description: 表示崩れ、動かない、データの誤りなど
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        アプリ内の「📮 ご意見・不具合の報告」から送ると、下の項目が自動で埋まった状態でここに来ます。
+  - type: textarea
+    id: what
+    attributes:
+      label: 何が起きたか
+      placeholder: 例）採点結果で「選び漏れ」と「誤って選択」の色が見分けにくい
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: 再現の手順
+      placeholder: |
+        1. コメント選択練習を開く
+        2. 白ワインAを選ぶ
+        3. 採点する
+  - type: input
+    id: expected
+    attributes:
+      label: どうなると思ったか
+  - type: input
+    id: actual
+    attributes:
+      label: 実際どうなったか
+  - type: input
+    id: screen
+    attributes:
+      label: 該当の画面
+      placeholder: 例）採点結果
+  - type: textarea
+    id: env
+    attributes:
+      label: 端末と状況
+      placeholder: アプリのバージョン、端末、ブラウザなど（アプリから送ると自動で入ります）
