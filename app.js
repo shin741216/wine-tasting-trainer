@@ -27,6 +27,7 @@ const HELP = {
       <li>📘 <b>使い方</b> — 全機能の説明と「収録データについて」をまとめて読めます</li>
     </ul>
     <p>各画面の右上 ⓘ でその画面の使い方が見られます。採点や解説の元になっているデータの出所は、📘使い方の「収録データについて」をご覧ください。</p>
+    <p><b>共有について</b> — 個人の勉強用に作ったアプリで、教材や解答用紙の用語をそのまま使っている箇所があります。SNSへの投稿や、不特定多数への転送はご遠慮ください。詳しくは📘使い方の「共有についてのお願い」をご覧ください。</p>
     <p><b>アプリの更新について</b> — 画面を開いたままにしていると、更新されても古い表示のままになります。アプリに戻ってきたタイミングで更新を確認し、あれば画面下にバーでお知らせします。「再読み込み」を押すと最新の表示になります。記入中の内容は自動で一時保存し、開いていた画面のまま戻ってくるので、そのまま続けられます。</p>` },
   comment: { title: "コメント選択練習の使い方", body: `
     <p>本番の解答用紙を模した用語シートでコメントを作り、模範解答と照合して採点する練習です。</p>
@@ -90,6 +91,15 @@ const HELP = {
     </ul>
     <p><b>過去問アーカイブ</b> — 本試験で実際に発表された正解です。2015・2017・2018年の21本は一般公開されている正解PDFから（📜）、2021〜2025年の31本は会員限定公開の正解を個人ブログが記事中に転記した内容から収録しています（📝・原本と未照合）。2016年は正解未公表、2019・2020年は転記元にも記載がないため収録できていません。2021〜2025年では2025年WE③と2022年ソムリエ3本が未収録です。</p>
     <p>AI作成の参考解答、および個人ブログ由来のデータには誤りが含まれる可能性があります。お手元の教材と記述が異なる場合は教材を優先してください。</p>` },
+  sharing: { title: "共有についてのお願い", body: `
+    <p>個人の勉強用に作ったアプリです。<b>市販の教材や解答用紙の用語をそのまま使っている箇所があり、著作権まわりの整理をしていません。</b></p>
+    <ul>
+      <li>用語選択シートの項目・用語・並び順は、ワイン受験.com「テイスティング解答用紙 2026年版」と Wine-Flight「2025年版 テイスティング用語選択シート」に準拠しています</li>
+      <li>過去問アーカイブの模範解答には、会員限定公開分を個人ブログが記事中に転記した内容から収録したものが含まれます</li>
+      <li>タイプ別テッパンも、同じ個人ブログの分析をもとにしています</li>
+    </ul>
+    <p>そのため、<b>SNSへの投稿や、不特定多数への転送はご遠慮ください</b>。身のまわりの方と使っていただく分には問題ありません。</p>
+    <p>出所の詳細は「収録データについて」をご覧ください。</p>` },
   archive: { title: "過去問アーカイブの使い方", body: `
     <ul>
       <li>本試験で実際に発表された正解（模範解答）を年度別に閲覧できます。<b>AI作成ではない実物のデータ</b>です</li>
@@ -128,6 +138,16 @@ const HELP = {
       <li>「タンニン 力強い 100%」のようなテッパンの主張を、自分の手元のデータで検証する用途を想定しています</li>
     </ul>
     <p><b>データの出所</b> — 📜 一般公開の正解PDF と 📝 個人ブログの転記（未検証）を合算しています。旧様式の用語（「やや強め」など）はそのまま数えているので、現行の用語シートで比べたいときは範囲を「2021〜2025年」に絞ってください。</p>` },
+  feedback: { title: "ご意見・不具合の報告の使い方", body: `
+    <p>使っていて気づいたこと（不具合・追加してほしい機能・その他）を送るフォームです。送り先はこのアプリのGitHubリポジトリで、<b>Issue</b>として登録されます。</p>
+    <ul>
+      <li><b>種類</b>を選び、<b>件名</b>と<b>内容</b>を書きます。不具合のときは「何をしたら」「どうなると思ったか」「実際どうなったか」の3点があると直しやすくなります</li>
+      <li><b>📮 GitHubでIssueを作る</b> — 入力内容を埋め込んだGitHubの新規Issue画面がブラウザで開きます。内容を確認して「Submit new issue」を押すと登録完了です（GitHubへのログインが必要です）</li>
+      <li><b>📋 内容をコピー</b> — GitHubを使わないときはこちら。整形した文面がクリップボードに入るので、メールやメモに貼って渡せます</li>
+      <li><b>自動で付く情報</b> — アプリのバージョン・用語シート・画面サイズ・ブラウザ・日時が付きます。中身は送信前に確認でき、チェックを外せば付けません</li>
+      <li>書きかけの内容は自動で保存され、次に開いたときに残っています。送ったあとの控えもこの画面に残ります</li>
+    </ul>
+    <p>送られた内容はGitHubのIssueとして公開されます。個人情報や見られたくない内容は書かないでください。</p>` },
   notes: { title: "テイスティング会メモの見方", body: `
     <p><b>${NOTE_SESSION.label}</b> のテイスティング会（白3本・赤3本）で、${NOTE_SESSION.sheet}の用語選択シートに取った手書きメモを、<b>模範解答の形に流し込んで</b>並べた画面です。他の機能（コメント練習の一覧・クイズ・推定）には含めていません。</p>
     <ul>
@@ -169,6 +189,7 @@ function viewHelpKey() {
   if (view === "termstats") return "termstats";
   if (view === "examset" || view === "setSummary") return "examset";
   if (view === "notes") return "notes";
+  if (view === "feedback") return "feedback";
   return "launcher";
 }
 
@@ -442,6 +463,7 @@ const FEATURES = [
   { id: "examset", icon: "🎓", title: "本番セット練習", desc: "年度と試験区分を選び、その回の出題を番号順にブラインドで通す", active: true, src: "transcribed" },
   { id: "notes", icon: "🍷", title: "テイスティング会メモ", desc: "テイスティング会の手書きメモ6本を模範解答の形で閲覧（番号付き）", active: true, src: "note" },
   { id: "guide", icon: "📘", title: "使い方", desc: "各機能の説明・操作方法", active: true },
+  { id: "feedback", icon: "📮", title: "ご意見・不具合の報告", desc: "気づいたことを送る。GitHubのIssueとして届きます", active: true },
 ];
 
 function showLauncher() {
@@ -481,6 +503,7 @@ function showLauncher() {
       if (tile.dataset.feature === "termstats") showTermStats();
       if (tile.dataset.feature === "examset") showExamSets();
       if (tile.dataset.feature === "notes") showNotes();
+      if (tile.dataset.feature === "feedback") showFeedback();
     });
   });
   window.scrollTo(0, 0);
@@ -1422,13 +1445,192 @@ function notesTableHtml(wines, sheet, circled) {
   return tables.join("");
 }
 
+// ---------------- feedback (ご意見・不具合の報告) ----------------
+// このアプリはサーバーを持たない静的サイトなので、報告の受け口は GitHub の Issue にしている。
+// フォームの内容を新規IssueのプリフィルURLに載せて開くだけで、送信処理はアプリ側に無い。
+// GitHubを使わない人向けに、同じ文面をクリップボードへコピーする経路も用意している。
+const REPO_SLUG = "shin741216/wine-tasting-trainer";
+const FEEDBACK_KEY = "wtt-feedback";        // 送信した報告の控え
+const FEEDBACK_DRAFT_KEY = "wtt-feedback-draft"; // 書きかけの内容
+const FEEDBACK_KINDS = [
+  { id: "bug", icon: "🐞", label: "不具合", prefix: "[不具合]", ghLabel: "bug",
+    hint: "何をしたら／どうなると思ったか／実際どうなったか、の3点が分かると直しやすくなります。" },
+  { id: "feature", icon: "✨", label: "機能の追加", prefix: "[機能追加]", ghLabel: "enhancement",
+    hint: "どんな場面で何ができると嬉しいかを書いてください。" },
+  { id: "other", icon: "💬", label: "その他", prefix: "[その他]", ghLabel: "",
+    hint: "使いにくいところ、データの誤りなど、何でもどうぞ。" },
+];
+// 報告フォームの「どの画面か」で選べる一覧
+const VIEW_LABELS = {
+  "": "（選択しない）",
+  launcher: "メニュー", wineList: "コメント選択練習（ワイン選択）", sheet: "用語シート", result: "採点結果",
+  flashcards: "主要品種フラッシュカード", quiz: "品種当てクイズ", stats: "出題傾向データ",
+  compare: "模範解答 比較閲覧", archive: "過去問アーカイブ", teppan: "タイプ別テッパンコメント",
+  realcmp: "実物正解 品種×年度 横断", termstats: "用語の採用率", examset: "本番セット練習",
+  notes: "テイスティング会メモ", guide: "使い方", other: "上記以外・全体のこと",
+};
+const esc = (t) => String(t).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+function loadFeedback() { try { return JSON.parse(localStorage.getItem(FEEDBACK_KEY)) || []; } catch { return []; } }
+function loadFeedbackDraft() { try { return JSON.parse(localStorage.getItem(FEEDBACK_DRAFT_KEY)) || {}; } catch { return {}; } }
+function saveFeedbackDraft(d) { try { localStorage.setItem(FEEDBACK_DRAFT_KEY, JSON.stringify(d)); } catch {} }
+
+// 端末や状況の情報。個人を特定するものは含めない
+function feedbackContext() {
+  return {
+    "アプリ": APP_VERSION,
+    "用語シート": activeSheet().label,
+    "画面サイズ": `${window.innerWidth}×${window.innerHeight}（DPR ${window.devicePixelRatio || 1}）`,
+    "表示モード": window.matchMedia("(display-mode: standalone)").matches || navigator.standalone ? "ホーム画面から起動" : "ブラウザ",
+    "ブラウザ": navigator.userAgent,
+    "日時": new Date().toLocaleString("ja-JP"),
+  };
+}
+
+// GitHub の Issue に貼る本文（Markdown）
+function feedbackBody(d, ctx) {
+  const kind = FEEDBACK_KINDS.find(k => k.id === d.kind) || FEEDBACK_KINDS[0];
+  let out = `### 種類\n${kind.icon} ${kind.label}\n\n### 内容\n${d.body || ""}\n`;
+  if (d.screen) out += `\n### 該当の画面\n${VIEW_LABELS[d.screen] || d.screen}\n`;
+  if (ctx) {
+    out += `\n---\n<details><summary>自動で付いた情報</summary>\n\n| 項目 | 値 |\n|---|---|\n`;
+    for (const [k, v] of Object.entries(ctx)) out += `| ${k} | ${String(v).replace(/\|/g, "\\|")} |\n`;
+    out += `\n</details>\n`;
+  }
+  return out;
+}
+
+function feedbackIssueUrl(d, ctx) {
+  const kind = FEEDBACK_KINDS.find(k => k.id === d.kind) || FEEDBACK_KINDS[0];
+  const q = new URLSearchParams({ title: `${kind.prefix} ${d.title || ""}`.trim(), body: feedbackBody(d, ctx) });
+  if (kind.ghLabel) q.set("labels", kind.ghLabel);
+  return `https://github.com/${REPO_SLUG}/issues/new?${q}`;
+}
+
+function showFeedback() {
+  view = "feedback";
+  currentWine = null;
+  headerTitle.textContent = "ご意見・不具合の報告";
+  btnHome.classList.remove("hidden");
+  footerBar.classList.add("hidden");
+
+  const d = { kind: "bug", title: "", body: "", screen: "", ctx: true, ...loadFeedbackDraft() };
+  const sent = loadFeedback().sort((a, b) => b.t - a.t).slice(0, 10);
+
+  screen.innerHTML = `
+    <p class="home-lead">使っていて気づいたことを送れます。送り先はこのアプリのGitHubリポジトリで、Issueとして登録されます。</p>
+    <div class="section-card">
+      <div class="section-head"><span class="section-title">種類</span></div>
+      <div class="chips">${FEEDBACK_KINDS.map(k => `<button class="chip fb-kind ${k.id === d.kind ? "on" : ""}" data-kind="${k.id}">${k.icon} ${k.label}</button>`).join("")}</div>
+      <p class="fb-hint" id="fb-hint"></p>
+
+      <label class="fb-label" for="fb-title">件名</label>
+      <input class="fb-input" id="fb-title" type="text" maxlength="80" placeholder="ひとことで（例：採点結果の色が見分けにくい）" value="${esc(d.title)}">
+
+      <label class="fb-label" for="fb-body">内容</label>
+      <textarea class="fb-input fb-area" id="fb-body" rows="7" maxlength="2000" placeholder="詳しく書いてください">${esc(d.body)}</textarea>
+
+      <label class="fb-label" for="fb-screen">どの画面のことか</label>
+      <select class="fb-input" id="fb-screen">
+        ${Object.entries(VIEW_LABELS).map(([k, v]) => `<option value="${k}" ${k === d.screen ? "selected" : ""}>${v}</option>`).join("")}
+      </select>
+
+      <label class="fb-check"><input type="checkbox" id="fb-ctx" ${d.ctx ? "checked" : ""}> 端末と状況の情報を付ける</label>
+      <details class="fb-ctx-detail"><summary>付く内容を確認する</summary>
+        <div class="fb-ctx-body">${Object.entries(feedbackContext()).map(([k, v]) => `<div><b>${k}</b>：${esc(v)}</div>`).join("")}</div>
+      </details>
+
+      <div class="fb-actions">
+        <button class="btn-secondary" id="fb-copy">📋 内容をコピー</button>
+        <button class="btn-primary" id="fb-send">📮 GitHubでIssueを作る</button>
+      </div>
+      <p class="reveal-note">「GitHubでIssueを作る」を押すと、入力内容を埋め込んだ新規Issue画面がブラウザで開きます。内容を確認して「Submit new issue」を押すと登録完了です（GitHubへのログインが必要です）。GitHubを使わないときは「内容をコピー」から文面を持ち出せます。</p>
+    </div>
+    ${sent.length ? `
+    <h2 class="wine-section-title">送った報告の控え（${sent.length}件）</h2>
+    <div class="section-card">
+      ${sent.map(r => `
+        <div class="pr-row">
+          <span>${(FEEDBACK_KINDS.find(k => k.id === r.kind) || {}).icon || "💬"}</span>
+          <span class="pr-name">${esc(r.title)}</span>
+          <span class="pr-time">${new Date(r.t).toLocaleString("ja-JP", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" })}</span>
+          <button class="pr-del" data-del="${r.t}" aria-label="この控えを削除">🗑</button>
+        </div>`).join("")}
+      <p class="reveal-note">この控えは端末内だけの記録です。GitHub側の状況（対応済みかどうか）とは連動しません。</p>
+    </div>` : ""}
+    <p class="reveal-note">⚠ 送った内容はGitHubのIssueとして<b>公開</b>されます。個人情報や見られたくない内容は書かないでください。</p>
+  `;
+
+  const el = id => document.getElementById(id);
+  const read = () => ({ kind: d.kind, title: el("fb-title").value.trim(), body: el("fb-body").value.trim(),
+                        screen: el("fb-screen").value, ctx: el("fb-ctx").checked });
+  const renderHint = () => { el("fb-hint").textContent = (FEEDBACK_KINDS.find(k => k.id === d.kind) || {}).hint || ""; };
+  renderHint();
+
+  screen.querySelectorAll(".fb-kind").forEach(b => b.addEventListener("click", () => {
+    d.kind = b.dataset.kind;
+    screen.querySelectorAll(".fb-kind").forEach(x => x.classList.toggle("on", x.dataset.kind === d.kind));
+    renderHint();
+    saveFeedbackDraft(read());
+  }));
+  ["fb-title", "fb-body", "fb-screen", "fb-ctx"].forEach(id =>
+    el(id).addEventListener("input", () => saveFeedbackDraft(read())));
+
+  // 件名と内容がそろっているか確かめる。足りなければ送らせない
+  const validate = (v) => {
+    if (!v.title) { openModal("件名が空です", "<p>ひとことで分かる件名を入れてください。</p>"); return false; }
+    if (!v.body) { openModal("内容が空です", "<p>詳しい内容を入れてください。</p>"); return false; }
+    return true;
+  };
+  const remember = (v) => {
+    const list = loadFeedback();
+    list.push({ t: Date.now(), kind: v.kind, title: v.title, body: v.body, screen: v.screen });
+    try { localStorage.setItem(FEEDBACK_KEY, JSON.stringify(list.slice(-30))); } catch {}
+    try { localStorage.removeItem(FEEDBACK_DRAFT_KEY); } catch {}
+  };
+
+  el("fb-send").addEventListener("click", () => {
+    const v = read();
+    if (!validate(v)) return;
+    const url = feedbackIssueUrl(v, v.ctx ? feedbackContext() : null);
+    remember(v);
+    window.open(url, "_blank", "noopener");
+    showFeedback();
+    openModal("📮 GitHubの画面を開きました", `
+      <p>開いたページで内容を確認し、「Submit new issue」を押すと登録が完了します。</p>
+      <p>ページが開かない場合は、下のリンクから開いてください。</p>
+      <p><a href="${esc(url)}" target="_blank" rel="noopener">GitHubで新しいIssueを作る</a></p>`);
+  });
+
+  el("fb-copy").addEventListener("click", async () => {
+    const v = read();
+    if (!validate(v)) return;
+    const kind = FEEDBACK_KINDS.find(k => k.id === v.kind) || FEEDBACK_KINDS[0];
+    const text = `${kind.prefix} ${v.title}\n\n${feedbackBody(v, v.ctx ? feedbackContext() : null)}`;
+    let ok = false;
+    try { await navigator.clipboard.writeText(text); ok = true; } catch {}
+    remember(v);
+    showFeedback();
+    openModal(ok ? "📋 コピーしました" : "内容はこちらです",
+      ok ? "<p>メールやメモに貼り付けて渡せます。</p>"
+         : `<p>自動でコピーできませんでした。下の文面を選んでコピーしてください。</p><textarea class="fb-input fb-area" rows="10" readonly>${esc(text)}</textarea>`);
+  });
+
+  screen.querySelectorAll(".pr-del").forEach(b => b.addEventListener("click", () => {
+    if (!confirm("この控えを削除しますか？")) return;
+    try { localStorage.setItem(FEEDBACK_KEY, JSON.stringify(loadFeedback().filter(r => r.t !== +b.dataset.del))); } catch {}
+    showFeedback();
+  }));
+  window.scrollTo(0, 0);
+}
+
 // ---------------- guide (使い方ページ) ----------------
 function showGuide() {
   view = "guide";
   headerTitle.textContent = "使い方";
   btnHome.classList.remove("hidden");
   footerBar.classList.add("hidden");
-  const order = ["launcher", "data", "comment", "sheet", "flashcards", "quiz", "teppan", "stats", "compare", "archive", "realcmp", "termstats", "examset", "notes"];
+  const order = ["launcher", "sharing", "data", "comment", "sheet", "flashcards", "quiz", "teppan", "stats", "compare", "archive", "realcmp", "termstats", "examset", "notes", "feedback"];
   screen.innerHTML = order.map(k => `
     <div class="section-card">
       <div class="section-head"><span class="section-title">${HELP[k].title}</span></div>
@@ -1983,6 +2185,7 @@ function restoreView(s) {
       showTermStats(); return true;
     case "compare": if (s.cmp) cmpGrape = s.cmp; showCompare(); return true;
     case "notes": if (s.nt) ntMode = s.nt; showNotes(); return true;
+    case "feedback": showFeedback(); return true;
     default: return false;
   }
 }
