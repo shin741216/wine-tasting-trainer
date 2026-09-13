@@ -476,6 +476,11 @@ function showLauncher() {
 
   screen.innerHTML = `
     <p class="home-lead">機能を選んでください。今後、機能を順次追加していきます。</p>
+    <button class="share-note" id="btn-share-note">
+      <span class="share-note-icon">🤝</span>
+      <span class="share-note-text"><b>個人の勉強用に作ったアプリです。</b>SNSや不特定多数への共有はご遠慮ください。</span>
+      <span class="share-note-more">詳しく</span>
+    </button>
     <div class="tile-grid">
       ${FEATURES.map(f => `
         <button class="tile ${f.active ? "" : "disabled"}" data-feature="${f.id}" ${f.active ? "" : "disabled"}>
@@ -488,6 +493,8 @@ function showLauncher() {
       `).join("")}
     </div>
   `;
+
+  document.getElementById("btn-share-note").addEventListener("click", () => openHelp("sharing"));
 
   screen.querySelectorAll(".tile:not(.disabled)").forEach(tile => {
     tile.addEventListener("click", () => {

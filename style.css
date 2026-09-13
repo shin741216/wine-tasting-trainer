@@ -84,6 +84,23 @@ main { padding: 16px 14px 120px; max-width: 640px; margin: 0 auto; }
   padding: 3px 8px; border-radius: 999px;
 }
 
+/* トップ画面に常時出す共有のお願い。押すと使い方の該当項目が開く */
+.share-note {
+  display: flex; align-items: flex-start; gap: 8px; width: 100%;
+  background: #fdf6f8; border: 1px solid #e6ccd5; border-radius: 12px;
+  padding: 10px 12px; margin: -6px 0 14px;
+  font: inherit; color: var(--text); text-align: left; cursor: pointer;
+}
+.share-note:active { transform: scale(.99); }
+.share-note-icon { font-size: 1rem; line-height: 1.5; }
+.share-note-text { flex: 1; font-size: .76rem; line-height: 1.6; }
+.share-note-text b { color: var(--wine); }
+.share-note-more {
+  flex: 0 0 auto; align-self: center; white-space: nowrap;
+  font-size: .7rem; font-weight: 700; color: var(--wine);
+  border: 1px solid #d9bfc7; border-radius: 999px; padding: 3px 9px;
+}
+
 /* ---------- home ---------- */
 .home-lead { color: var(--muted); font-size: .9rem; margin: 4px 2px 16px; line-height: 1.6; }
 .wine-section-title {
