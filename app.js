@@ -175,6 +175,7 @@ const HELP = {
       <li>チップの数字は、いま選んでいる他の条件（白／赤・国・品種）で絞ったときの該当本数です。0 の薄いチップは組み合わせの該当がありません</li>
       <li>上の <b>すべて／白／赤</b> で色を絞れます</li>
       <li>該当したコメントは 白→赤、<span class="src-badge real">📜 実物過去問</span>・<span class="src-badge transcribed">📝 転記・未検証</span>（新しい年度から）→ <span class="src-badge ai">🤖 AI参考解答</span> → <span class="src-badge note">🍷 テイスティング会メモ</span> の順に並びます。行を開くと全項目の正解が見られます</li>
+      <li><b>📋 1本ずつ／📊 比較表</b>を切り替えられます。比較表は該当コメントを白・赤それぞれ横並びにし、同色の全本で採用された語を色付きの太字にします。列が多いときは横にスクロールします。項目名は出所によらず現行様式に寄せています（旧様式の「果実」「花・植物」は「果実・花・植物」にまとめ）</li>
       <li>「この正解で採点する練習へ」でそのまま用語シートの練習に進めます（採点後はこの検索結果に戻ります）。実物過去問は「過去問アーカイブで見る」で原本どおりの表示にも移れます</li>
       <li>AI参考解答とテイスティング会メモは、コメント練習で選んでいる用語シートの語で表示します（Wine-Flight 2025年版なら番号付き）。実物過去問は出題当時の様式のままです</li>
     </ul>
@@ -1759,7 +1760,7 @@ function renderCompareTable() {
 // （📜📝 実物過去問 = PAST_ANSWERS、🤖 AI参考解答 = WINES、🍷 テイスティング会メモ = WINES origin:"note"）
 // を横断して一覧する画面。実物の模範解答から作った練習ワイン（origin:"past"）は PAST_ANSWERS と
 // 同じ内容なので一覧には出さず、「採点する練習へ」のボタンの行き先としてだけ使う。
-const srState = { color: "all", country: null, grape: null };
+const srState = { color: "all", country: null, grape: null, mode: "list" }; // mode: list（1本ずつ）| table（比較表）
 let practiceFrom = null; // "search" のとき、練習を終えたらワイン選択ではなく検索結果へ戻す
 
 // 品種名の表記ゆれを寄せる（「シラー（シラーズ）」「シラーズ」「メルロー」→「シラー」「メルロ」）
@@ -1808,11 +1809,19 @@ function showSearch() {
     </div>
     <details class="cmp-acc" open><summary>🌍 生産国</summary><div class="fc-filters cmp-acc-body" id="sr-countries"></div></details>
     <details class="cmp-acc" open><summary>🍇 品種</summary><div class="fc-filters cmp-acc-body" id="sr-grapes"></div></details>
+    <div class="fc-filters nt-mode">
+      <button class="chip sr-mode-opt" data-mode="list">📋 1本ずつ</button>
+      <button class="chip sr-mode-opt" data-mode="table">📊 比較表（横並び）</button>
+    </div>
     <div id="sr-body"></div>
     <p class="reveal-note"><b>データの出所</b> — ${srcBadge("real")} は一般公開の正解PDF、${srcBadge("transcribed")} は個人ブログの転記（未検証）で、どちらも「🗄️ 過去問アーカイブ」と同じ52本です。${srcBadge("ai")} はAI作成の参考解答、${srcBadge("note")} は自分のテイスティングメモで、協会の正解ではありません。品種名の表記ゆれ（シラーズ／メルローなど）は同じ品種にまとめています。</p>
   `;
   screen.querySelectorAll(".sr-color-opt").forEach(b => b.addEventListener("click", () => {
     srState.color = b.dataset.color;
+    renderSearch();
+  }));
+  screen.querySelectorAll(".sr-mode-opt").forEach(b => b.addEventListener("click", () => {
+    srState.mode = b.dataset.mode;
     renderSearch();
   }));
   renderSearch();
@@ -1822,6 +1831,7 @@ function showSearch() {
 function renderSearch() {
   const entries = srEntries();
   screen.querySelectorAll(".sr-color-opt").forEach(b => b.classList.toggle("on", b.dataset.color === srState.color));
+  screen.querySelectorAll(".sr-mode-opt").forEach(b => b.classList.toggle("on", b.dataset.mode === srState.mode));
 
   // 国・品種のチップ。件数は「もう片方の条件と色」で絞った数。0件の国・品種は薄く表示する
   const countryOrder = [...new Set([...VOCAB.white.find(s => s.id === "country").terms, ...VOCAB.red.find(s => s.id === "country").terms])];
@@ -1862,6 +1872,11 @@ function renderSearch() {
     body.innerHTML = `<div class="section-card"><p class="rc-summary">「${cond}」に該当するコメントはありません。国か品種の条件を外してください。</p></div>`;
     return;
   }
+  const summary = `<p class="rc-summary sr-summary">${cond}：<b>${hits.length}本</b>（実物過去問 ${nPast}・AI参考解答 ${nAi}・テイスティング会メモ ${nNote}）</p>`;
+  if (srState.mode === "table") {
+    body.innerHTML = summary + srTableHtml(hits);
+    return;
+  }
   const sheet = activeSheet();
   const termHtml = (sec, t) => sheet.numbered ? `<span class="ct-term"><span class="chip-no">${sec.terms.indexOf(t) + 1}</span>${t}</span>` : `<span class="ct-term">${t}</span>`;
   const wineRows = w => {
@@ -1883,7 +1898,7 @@ function renderSearch() {
     return rows;
   };
   body.innerHTML = `
-    <p class="rc-summary sr-summary">${cond}：<b>${hits.length}本</b>（実物過去問 ${nPast}・AI参考解答 ${nAi}・テイスティング会メモ ${nNote}）</p>
+    ${summary}
     <div class="ar-year">
       ${hits.map((e, i) => {
         const head = e.type === "past" ? `<span class="ar-exam">${e.label}</span> ${e.grapeLabel}（${e.country}）<span class="ar-vintage">${e.vintage}</span>`
@@ -1920,6 +1935,49 @@ function renderSearch() {
     e.preventDefault();
     showArchive(b.dataset.key);
   }));
+}
+
+// 検索結果の比較表。白・赤それぞれ 行＝項目、列＝コメント で横並びにし、同色の全本で
+// 採用された語を太字（rc-common）にする。項目名は実物正解 品種×年度 横断と同じ正規化
+// （AR_ITEMS）に寄せ、AI参考解答・メモは VOCAB（ワイン受験.com 2026年版）の語のまま出す。
+// 表記ゆれ（すいかずら／スイカズラ など）は TERM_ALIASES で同じ語として数える
+function srItemMap(e) {
+  if (e.type === "past") return arItemMap(e.answer);
+  const m = {};
+  for (const sec of VOCAB[e.color]) {
+    if (["vintage", "country", "grape"].includes(sec.id)) continue;
+    const k = AR_ITEM_ALIAS[sec.title] || NT_SHORT_TITLE[sec.title] || sec.title;
+    (m[k] = m[k] || []).push(...(e.wine.answers[sec.id] || []).filter(t => !m[k].includes(t)));
+  }
+  return m;
+}
+function srTableHtml(hits) {
+  const tables = [];
+  for (const color of ["white", "red"]) {
+    const list = hits.filter(e => e.color === color);
+    if (!list.length) continue;
+    const maps = list.map(srItemMap);
+    const items = [...AR_ITEMS[color]];
+    for (const m of maps) for (const k of Object.keys(m)) if (!items.includes(k)) items.push(k);
+    let rows = "", totalCommon = 0;
+    for (const item of items) {
+      const cells = maps.map(m => m[item] || []);
+      const common = list.length >= 2 ? cells[0].filter(t => cells.every(c => c.some(x => normTerm(x) === normTerm(t)))).map(normTerm) : [];
+      totalCommon += common.length;
+      rows += `<tr><th class="rc-item">${item}</th>${cells.map(c => `<td>${c.map(t => `<span class="ct-term ${common.includes(normTerm(t)) ? "rc-common" : ""}">${t}</span>`).join("") || "<span class='rc-none'>—</span>"}</td>`).join("")}</tr>`;
+    }
+    tables.push(`
+      <div class="section-card">
+        <div class="section-head"><span class="section-title">${color === "white" ? "🥂 白ワイン" : "🍷 赤ワイン"}（${list.length}本）</span></div>
+        ${list.length >= 2 ? `<p class="rc-summary">${list.length}本すべてで採用された語: <b>${totalCommon}語</b>（<span class="rc-common">色付きの太字</span>）。${list.length > 8 ? "横にスクロールして見比べられます。国や品種で絞ると見やすくなります。" : ""}</p>` : `<p class="rc-summary">1本のみです。比較対象がないため共通語は出しません。</p>`}
+        <div class="rc-wrap"><table class="rc-table" ${ctWidth(list.length)}>
+          ${ctCols(list.length)}
+          <thead><tr><th class="rc-item"></th>${list.map(e => `<th>${e.grapeLabel}<br><span class="rc-sub">${e.country}・${e.vintage.replace(/（.*$/, "")}</span>${e.type === "past" ? `<br><span class="rc-sub">${e.label}</span>` : ""}<br>${srcBadge(e.kind)}</th>`).join("")}</tr></thead>
+          <tbody>${rows}</tbody>
+        </table></div>
+      </div>`);
+  }
+  return tables.join("");
 }
 
 // 練習（用語シート・採点結果）から戻る先。検索結果から始めた練習は検索結果へ、
