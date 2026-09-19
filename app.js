@@ -37,7 +37,7 @@ const HELP = {
       <li><b>ブラインドテイスティングでの使い方</b> — 実際にワインを飲みながらランダム出題でシートを記入→採点すると本番に近い練習になります</li>
       <li><b>用語シートの切り替え</b> — 画面上部で「ワイン受験.com 2026年版」と「Wine-Flight 2025年版」を選べます。Wine-Flight版は本番同様に選択肢へ番号が付き、「果実」と「花・植物」が1項目に統合されています。模範解答は選んだシートの用語へ自動で読み替えて採点します</li>
       <li><b>練習の記録</b> — 採点結果は自動で記録され、この画面に一覧表示されます（白・赤それぞれ最新5回分。超えた分は古いものから自動で消えます）。行をタップすると当時の選択と採点結果を再表示できます。削除はあなたの操作でのみ行われます（🗑 で1件ずつ、または「記録を全て削除」）</li>
-      <li><b>一覧の末尾の27本</b>（名前に「2025年ソムリエ①」のように年度が入っているもの）は、AI参考解答ではなく<b>本試験の模範解答そのもの</b>で採点します。項目ごとの選択数もその年の正解の語数になります</li>
+      <li><b>一覧の末尾の27本</b>（名前に「2025年ソムリエ①」のように年度が入っているもの）は、AI参考解答ではなく<b>本試験の模範解答そのもの</b>で採点します。本試験の正解は選択数より多くの語を正解と認めている項目があるため、選択数は用語シートと同じにし、正解の語数がそれより少ない項目だけ正解の語数にしています</li>
       <li><b>テイスティング会メモの6本</b>はこの一覧には並びません。メニューの「🍷 テイスティング会メモ」にまとめてあり、そこから採点練習に進めます</li>
     </ul>
     <p><b>データの出所</b> — 一覧の各ワインにバッジが付いています。<span class="src-badge ai">🤖 AI参考解答</span> はAIが試験対策の定石に基づいて作成した参考解答、<span class="src-badge transcribed">📝 転記・未検証</span> は本試験で実際に発表された模範解答ですが、会員限定公開分を個人ブログが転記した内容から収録しており原本と照合していません。<span class="src-badge note">🍷 テイスティング会メモ</span> は自分のテイスティングメモ由来で、協会の正解ではありません。</p>` },
@@ -53,7 +53,7 @@ const HELP = {
       <li><b>アプリが更新されたとき</b> — 画面下に「新しいバージョンがあります」のバーが出ます。「再読み込み」を押すと、記入中の内容を自動で一時保存してから読み込み直し、同じシートの同じ記入状態で開き直します</li>
       <li>採点結果は「正解（緑）／選び漏れ（黄）／誤って選択（赤）」で色分け表示されます</li>
     </ul>
-    <p>※「いくつ選べ」の数は本番で年により変わるため目安です。ただし <span class="src-badge transcribed">📝 転記・未検証</span> が付いた実物由来のワインだけは、目安ではなく<b>その年の正解の語数</b>を使います（色調が4語なら「0/4」）。</p>
+    <p>※「いくつ選べ」の数は本番でワインごとに指定が変わるため、用語シートに合わせた目安です。<span class="src-badge transcribed">📝 転記・未検証</span> が付いた実物由来のワインは、正解が選択数より多くの語を認めている項目があります（評価が2語など）。その場合も分母は用語シートの選択数のままで、採点結果に正解として認められた語をすべて表示します。正解の語数が選択数より少ない項目だけ、正解の語数を分母にします。</p>
     <p><b>データの出所</b> — 採点に使う模範解答の出所は、画面上部の「出題ワイン」欄のバッジで確認できます。用語シートは「ワイン受験.com 2026年版」または「Wine-Flight 2025年版」（ワイン選択画面で切り替え）に準拠し、どちらを使ったかは出題ワイン欄と採点結果に表示されます。</p>` },
   flashcards: { title: "品種フラッシュカードの使い方", body: `
     <ul>
@@ -2228,12 +2228,21 @@ function subsetsFor(wine, sec) {
   return sec.subsets;
 }
 
-// 項目ごとの選択数。実物の模範解答から作った練習ワイン（origin: "past"）だけは
-// 用語シート既定の pick ではなく、その年の正解の語数に合わせる
+// 項目ごとの選択数（「0/2」の分母）。
+//   1. ワインに picks（項目ID → 選択数）があればそれを最優先。本番の指定が分かっている
+//      ワインに使う。統合項目（from）は元の項目の合計
+//   2. 実物の模範解答から作った練習ワイン（origin: "past"）は、正解が選択数より多くの語を
+//      認めている（評価が2語、香辛料が10語など）ため、正解の語数を分母にすると本番と
+//      かけ離れる。用語シートの選択数を使い、正解がそれより少ない項目だけ正解の語数にする
+//   3. それ以外は用語シートの pick
 function pickFor(wine, sec, sheet = activeSheet()) {
+  if (wine && wine.picks) {
+    const ids = sec.from || [sec.id];
+    if (ids.every(id => wine.picks[id] != null)) return ids.reduce((n, id) => n + wine.picks[id], 0);
+  }
   if (wine && wine.origin === "past") {
     const a = modelAnswers(wine, sheet).answers[sec.id];
-    if (a && a.length) return a.length;
+    if (a && a.length) return Math.min(sec.pick, a.length);
   }
   return sec.pick;
 }
@@ -2271,11 +2280,16 @@ function showResult(opts = {}) {
   let sectionsHtml = "";
   let lastGroup = null;
 
+  let extraAccepted = 0; // 選択数より多く正解と認められている語の数（実物の模範解答で起きる）
   for (const sec of vocab) {
     const model = new Set(modelAll[sec.id] || []);
     const chosen = sel[sec.id] || new Set();
-    const hits = [...chosen].filter(t => model.has(t)).length;
-    totalModel += model.size;
+    // 分母は選択数（正解がそれより少なければ正解の語数）。正解が選択数より多い項目は、
+    // 選択数ぶん当てれば満点になるよう、一致数も分母で頭打ちにする
+    const need = model.size ? Math.min(pickFor(wine, sec, sheet), model.size) : 0;
+    const hits = Math.min([...chosen].filter(t => model.has(t)).length, need);
+    extraAccepted += model.size - need;
+    totalModel += need;
     totalHit += hits;
 
     if (sec.group !== lastGroup) {
@@ -2283,12 +2297,12 @@ function showResult(opts = {}) {
       lastGroup = sec.group;
     }
 
-    const scoreClass = model.size > 0 && hits === model.size ? "good" : (hits === 0 ? "bad" : "");
+    const scoreClass = need > 0 && hits === need ? "good" : (hits === 0 ? "bad" : "");
     sectionsHtml += `
       <div class="section-card">
         <div class="section-head">
-          <span class="section-title">${sec.title}</span>
-          <span class="section-score ${scoreClass}">${model.size ? `${hits}/${model.size}` : "採点対象外"}</span>
+          <span class="section-title">${sec.title}${model.size > need ? `<span class="section-hint">正解として認められた語は${model.size}語（${need}語選択）</span>` : ""}</span>
+          <span class="section-score ${scoreClass}">${need ? `${hits}/${need}` : "採点対象外"}</span>
         </div>
         <div class="chips">
           ${sec.terms.map((t, i) => {
@@ -2318,7 +2332,7 @@ function showResult(opts = {}) {
     <div class="score-card">
       <div class="s-wine">${wine.name}${blind ? "（ブラインド）" : ""}</div>
       <div class="s-score">${pct}点</div>
-      <div class="s-detail">模範解答 ${totalModel} 語中 ${totalHit} 語一致 ${srcBadge(srcKind)}</div>
+      <div class="s-detail">選択数 ${totalModel} 語中 ${totalHit} 語一致 ${srcBadge(srcKind)}</div>
       <div class="s-detail">用語シート: ${sheet.label}${record ? `　記録 ${new Date(record.t).toLocaleString("ja-JP", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" })}` : ""}</div>
     </div>
     <div class="legend">
@@ -2327,6 +2341,7 @@ function showResult(opts = {}) {
       <span class="l-wrong">誤って選択</span>
     </div>
     ${dropped ? `<div class="ar-note">ℹ️ 模範解答のうち ${dropped} 語は「${sheet.label}」のシートに存在しないため、採点から除外しています（例：このシートにない品種・収穫年・用語）。</div>` : ""}
+    ${extraAccepted ? `<div class="ar-note">ℹ️ この正解は、選択数より多くの語を正解として認めている項目があります（合計 ${extraAccepted} 語）。分母は用語シートの選択数（正解がそれより少ない項目は正解の語数）で、黄色の語はいずれも正解として認められた語です。選択数ぶん当てればその項目は満点になります。</div>` : ""}
     ${wine.origin === "past" ? `<div class="ar-note">📝 この正解は本試験で発表された模範解答ですが、会員限定公開分を個人ブログが転記した内容から収録したもので、原本と照合していません。${wine.caveat ? `<br>${wine.caveat}` : ""}${wine.archiveKey ? `<br><a href="#" id="btn-archive-link">🗄️ 過去問アーカイブで原本どおりの正解を見る</a>` : ""}</div>` : ""}
     ${wine.origin === "note" ? `<div class="ar-note">🍷 この正解は ${NOTE_SESSION.label} のテイスティング会で取った手書きメモを模範解答に流し込んだもので、協会の正解でもAI参考解答でもありません。メモにない項目は定石で補っています。<br><b>元のメモ：</b>${wine.memo}<br><b>補い方：</b>${wine.note}</div>` : ""}
     ${sectionsHtml}
